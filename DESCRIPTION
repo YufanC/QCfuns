@@ -1,0 +1,5 @@
+Package: QCfuns
+Type: Package
+Title: Collection of R QC functions 
+Version: 1.0.0.0
+RoxygenNote: 7.1.1
