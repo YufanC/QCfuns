@@ -10,4 +10,3 @@ Imports:
   openxlsx   (>= 4.2.5),
   stringr    (>= 1.4.1),
   striprtf   (>= 0.5.3)
-  

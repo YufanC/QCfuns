@@ -26,6 +26,7 @@
 #' @examples 
 #' dat <- rtf2df("tsidem01", "PREPROD");
 #' @export
+#' @importFrom striprtf read_rtf
 
 rtf2df <- function(filename, level = NULL){
   
