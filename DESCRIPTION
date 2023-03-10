@@ -1,5 +1,13 @@
 Package: QCfuns
+Authors@R: person("Yufan", "Chen", email = "ychen209@its.jnj.com", role = c("aut", "cre"))
 Type: Package
 Title: Collection of R QC functions 
-Version: 1.0.0.0
+Version: 1.0.0
 RoxygenNote: 7.1.1
+Imports:
+  arsenal    (>= 3.6.3),
+  dplyr      (>= 1.0.7),
+  openxlsx   (>= 4.2.5),
+  stringr    (>= 1.4.1),
+  striprtf   (>= 0.5.3)
+  
