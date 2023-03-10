@@ -26,14 +26,13 @@
 #' @examples 
 #' dat <- rtf2df("tsidem01", "PREPROD");
 #' @export
-#' @importFrom striprtf read_rtf
 
 rtf2df <- function(filename, level = NULL){
   
   if (is.null(level)) {
-    a_rtf <- read_rtf(read_path(opath, paste0(str_to_lower(filename), ".rtf")))
+    a_rtf <- striprtf::read_rtf(read_path(opath, paste0(str_to_lower(filename), ".rtf")))
   } else {
-    a_rtf <- read_rtf(read_path(opath[level], paste0(str_to_lower(filename), ".rtf")))
+    a_rtf <- striprtf::read_rtf(read_path(opath[level], paste0(str_to_lower(filename), ".rtf")))
   }
   
   # Get the valuable lines 
