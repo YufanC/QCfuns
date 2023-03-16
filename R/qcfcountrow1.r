@@ -1,23 +1,15 @@
-##################################################################################################
-# Original Reporting Effort:  FDC SCS
-# Program Name             :  qcfcountrow1.r
-# R Version                :  4.0.5
-# Short Description        :  R functions to compute count for analysis set row
-# Author                   :  Yufan Chen
-# Date                     :  Dec 09,2022
-# Input                    :  input(R): input dataframe 
-#                             colvar(R): column variable 
-#                             popfl(R): population flag (="Y")
-#                             row_text: row text 
-# Output                   :  
-# Remarks                  :  Required packages: dplyr, tidyr
-# Function Sample Call     :  countpct(input = adae, colvar = "TRT01PN", popfl = SAFFL,
-#                                      row_text = "Analysis set: Safety")
-# Modification History
-#Rev        Modified By                   Reporting Effort         Date      Description
-##################################################################################################
-
-countrow1 <- function(input, colvar, row_text = NULL, subset = NULL){
+#' Create Analysis Set Row 
+#'
+#' Function to create analysis set row
+#' @param input input dataframe 
+#' @param colvar column variable 
+#' @param row_text row text 
+#' @param subset subset criteria. Default = "TRUE" means no subsetting
+#' @return Analysis set row
+#' @examples 
+#' cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
+#' @export
+countrow1 <- function(input, colvar, row_text = NULL, subset = "TRUE"){
   first_row <- input %>% 
     filter(eval(parse(text = subset))) %>% 
     group_by(.data[[colvar]], .drop = F) %>% 

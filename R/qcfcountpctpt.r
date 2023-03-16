@@ -1,30 +1,20 @@
-##################################################################################################
-# Original Reporting Effort:  FDC SCS
-# Program Name             :  qcfcountpctpt.r
-# R Version                :  4.0.5
-# Short Description        :  R functions to compute count and percentage of PT
-# Author                   :  Yufan Chen
-# Date                     :  Dec 09,2022
-# Input                    :  input(R):   input dataframe 
-#                             colvar(R):  column variable 
-#                             rowvar(R):  row variable (can be single variable such
-#                                         as "AEDECOD" or multiple variable such as
-#                                         c("AEBODSYS", "AEDECOD"))
-#                             row_text:   row text 
-#                             N_row(R):   dataframe with N 
-#                             col_order:  ordering column name. e.g. "n_5". 
-#                                         Default is NULL and PTs will be ordered by row-wise sum
-#                             subset:     subset criteria
-# Output                   :  
-# Remarks                  :  Required packages: dplyr, tidyr
-# Function Sample Call     :  countpctpt(qc = adae, colvar = "TRT01PN", rowvar = "AEDECOD",
-#                                        row_text = "Subjects with 1 or more AEs", 
-#                                        N_row = first_row, col_order = "n_5")
-# Modification History
-#Rev        Modified By                   Reporting Effort         Date      Description
-##################################################################################################
-
-countpctpt <- function(input, colvar, rowvar, row_text, N_row, col_order = NULL, subset = NULL){
+#' Compute count and percentage of SOC/PT
+#'
+#' compute count and percentage of SOC/PT by column variable with an ordering
+#' @param input input dataframe 
+#' @param colvar column variable 
+#' @param rowvar row variable (can be single variable such as "AEDECOD" or multiple variable such as c("AEBODSYS", "AEDECOD"))
+#' @param row_text row text 
+#' @param N_row dataframe with N 
+#' @param col_order ordering column name. e.g. "n_5". Default is NULL and PTs will be ordered by row-wise sum 
+#' @param subset subset criteria. Default = NULL
+#' @return a dataframe containing count and percentage of SOC/PT by colvar
+#' @examples 
+#' countpctpt(qc = adae, colvar = "TRT01PN", rowvar = "AEDECOD",
+#'            row_text = "Subjects with 1 or more AEs", 
+# '           N_row = first_row, col_order = "n_5")
+#' @export
+cntpctpt <- function(input, colvar, rowvar, row_text, N_row, col_order = NULL, subset = NULL){
   ### first N row
   row1 <- input %>%
     group_by(.data[[colvar]], .drop = F) %>% 

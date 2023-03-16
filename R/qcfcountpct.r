@@ -1,24 +1,16 @@
-##################################################################################################
-# Original Reporting Effort:  FDC SCS
-# Program Name             :  qcfcountpct.r
-# R Version                :  4.0.5
-# Short Description        :  R functions to compute count and percentage of character variables
-# Author                   :  Yufan Chen
-# Date                     :  Dec 09,2022
-# Input                    :  input(R): input dataframe 
-#                             colvar(R): column variable 
-#                             row_text: row text 
-#                             N_row(R): dataframe with N 
-#                             subset: subset criteria
-# Output                   :  
-# Remarks                  :  Required packages: dplyr, tidyr
-# Function Sample Call     :  countpct(input = adae, colvar = "TRT01PN", N_row = first_row,
-#                                      row_text = "Subjects with 1 or more AEs", subset = "SEX == "Female")
-# Modification History
-#Rev        Modified By                   Reporting Effort         Date      Description
-##################################################################################################
-
-countpct <- function(input, colvar, row_text, N_row, subset = NULL){
+#' Compute count and percentage
+#'
+#' compute count and percentage by column variable
+#' @param input input dataframe 
+#' @param colvar column variable 
+#' @param row_text row text 
+#' @param N_row dataframe with N 
+#' @param subset subset criteria. Default = NULL
+#' @return a dataframe containing count and percentage by colvar
+#' @examples 
+#' countpct(input = adae, colvar = "TRT01PN", N_row = first_row, row_text = "Subjects with 1 or more AEs", subset = "SEX == "Female")
+#' @export
+cntpct <- function(input, colvar, row_text, N_row, subset = NULL){
   ### first N row
   row1 <- input %>%
     group_by(.data[[colvar]], .drop = F) %>% 

@@ -1,29 +1,16 @@
-##################################################################################################
-# Original Reporting Effort:  THR1003/DBR_CSR/RE_CSR
-# Program Name             :  qcfdemofuns.r
-# R Version                :  4.1.0
-# Short Description        :  R functions to create demographic table
-# Author                   :  Yufan Chen
-# Date                     :  APR 30,2021
-# Input                    :  cat_row(), num_row() and demo: rows for categorical and continuous variables
-#                             input:         input dataset
-#                             colvar:        column variable
-#                             rowvar:        row variable
-#                             N_row:         dataframe with N
-#                             keep:          if = TRUE, keep all levels
-#                             digit:         the original digit of the continuous variable
-#                             var_list:      variable list in demo table
-#                             con_var_list:  List of continuous variables that concatenate to the corresponding categorical variables
-#                             drop_var_list: Variable that don't keep all levels in the output
-#                             
-# Output                   :  
-# Remarks                  :  Required packages: dplyr, tidyr
-# function Sample Call     :
 
-# Modification History
-#Rev        Modified By                   Reporting Effort         Date      Description
-##################################################################################################
-
+#' Create Rows for Categorical Variables
+#'
+#' Function to create rows for categorical variables in demographic table
+#' @param data input dataframe 
+#' @param colvar column variable 
+#' @param rowvar row variable
+#' @param N_row a dataframe with denominator N
+#' @param keep if = TRUE, keep all factor levels
+#' @return dataframe with demographic rows 
+#' @examples 
+#' cat_row(adsl, "TRT01P", "SEX", N_row = firstrow)
+#' @export
 ### Categorical variable rows
 cat_row <- function(data, colvar, rowvar, N_row, keep = TRUE){
   # Calculate count and percentage
@@ -57,6 +44,18 @@ cat_row <- function(data, colvar, rowvar, N_row, keep = TRUE){
   return(tab5)
 }
 
+
+#' Create Rows for Continuous Variables
+#'
+#' Function to create rows for continuous variables in demographic table
+#' @param data input dataframe 
+#' @param colvar column variable 
+#' @param rowvar row variable
+#' @param digit number of decimal place to report
+#' @return dataframe with demographic rows 
+#' @examples 
+#' num_row(adsl, "TRT01P", "AGE", digit = 1)
+#' @export
 ### Numeric variable rows
 num_row <- function(data, colvar, rowvar, digit){
   # Calculate mean, median and range
@@ -111,8 +110,35 @@ num_row <- function(data, colvar, rowvar, digit){
   return(tab7)
 }
 
+
+#' Create Rows for Continuous Variables
+#'
+#' Function to create rows for continuous variables in demographic table
+#' @param input input dataframe 
+#' @param colvar column variable 
+#' @param N_row a dataframe with denominator N
+#' @param var_list variable list in demo table
+#' @param con_var_list List of continuous variables that concatenate to the corresponding categorical variables
+#' @param drop_var_list Variable that don't keep all levels in the output
+#' @param max_digit maximum number of decimal place to report
+#' @return dataframe with demographic rows 
+#' @examples 
+#' ### Create variable list based on DPS
+#' var_list <- c("AGE", "AGEGR1", "SEX", "RACEGR1", "ETHNIC", "REGION2", "REGION1", "WEIGHTBL", "HEIGHTBL",
+#'              "BMIBL", "BMIBLG1", "WHOFCBL", "PAHETBL", "PAHDURY")
+#'# list of variable labels displayed in the table
+#'names(var_list) <- c("Age, years", "", "Sex", "Race", "Ethnicity", "Region", "Geographical region", "Weight, kg", "Height, cm", 
+#'                     "Body mass index, kg/m2", "", "WHO FC", " PAH etiology", "Time since diagnosis, years")
+#'# List of continuous variables that concatenate to the corresponding categorical variables
+#'var_list1 <- c("AGEGR1", "BMIBLG1")
+#'# Variable that don't keep all levels in the output
+#'var_list2 <- "PAHETBL"
+#'
+#'tab_final <- demo(adsl1, colvar = "TRT01PN", N_row = first_row[[1]], var_list = var_list, 
+#'                  con_var_list = var_list1, drop_var_list = var_list2)
+#' @export
 ### create demo table 
-demo <- function(input, colvar, N_row, var_list, con_var_list, drop_var_list){
+demo <- function(input, colvar, N_row, var_list, con_var_list, drop_var_list, max_digit = 2){
   
   tab_final <- data.frame()
   
@@ -121,7 +147,7 @@ demo <- function(input, colvar, N_row, var_list, con_var_list, drop_var_list){
     
     # Number of decimal place in the original data
     if (class(input[[var_list[i]]]) == "numeric"){
-      digit0 <- Getdigit(input, var_list[i])
+      digit0 <- Getdigit(input, var_list[i], max_digit)
     } 
     
     # Build rows for numeric and categorical variables separately
