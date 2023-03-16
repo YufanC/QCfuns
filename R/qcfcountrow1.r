@@ -9,7 +9,7 @@
 #' @examples 
 #' cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
 #' @export
-countrow1 <- function(input, colvar, row_text = NULL, subset = "TRUE"){
+countrow1 <- function(input, colvar = "TRT01P", row_text = "Analysis set: Safety", subset = "TRUE"){
   first_row <- input %>% 
     filter(eval(parse(text = subset))) %>% 
     group_by(.data[[colvar]], .drop = F) %>% 

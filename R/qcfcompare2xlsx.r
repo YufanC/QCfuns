@@ -14,7 +14,7 @@
 #' @export
 #' @import openxlsx
 #' @importFrom arsenal comparedf
-compare2xlsx <- function(qc, rtf, path = qc, filename, max_diff = 50, max_diff_per_var = 10, version = TRUE) {
+compare2xlsx <- function(qc, rtf, path = qc, filename = "TSIDEM01", max_diff = 50, max_diff_per_var = 10, version = TRUE) {
   
   # Check whether the number of columns matches
   if (length(qc) != length(rtf)){

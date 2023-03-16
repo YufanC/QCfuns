@@ -12,7 +12,7 @@
 #' @examples 
 #' chgfb(adlb, "AVAL", "CHG", rowvar = c("PARAM", "TRT01P", "AVISIT"), max_digit = 3, keep = FALSE)
 #' @export
-chgfb <- function(input, val, chg, rowvar, stats_list = c("N", "Mean", "SD", "Median", "Min", "Max"), max_digit = 2, keep = TRUE){
+chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT01P", "AVISIT"), stats_list = c("N", "Mean", "SD", "Median", "Min", "Max"), max_digit = 2, keep = TRUE){
   
   if(length(rowvar) == 2){
     
@@ -21,7 +21,7 @@ chgfb <- function(input, val, chg, rowvar, stats_list = c("N", "Mean", "SD", "Me
       filter(!is.na(.data[[val]])) %>% 
       # Get the original decimal place
       rowwise() %>% 
-      mutate(digit0 = ifelse(vgetdigit(.data[[val]]) >= max_digit, 2, vgetdigit(.data[[val]]))) %>% 
+      mutate(digit0 = ifelse(getdigit(.data[[val]]) >= max_digit, 2, getdigit(.data[[val]]))) %>% 
       ungroup() %>% 
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .drop = !keep) %>% 
       summarise(N      = ifelse(sum(!is.na(.data[[val]])) == 0, 0, sum(!is.na(.data[[val]]))),
@@ -41,8 +41,8 @@ chgfb <- function(input, val, chg, rowvar, stats_list = c("N", "Mean", "SD", "Me
       # Get the original decimal place
       rowwise() %>% 
       mutate(digit0 = ifelse(chg != "PCHG", 
-                             ifelse(vgetdigit(.data[[chg]]) >= max_digit, 2, vgetdigit(.data[[chg]])),
-                             ifelse(vgetdigit(.data[[val]]) >= max_digit, 2, vgetdigit(.data[[val]])))) %>% 
+                             ifelse(getdigit(.data[[chg]]) >= max_digit, 2, getdigit(.data[[chg]])),
+                             ifelse(getdigit(.data[[val]]) >= max_digit, 2, getdigit(.data[[val]])))) %>% 
       ungroup() %>% 
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .drop = !keep) %>% 
       summarise(Base_mean  = formatC(mean(BASE, na.rm = T), format = "f", digits = max(digit0) + 1), 
@@ -88,7 +88,7 @@ chgfb <- function(input, val, chg, rowvar, stats_list = c("N", "Mean", "SD", "Me
       filter(!is.na(.data[[val]])) %>% 
       # Get the original decimal place
       rowwise() %>% 
-      mutate(digit0 = ifelse(vgetdigit(.data[[val]]) >= max_digit, 2, vgetdigit(.data[[val]]))) %>% 
+      mutate(digit0 = ifelse(getdigit(.data[[val]]) >= max_digit, 2, getdigit(.data[[val]]))) %>% 
       ungroup() %>% 
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .data[[rowvar[3]]], .drop = !keep) %>% 
       summarise(N      = ifelse(sum(!is.na(.data[[val]])) == 0, 0, sum(!is.na(.data[[val]]))),
@@ -108,8 +108,8 @@ chgfb <- function(input, val, chg, rowvar, stats_list = c("N", "Mean", "SD", "Me
       # Get the original decimal place
       rowwise() %>% 
       mutate(digit0 = ifelse(chg != "PCHG", 
-                             ifelse(vgetdigit(.data[[chg]]) >= max_digit, 2, vgetdigit(.data[[chg]])),
-                             ifelse(vgetdigit(.data[[val]]) >= max_digit, 2, vgetdigit(.data[[val]])))) %>% 
+                             ifelse(getdigit(.data[[chg]]) >= max_digit, 2, getdigit(.data[[chg]])),
+                             ifelse(getdigit(.data[[val]]) >= max_digit, 2, getdigit(.data[[val]])))) %>% 
       ungroup() %>% 
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .data[[rowvar[3]]], .drop = !keep) %>% 
       summarise(Base_mean  = formatC(mean(BASE, na.rm = T), format = "f", digits = max(digit0) + 1), 

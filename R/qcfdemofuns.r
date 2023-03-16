@@ -12,7 +12,7 @@
 #' cat_row(adsl, "TRT01P", "SEX", N_row = firstrow)
 #' @export
 ### Categorical variable rows
-cat_row <- function(data, colvar, rowvar, N_row, keep = TRUE){
+cat_row <- function(data, colvar = "TRT01P", rowvar = "SEX", N_row, keep = TRUE){
   # Calculate count and percentage
   tab1 <- data %>% 
     filter(!is.na(.data[[rowvar]])) %>% 
@@ -57,7 +57,7 @@ cat_row <- function(data, colvar, rowvar, N_row, keep = TRUE){
 #' num_row(adsl, "TRT01P", "AGE", digit = 1)
 #' @export
 ### Numeric variable rows
-num_row <- function(data, colvar, rowvar, digit){
+num_row <- function(data, colvar = "TRT01P", rowvar = "AGE", digit){
   # Calculate mean, median and range
   tab1 <- data %>% 
     filter(!is.na(.data[[rowvar]])) %>% 
@@ -138,7 +138,7 @@ num_row <- function(data, colvar, rowvar, digit){
 #'                  con_var_list = var_list1, drop_var_list = var_list2)
 #' @export
 ### create demo table 
-demo <- function(input, colvar, N_row, var_list, con_var_list, drop_var_list, max_digit = 2){
+demo <- function(input, colvar = "TRT01P", N_row, var_list = c("AGE", "AGEGR1", "SEX"), con_var_list = "AGEGR1", drop_var_list = NULL, max_digit = 2){
   
   tab_final <- data.frame()
   

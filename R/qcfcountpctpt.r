@@ -14,7 +14,7 @@
 #'            row_text = "Subjects with 1 or more AEs", 
 # '           N_row = first_row, col_order = "n_5")
 #' @export
-cntpctpt <- function(input, colvar, rowvar, row_text, N_row, col_order = NULL, subset = NULL){
+cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"), row_text = "Subjects with 1 or more AEs", N_row, col_order = NULL, subset = NULL){
   ### first N row
   row1 <- input %>%
     group_by(.data[[colvar]], .drop = F) %>% 

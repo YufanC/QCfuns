@@ -10,7 +10,7 @@
 #' @import dplyr
 #' @import stringr
 
-rtf2df <- function(filename, level = NULL){
+rtf2df <- function(filename = "tsidem01", level = NULL){
   
   if (is.null(level)) {
     a_rtf <- striprtf::read_rtf(read_path(opath, paste0(str_to_lower(filename), ".rtf")))

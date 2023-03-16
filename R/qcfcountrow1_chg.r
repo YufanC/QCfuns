@@ -9,7 +9,7 @@
 #' @examples 
 #' cntrow1_chg(input = adlb, colvar = "TRT01P", row_text = "Analysis set: Full")
 #' @export
-cntrow1_chg <- function(input, colvar, row_text = NULL, subset = "TRUE"){
+cntrow1_chg <- function(input, colvar = "TRT01P", row_text = "Analysis set: Full", subset = "TRUE"){
   first_row <- input %>%
     filter(eval(parse(text = subset))) %>% 
     group_by(.data[[colvar]]) %>%
