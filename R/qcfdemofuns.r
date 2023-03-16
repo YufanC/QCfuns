@@ -111,9 +111,9 @@ num_row <- function(data, colvar, rowvar, digit){
 }
 
 
-#' Create Rows for Continuous Variables
+#' Create Demographic Rows
 #'
-#' Function to create rows for continuous variables in demographic table
+#' Function to create demographic rows 
 #' @param input input dataframe 
 #' @param colvar column variable 
 #' @param N_row a dataframe with denominator N

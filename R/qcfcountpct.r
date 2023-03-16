@@ -10,6 +10,7 @@
 #' @examples 
 #' countpct(input = adae, colvar = "TRT01PN", N_row = first_row, row_text = "Subjects with 1 or more AEs", subset = "SEX == "Female")
 #' @export
+#' @import tidyr
 cntpct <- function(input, colvar, row_text, N_row, subset = NULL){
   ### first N row
   row1 <- input %>%

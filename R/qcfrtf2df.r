@@ -8,6 +8,7 @@
 #' dat <- rtf2df("tsidem01", "PREPROD");
 #' @export
 #' @import dplyr
+#' @import stringr
 
 rtf2df <- function(filename, level = NULL){
   

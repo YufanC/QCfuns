@@ -7,6 +7,7 @@ RoxygenNote: 7.1.1
 Imports:
   arsenal    (>= 3.6.3),
   dplyr      (>= 1.0.7),
+  tidyr      (>= 1.3.0),
   openxlsx   (>= 4.2.5),
-  stringr    (>= 1.4.1),
-  striprtf   (>= 0.5.3)
+  striprtf   (>= 0.5.3),
+  stringr    (>= 1.4.1) 

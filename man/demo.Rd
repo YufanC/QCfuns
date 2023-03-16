@@ -2,7 +2,7 @@
 % Please edit documentation in R/qcfdemofuns.r
 \name{demo}
 \alias{demo}
-\title{Create Rows for Continuous Variables}
+\title{Create Demographic Rows}
 \usage{
 demo(
   input,
@@ -33,7 +33,7 @@ demo(
 dataframe with demographic rows
 }
 \description{
-Function to create rows for continuous variables in demographic table
+Function to create demographic rows
 }
 \examples{
 ### Create variable list based on DPS

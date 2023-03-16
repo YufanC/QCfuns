@@ -12,6 +12,8 @@
 #' @examples 
 #' compare2xlsx(qc = tab_qc, rtf = tab_rtf, path = qc, filename = "tableid")
 #' @export
+#' @import openxlsx
+#' @importFrom arsenal comparedf
 compare2xlsx <- function(qc, rtf, path = qc, filename, max_diff = 50, max_diff_per_var = 10, version = TRUE) {
   
   # Check whether the number of columns matches
