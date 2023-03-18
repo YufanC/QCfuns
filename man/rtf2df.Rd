@@ -4,7 +4,7 @@
 \alias{rtf2df}
 \title{Convert rtf to dataframe}
 \usage{
-rtf2df(filename, level = NULL)
+rtf2df(filename = "tsidem01", level = NULL)
 }
 \arguments{
 \item{filename}{the rtf filename you want to read in}

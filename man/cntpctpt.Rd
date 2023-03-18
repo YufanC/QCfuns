@@ -6,9 +6,9 @@
 \usage{
 cntpctpt(
   input,
-  colvar,
-  rowvar,
-  row_text,
+  colvar = "TRT01P",
+  rowvar = c("AEBODSYS", "AEDECOD"),
+  row_text = "Subjects with 1 or more AEs",
   N_row,
   col_order = NULL,
   subset = NULL

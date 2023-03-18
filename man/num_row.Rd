@@ -4,7 +4,7 @@
 \alias{num_row}
 \title{Create Rows for Continuous Variables}
 \usage{
-num_row(data, colvar, rowvar, digit)
+num_row(data, colvar = "TRT01P", rowvar = "AGE", stats_list, digit)
 }
 \arguments{
 \item{data}{input dataframe}
@@ -12,6 +12,8 @@ num_row(data, colvar, rowvar, digit)
 \item{colvar}{column variable}
 
 \item{rowvar}{row variable}
+
+\item{stats_list}{stats variables to display. Accepted values are c("Mean_SD", "Median", "Range", "Geo_mean", "Geo_CV", "Geo_CL") and the order of variables matters}
 
 \item{digit}{number of decimal place to report}
 }

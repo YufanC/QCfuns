@@ -4,7 +4,7 @@
 \alias{cat_row}
 \title{Create Rows for Categorical Variables}
 \usage{
-cat_row(data, colvar, rowvar, N_row, keep = TRUE)
+cat_row(data, colvar = "TRT01P", rowvar = "SEX", N_row, keep = TRUE)
 }
 \arguments{
 \item{data}{input dataframe}

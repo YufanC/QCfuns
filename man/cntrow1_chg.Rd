@@ -4,7 +4,12 @@
 \alias{cntrow1_chg}
 \title{Create Analysis Set Row for Change From Baseline Table}
 \usage{
-cntrow1_chg(input, colvar, row_text = NULL, subset = "TRUE")
+cntrow1_chg(
+  input,
+  colvar = "TRT01P",
+  row_text = "Analysis set: Full",
+  subset = "TRUE"
+)
 }
 \arguments{
 \item{input}{input dataframe}

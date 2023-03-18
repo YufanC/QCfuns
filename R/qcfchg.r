@@ -30,7 +30,7 @@ chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT01P"
                 Median = formatC(median(.data[[val]], na.rm = T), format = "f", digits = max(digit0) + 1), 
                 Min    = formatC(min(.data[[val]], na.rm = T), format = "f", digits = max(digit0)), 
                 Max    = formatC(max(.data[[val]], na.rm = T), format = "f", digits = max(digit0)),
-                CV     = formatC(sd(.data[[val]], na.rm = T)/mean(.data[[val]], na.rm = T)*100, format = "f", digits = max(digit0) + 1),
+                CV     = formatC(sd(.data[[val]], na.rm = T)/mean(.data[[val]], na.rm = T), format = "f", digits = max(digit0) + 1),
                 .groups = "drop") %>% 
       mutate(across(everything(), ~replace(., trimws(.)=="NaN"|trimws(.)=="NA"|trimws(.)=="Inf"|trimws(.)=="-Inf", NA))) %>% 
       select(rowvar[1], rowvar[2], stats_list[!stats_list %in% "Base_mean"])
@@ -52,7 +52,7 @@ chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT01P"
                 Median = formatC(median(.data[[chg]], na.rm = T), format = "f", digits = max(digit0) + 1), 
                 Min    = formatC(min(.data[[chg]], na.rm = T), format = "f", digits = max(digit0)), 
                 Max    = formatC(max(.data[[chg]], na.rm = T), format = "f", digits = max(digit0)),
-                CV     = formatC(sd(.data[[chg]], na.rm = T)/mean(.data[[chg]], na.rm = T)*100, format = "f", digits = max(digit0) + 1),
+                CV     = formatC(sd(.data[[chg]], na.rm = T)/mean(.data[[chg]], na.rm = T), format = "f", digits = max(digit0) + 1),
                 .groups = "drop") %>% 
       mutate(across(everything(), ~replace(., trimws(.)=="NaN"|trimws(.)=="NA"|trimws(.)=="Inf"|trimws(.)=="-Inf", NA))) %>% 
       select(rowvar[1], rowvar[2], stats_list)
@@ -97,7 +97,7 @@ chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT01P"
                 Median = formatC(median(.data[[val]], na.rm = T), format = "f", digits = max(digit0) + 1), 
                 Min    = formatC(min(.data[[val]], na.rm = T), format = "f", digits = max(digit0)), 
                 Max    = formatC(max(.data[[val]], na.rm = T), format = "f", digits = max(digit0)),
-                CV     = formatC(sd(.data[[val]], na.rm = T)/mean(.data[[val]], na.rm = T)*100, format = "f", digits = max(digit0) + 1),
+                CV     = formatC(sd(.data[[val]], na.rm = T)/mean(.data[[val]], na.rm = T), format = "f", digits = max(digit0) + 1),
                 .groups = "drop") %>% 
       mutate(across(everything(), ~replace(., trimws(.)=="NaN"|trimws(.)=="NA"|trimws(.)=="Inf"|trimws(.)=="-Inf", NA))) %>% 
       select(rowvar[1], rowvar[2], rowvar[3], stats_list[!stats_list %in% "Base_mean"])
@@ -119,7 +119,7 @@ chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT01P"
                 Median = formatC(median(.data[[chg]], na.rm = T), format = "f", digits = max(digit0) + 1), 
                 Min    = formatC(min(.data[[chg]], na.rm = T), format = "f", digits = max(digit0)), 
                 Max    = formatC(max(.data[[chg]], na.rm = T), format = "f", digits = max(digit0)),
-                CV     = formatC(sd(.data[[chg]], na.rm = T)/mean(.data[[chg]], na.rm = T)*100, format = "f", digits = max(digit0) + 1),
+                CV     = formatC(sd(.data[[chg]], na.rm = T)/mean(.data[[chg]], na.rm = T), format = "f", digits = max(digit0) + 1),
                 .groups = "drop") %>% 
       mutate(across(everything(), ~replace(., trimws(.)=="NaN"|trimws(.)=="NA"|trimws(.)=="Inf"|trimws(.)=="-Inf", NA))) %>% 
       select(rowvar[1], rowvar[2], rowvar[3], stats_list)

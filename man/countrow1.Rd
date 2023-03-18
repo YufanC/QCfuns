@@ -4,7 +4,12 @@
 \alias{countrow1}
 \title{Create Analysis Set Row}
 \usage{
-countrow1(input, colvar, row_text = NULL, subset = "TRUE")
+countrow1(
+  input,
+  colvar = "TRT01P",
+  row_text = "Analysis set: Safety",
+  subset = "TRUE"
+)
 }
 \arguments{
 \item{input}{input dataframe}

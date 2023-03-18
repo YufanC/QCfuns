@@ -4,7 +4,13 @@
 \alias{cntpct}
 \title{Compute count and percentage}
 \usage{
-cntpct(input, colvar, row_text, N_row, subset = NULL)
+cntpct(
+  input,
+  colvar = "TRT01P",
+  row_text = "Subjects with 1 or more AEs",
+  N_row,
+  subset = NULL
+)
 }
 \arguments{
 \item{input}{input dataframe}

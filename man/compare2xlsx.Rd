@@ -8,7 +8,7 @@ compare2xlsx(
   qc,
   rtf,
   path = qc,
-  filename,
+  filename = "TSIDEM01",
   max_diff = 50,
   max_diff_per_var = 10,
   version = TRUE

@@ -3,6 +3,7 @@ Authors@R: person("Yufan", "Chen", email = "ychen209@its.jnj.com", role = c("aut
 Type: Package
 Title: Collection of R QC functions 
 Version: 1.0.0
+Encoding: UTF-8
 RoxygenNote: 7.1.1
 Imports:
   arsenal    (>= 3.6.3),

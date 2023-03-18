@@ -6,9 +6,9 @@
 \usage{
 chgfb(
   input,
-  val,
-  chg,
-  rowvar,
+  val = "AVAL",
+  chg = "CHG",
+  rowvar = c("PARAM", "TRT01P", "AVISIT"),
   stats_list = c("N", "Mean", "SD", "Median", "Min", "Max"),
   max_digit = 2,
   keep = TRUE

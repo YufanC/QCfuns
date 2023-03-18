@@ -6,11 +6,12 @@
 \usage{
 demo(
   input,
-  colvar,
+  colvar = "TRT01P",
   N_row,
-  var_list,
-  con_var_list,
-  drop_var_list,
+  stats_list = c("Mean_SD", "Median", "Range"),
+  var_list = c("AGE", "AGEGR1", "SEX"),
+  con_var_list = "AGEGR1",
+  drop_var_list = NULL,
   max_digit = 2
 )
 }
@@ -20,6 +21,8 @@ demo(
 \item{colvar}{column variable}
 
 \item{N_row}{a dataframe with denominator N}
+
+\item{stats_list}{stats variables to display. Accepted values are c("Mean_SD", "Median", "Range", "Geo_mean", "Geo_CV", "Geo_CL") and the order of variables matters}
 
 \item{var_list}{variable list in demo table}
 
@@ -39,11 +42,14 @@ Function to create demographic rows
 ### Create variable list based on DPS
 var_list <- c("AGE", "AGEGR1", "SEX", "RACEGR1", "ETHNIC", "REGION2", "REGION1", "WEIGHTBL", "HEIGHTBL",
              "BMIBL", "BMIBLG1", "WHOFCBL", "PAHETBL", "PAHDURY")
+             
 # list of variable labels displayed in the table
 names(var_list) <- c("Age, years", "", "Sex", "Race", "Ethnicity", "Region", "Geographical region", "Weight, kg", "Height, cm", 
                     "Body mass index, kg/m2", "", "WHO FC", " PAH etiology", "Time since diagnosis, years")
+                    
 # List of continuous variables that concatenate to the corresponding categorical variables
 var_list1 <- c("AGEGR1", "BMIBLG1")
+
 # Variable that don't keep all levels in the output
 var_list2 <- "PAHETBL"
 
