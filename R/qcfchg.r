@@ -21,7 +21,7 @@ chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT01P"
       filter(!is.na(.data[[val]])) %>% 
       # Get the original decimal place
       rowwise() %>% 
-      mutate(digit0 = ifelse(getdigit(.data[[val]]) >= max_digit, 2, getdigit(.data[[val]]))) %>% 
+      mutate(digit0 = getdigit(.data[[val]], max_digit = max_digit)) %>% 
       ungroup() %>% 
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .drop = !keep) %>% 
       summarise(N      = ifelse(sum(!is.na(.data[[val]])) == 0, 0, sum(!is.na(.data[[val]]))),
@@ -41,8 +41,8 @@ chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT01P"
       # Get the original decimal place
       rowwise() %>% 
       mutate(digit0 = ifelse(chg != "PCHG", 
-                             ifelse(getdigit(.data[[chg]]) >= max_digit, 2, getdigit(.data[[chg]])),
-                             ifelse(getdigit(.data[[val]]) >= max_digit, 2, getdigit(.data[[val]])))) %>% 
+                             getdigit(.data[[chg]], max_digit = max_digit),
+                             getdigit(.data[[val]], max_digit = max_digit))) %>% 
       ungroup() %>% 
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .drop = !keep) %>% 
       summarise(Base_mean  = formatC(mean(BASE, na.rm = T), format = "f", digits = max(digit0) + 1), 
@@ -88,7 +88,7 @@ chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT01P"
       filter(!is.na(.data[[val]])) %>% 
       # Get the original decimal place
       rowwise() %>% 
-      mutate(digit0 = ifelse(getdigit(.data[[val]]) >= max_digit, 2, getdigit(.data[[val]]))) %>% 
+      mutate(digit0 = getdigit(.data[[val]], max_digit = max_digit)) %>% 
       ungroup() %>% 
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .data[[rowvar[3]]], .drop = !keep) %>% 
       summarise(N      = ifelse(sum(!is.na(.data[[val]])) == 0, 0, sum(!is.na(.data[[val]]))),
@@ -108,8 +108,8 @@ chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT01P"
       # Get the original decimal place
       rowwise() %>% 
       mutate(digit0 = ifelse(chg != "PCHG", 
-                             ifelse(getdigit(.data[[chg]]) >= max_digit, 2, getdigit(.data[[chg]])),
-                             ifelse(getdigit(.data[[val]]) >= max_digit, 2, getdigit(.data[[val]])))) %>% 
+                             getdigit(.data[[chg]], max_digit = max_digit),
+                             getdigit(.data[[val]], max_digit = max_digit))) %>% 
       ungroup() %>% 
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .data[[rowvar[3]]], .drop = !keep) %>% 
       summarise(Base_mean  = formatC(mean(BASE, na.rm = T), format = "f", digits = max(digit0) + 1), 
