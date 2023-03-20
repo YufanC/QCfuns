@@ -141,7 +141,7 @@ chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT01P"
       summarise(.groups = "drop") %>% 
       arrange(.data[[rowvar[2]]]) %>%
       left_join(param_row, by = rowvar[1]) %>%
-      group_by(.data[[rowvar[1]]]) %>% 
+      group_by(.data[[rowvar[1]]], .drop = !keep) %>% 
       mutate(ord_trt = 1:n(),
              ord_visit = 0) %>% 
       ungroup()
@@ -161,7 +161,7 @@ chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT01P"
       select(row_text, everything(), -c(.data[[rowvar[1]]], .data[[rowvar[2]]], .data[[rowvar[3]]], ord_param, ord_trt, ord_visit))
     
   } else {
-    warning("rowvar has to have 2 or 3 elements")
+    stop("rowvar has to have 2 or 3 elements")
   }
   
   return(tab_combine)

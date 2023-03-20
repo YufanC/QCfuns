@@ -18,7 +18,7 @@ compare2xlsx <- function(qc, rtf, path = qc, filename = "TSIDEM01", max_diff = 5
   
   # Check whether the number of columns matches
   if (length(qc) != length(rtf)){
-    warning("qc and rtf dataframes have different columns")
+    stop("qc and rtf dataframes have different columns")
   } else {
     # Get rid of the leading and trailing whitespace from the character string
     rtfdf <- as.data.frame(sapply(rtf, trimws))
