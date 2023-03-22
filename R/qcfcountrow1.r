@@ -5,22 +5,32 @@
 #' @param colvar column variable 
 #' @param row_text row text 
 #' @param subset subset criteria. Default = "TRUE" means no subsetting
-#' @return Analysis set row
+#' @return Analysis set row list containing two elements.
+#' The first element is a dataframe with N that can be passed to following functions
+#' The second element is the analysis set row that can be combined with other following rows
 #' @examples 
-#' cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
+#' adae <- data.frame(
+#'   USUBJID = 1:10,
+#'   TRT01P = sample(c("A", "B", "C"), 10, replace = T))
+#'   
+#' first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
+#' 
+#' first_row[[1]]
+#' first_row[[2]]
 #' @export
-cntrow1 <- function(input, colvar = "TRT01P", row_text = "Analysis set: Safety", subset = "TRUE"){
+qc_cntrow1 <- function(input, colvar = "TRT01P", row_text = "Analysis set: Safety", subset = "TRUE"){
   first_row <- input %>% 
     filter(eval(parse(text = subset))) %>% 
     group_by(.data[[colvar]], .drop = F) %>% 
-    count() %>% 
+    summarise(n = n_distinct(USUBJID), .groups = "drop") %>%
     mutate(N_trt = n) %>% 
     select(-n)
   
   first_row1 <- first_row %>% 
     distinct(.data[[colvar]], N_trt) %>% 
     pivot_wider(names_from = .data[[colvar]],
-                values_from = N_trt)
+                values_from = N_trt)  %>% 
+    mutate(across(where(is.numeric), as.character))
   
   first_row2 <- cbind(row_text, first_row1)
   

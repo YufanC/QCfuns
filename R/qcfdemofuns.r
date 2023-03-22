@@ -2,19 +2,27 @@
 #' Create Rows for Categorical Variables
 #'
 #' Function to create rows for categorical variables in demographic table
-#' @param data input dataframe 
-#' @param colvar column variable 
+#' @inheritParams qc_cntrow1
 #' @param rowvar row variable
 #' @param N_row a dataframe with denominator N
 #' @param keep if = TRUE, keep all factor levels
 #' @return dataframe with demographic rows 
 #' @examples 
-#' cat_row(adsl, "TRT01P", "SEX", N_row = firstrow)
+#' adsl <- data.frame(
+#'   USUBJID = 1:10,
+#'   TRT01P = sample(c("A", "B", "C"), 10, replace = T),
+#'   SEX = as.factor(sample(c("Female", "Male"), 10, replace = T)))
+#' 
+#' ### Create analysis row first
+#' first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
+#'   
+#' tab1 <- qc_cat_row(adsl, "TRT01P", "SEX", N_row = firstrow[[1]])
+#' tab1
 #' @export
 ### Categorical variable rows
-cat_row <- function(data, colvar = "TRT01P", rowvar = "SEX", N_row, keep = TRUE){
+qc_cat_row <- function(input, colvar = "TRT01P", rowvar = "SEX", N_row, keep = TRUE){
   # Calculate count and percentage
-  tab1 <- data %>% 
+  tab1 <- input %>% 
     filter(!is.na(.data[[rowvar]])) %>% 
     group_by(.data[[colvar]], .data[[rowvar]], .drop = !keep) %>% 
     summarise(n = n_distinct(USUBJID), .groups = "drop") %>%
@@ -48,19 +56,25 @@ cat_row <- function(data, colvar = "TRT01P", rowvar = "SEX", N_row, keep = TRUE)
 #' Create Rows for Continuous Variables
 #'
 #' Function to create rows for continuous variables in demographic table
-#' @param data input dataframe 
-#' @param colvar column variable 
+#' @inheritParams qc_cntrow1
 #' @param rowvar row variable
 #' @param stats_list stats variables to display. Accepted values are c("Mean_SD", "Median", "Range", "Geo_mean", "Geo_CV", "Geo_CL") and the order of variables matters
 #' @param digit number of decimal place to report
 #' @return dataframe with demographic rows 
 #' @examples 
-#' num_row(adsl, "TRT01P", "AGE", digit = 1)
+#' adsl <- data.frame(
+#'   USUBJID = 1:10,
+#'   TRT01P = sample(c("A", "B", "C"), 10, replace = T),
+#'   AGE = sample(18:65, 10, replace = T))
+#'   
+#' tab1 <- qc_num_row(input = adsl, colvar = "TRT01P", rowvar = "AGE", 
+#'                         stats_list = c("Mean_SD", "Median", "Range"), digit = 0)
+#' tab1
 #' @export
 ### Numeric variable rows
-num_row <- function(data, colvar = "TRT01P", rowvar = "AGE", stats_list, digit){
-  # Calculate mean, median and range
-  tab1 <- data %>% 
+qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", stats_list, digit){
+  # Calculate statistics
+  tab1 <- input %>% 
     filter(!is.na(.data[[rowvar]])) %>% 
     group_by(.data[[colvar]], .drop = F) %>% 
     summarise(Mean = mean(.data[[rowvar]], na.rm = T), 
@@ -69,22 +83,27 @@ num_row <- function(data, colvar = "TRT01P", rowvar = "AGE", stats_list, digit){
               Min = min(.data[[rowvar]], na.rm = T), 
               Max = max(.data[[rowvar]], na.rm = T), 
               N_trt = n(),
-              Geo_mean = formatC(exp(mean(log(.data[[rowvar]]), na.rm = T)), format = "f", digits = (digit + 1)),
-              Geo_CV = formatC(exp(sd(log(.data[[rowvar]]), na.rm = T)/mean(log(.data[[rowvar]]), na.rm = T)), format = "f", digits = (digit + 1)),
-              Gmean_LL = exp(mean(log(.data[[rowvar]]), na.rm = T) - 1.96*sd(log(.data[[rowvar]]))/sqrt(n())),
-              Gmean_HL = exp(mean(log(.data[[rowvar]]), na.rm = T) + 1.96*sd(log(.data[[rowvar]]))/sqrt(n())),
+              Geo_mean = ifelse(n() < 1, NA,
+                                formatC(exp(mean(log(.data[[rowvar]][.data[[rowvar]] > 0]), na.rm = T)), format = "f", digits = (digit + 1))),
+              Geo_CV = ifelse(n() <= 1, NA,
+                              formatC(sqrt(exp(sd(log(.data[[rowvar]][.data[[rowvar]] > 0]), na.rm = T)^2) - 1), format = "f", digits = (digit + 1))),
+              Gmean_LL = ifelse(n() <= 1, NA,
+                                exp(mean(log(.data[[rowvar]][.data[[rowvar]] > 0]), na.rm = T) - qt(0.975,df=n()-1)*sd(log(.data[[rowvar]][.data[[rowvar]] > 0]))/sqrt(n()))),
+              Gmean_HL = ifelse(n() <= 1, NA,
+                                exp(mean(log(.data[[rowvar]][.data[[rowvar]] > 0]), na.rm = T) + qt(0.975,df=n()-1)*sd(log(.data[[rowvar]][.data[[rowvar]] > 0]))/sqrt(n()))),
               .groups = "drop") %>% 
     arrange(.data[[colvar]]) %>% 
     mutate(Mean_SD = ifelse(!is.na(SD), 
-                                paste0(formatC(Mean, format = "f", digits = (digit + 1)), 
-                                       ' (', formatC(SD, format = "f", digits = (digit + 2)), ')'), 
-                                paste0(formatC(Mean, format = "f", digits = (digit + 1)), 
-                                       ' (-)')),
+                            paste0(formatC(Mean, format = "f", digits = (digit + 1)), 
+                                   ' (', formatC(SD, format = "f", digits = (digit + 2)), ')'), 
+                            paste0(formatC(Mean, format = "f", digits = (digit + 1)), 
+                                   ' (-)')),
            Median = formatC(Median, format = "f", digits = (digit + 1)),
            Range = paste0("(", formatC(Min, format = "f", digits = digit), "; ", 
                           formatC(Max, format = "f", digits = digit), ")"),
-           Geo_CL = paste0("(", formatC(Gmean_LL, format = "f", digits = (digit + 1)), "; ", 
-                                               formatC(Gmean_HL, format = "f", digits = (digit + 1)), ")"))
+           Geo_CL = ifelse(is.na(Gmean_LL), NA, 
+                           paste0("(", formatC(Gmean_LL, format = "f", digits = (digit + 1)), "; ", 
+                                  formatC(Gmean_HL, format = "f", digits = (digit + 1)), ")")))
   
   tab2 <- tab1 %>%
     select(.data[[colvar]], all_of(stats_list))
@@ -118,7 +137,7 @@ num_row <- function(data, colvar = "TRT01P", rowvar = "AGE", stats_list, digit){
       row_text == "Geo_mean" ~ 'Geometric mean',
       row_text == "Geo_CV" ~ 'Geometric CV',
       row_text == "Geo_CL" ~ '95% CL of geometric mean',
-      .default = row_text
+      TRUE ~ row_text
     ))
   
   return(tab7)
@@ -128,35 +147,42 @@ num_row <- function(data, colvar = "TRT01P", rowvar = "AGE", stats_list, digit){
 #' Create Demographic Rows
 #'
 #' Function to create demographic rows 
-#' @param input input dataframe 
-#' @param colvar column variable 
+#' @inheritParams qc_cntrow1
 #' @param N_row a dataframe with denominator N
-#' @inheritParams num_row
+#' @inheritParams qc_num_row
 #' @param var_list variable list in demo table
 #' @param con_var_list List of continuous variables that concatenate to the corresponding categorical variables
 #' @param drop_var_list Variable that don't keep all levels in the output
 #' @param max_digit maximum number of decimal place to report
 #' @return dataframe with demographic rows 
 #' @examples 
+#' age <- sample(18:65, 10, replace = T)
+#' 
+#' adsl <- data.frame(
+#'   USUBJID = 1:10,
+#'   TRT01P = sample(c("A", "B", "C"), 10, replace = T),
+#'   AGE = age,
+#'   AGEGR1 = ifelse(age < 45, "< 45", ">= 45"),
+#'   SEX = as.factor(sample(c("Female", "Male"), 10, replace = T)))
+#'   
 #' ### Create variable list based on DPS
-#' var_list <- c("AGE", "AGEGR1", "SEX", "RACEGR1", "ETHNIC", "REGION2", "REGION1", "WEIGHTBL", "HEIGHTBL",
-#'              "BMIBL", "BMIBLG1", "WHOFCBL", "PAHETBL", "PAHDURY")
+#' var_list <- c("AGE", "AGEGR1", "SEX")
 #'              
-#'# list of variable labels displayed in the table
-#'names(var_list) <- c("Age, years", "", "Sex", "Race", "Ethnicity", "Region", "Geographical region", "Weight, kg", "Height, cm", 
-#'                     "Body mass index, kg/m2", "", "WHO FC", " PAH etiology", "Time since diagnosis, years")
+#' ### list of variable labels displayed in the table
+#' names(var_list) <- c("Age, years", "", "Sex")
 #'                     
-#'# List of continuous variables that concatenate to the corresponding categorical variables
-#'var_list1 <- c("AGEGR1", "BMIBLG1")
+#' ### List of continuous variables that concatenate to the corresponding categorical variables
+#' var_list1 <- "AGEGR1"
 #'
-#'# Variable that don't keep all levels in the output
-#'var_list2 <- "PAHETBL"
-#'
-#'tab_final <- demo(adsl1, colvar = "TRT01PN", N_row = first_row[[1]], var_list = var_list, 
-#'                  con_var_list = var_list1, drop_var_list = var_list2)
+#' ### Create analysis row first
+#' first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
+#' 
+#' tab1 <- qc_demo(adsl, colvar = "TRT01PN", N_row = first_row[[1]], var_list = var_list, 
+#'                con_var_list = var_list1)
+#' tab1
 #' @export
 ### create demo table 
-demo <- function(input, colvar = "TRT01P", N_row, stats_list = c("Mean_SD", "Median", "Range"), var_list = c("AGE", "AGEGR1", "SEX"), con_var_list = "AGEGR1", drop_var_list = NULL, max_digit = 2){
+qc_demo <- function(input, colvar = "TRT01P", N_row, stats_list = c("Mean_SD", "Median", "Range"), var_list = c("AGE", "AGEGR1", "SEX"), con_var_list = "AGEGR1", drop_var_list = NULL, max_digit = 2){
   
   tab_final <- data.frame()
   
@@ -165,14 +191,14 @@ demo <- function(input, colvar = "TRT01P", N_row, stats_list = c("Mean_SD", "Med
     
     # Number of decimal place in the original data
     if (class(input[[var_list[i]]]) == "numeric"){
-      digit0 <- Getdigit(input, var_list[i], max_digit)
+      digit0 <- getmaxdigit(input, var_list[i], max_digit)
     } 
     
     # Build rows for numeric and categorical variables separately
     if (class(input[[var_list[i]]]) == "numeric"){
-      tab <- num_row(input, colvar, var_list[i], stats_list = stats_list, digit0)
+      tab <- qc_num_row(input, colvar, var_list[i], stats_list = stats_list, digit0)
     } else if (class(input[[var_list[i]]]) %in% c("factor", "character")){
-      tab <- cat_row(input, colvar, var_list[i], N_row, keep = !(var_list[i] %in% drop_var_list))
+      tab <- qc_cat_row(input, colvar, var_list[i], N_row, keep = !(var_list[i] %in% drop_var_list))
     }
     # Append them together, combine group variable with its continuous counterpart
     if (var_list[i] %in% con_var_list){

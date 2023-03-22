@@ -10,9 +10,26 @@
 #' @param keep if = TRUE, keep all levels. Default = FALSE
 #' @return change from baseline table
 #' @examples 
-#' chgfb(adlb, "AVAL", "CHG", rowvar = c("PARAM", "TRT01P", "AVISIT"), max_digit = 3, keep = FALSE)
+#' adsl <- data.frame(
+#'   USUBJID = 1:10,
+#'   TRT01P = sample(c("A", "B", "C"), 10, replace = T))
+#'   
+#' param <- c("Test1", "Test2")
+#' visit <- c("Baseline", "Visit1", "Visit2")
+#' 
+#' adlb0 <- merge(adsl, param)
+#' adlb <- merge(adlb0, visit)
+#' 
+#' adlb$AVAL <- sample(1:100, 60)
+#' adlb$CHG <- sample(seq(-10, 10, by = 0.1), 60)
+#' 
+#' ### Create analysis row first
+#' first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
+#' 
+#' tab1 <- qc_chgfb(adlb, "AVAL", "CHG", rowvar = c("PARAM", "TRT01P", "AVISIT"), max_digit = 0, keep = FALSE)
+#' tab1
 #' @export
-chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT01P", "AVISIT"), stats_list = c("N", "Mean", "SD", "Median", "Min", "Max"), max_digit = 2, keep = TRUE){
+qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT01P", "AVISIT"), stats_list = c("N", "Mean", "SD", "Median", "Min", "Max"), max_digit = 2, keep = TRUE){
   
   if(length(rowvar) == 2){
     

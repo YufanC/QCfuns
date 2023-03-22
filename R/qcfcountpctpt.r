@@ -1,20 +1,29 @@
 #' Compute count and percentage of SOC/PT
 #'
-#' compute count and percentage of SOC/PT by column variable with an ordering
-#' @param input input dataframe 
-#' @param colvar column variable 
+#' compute count and percentage of SOC(class)/PT by column variable with an ordering
+#' @inheritParams qc_cntpct
 #' @param rowvar row variable (can be single variable such as "AEDECOD" or multiple variable such as c("AEBODSYS", "AEDECOD"))
-#' @param row_text row text 
 #' @param N_row dataframe with N 
 #' @param col_order ordering column name. e.g. "n_5". Default is NULL and PTs will be ordered by row-wise sum 
-#' @param subset subset criteria. Default = NULL
 #' @return a dataframe containing count and percentage of SOC/PT by colvar
 #' @examples 
-#' countpctpt(qc = adae, colvar = "TRT01PN", rowvar = "AEDECOD",
-#'            row_text = "Subjects with 1 or more AEs", 
-# '           N_row = first_row, col_order = "n_5")
+#' aedecod <- sample(paste0("PT", 1:3), 10, replace = T)
+#' 
+#' adae <- data.frame(
+#'   USUBJID = 1:10,
+#'   TRT01P = sample(c("A", "B", "C"), 10, replace = T),
+#'   SEX = as.factor(sample(c("Female", "Male"), 10, replace = T)),
+#'   AEBODSYS = ifelse(aedecod == "PT1", "SOC1", "SOC2"),
+#'   AEDECOD = aedecod)
+#' 
+#' ### Create analysis row first
+#' first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
+#' 
+#' tab1 <- cntpctpt(qc = adae, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"),
+#'            row_text = "Subjects with 1 or more AEs", N_row = first_row[[1]])
+#' tab1
 #' @export
-cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"), row_text = "Subjects with 1 or more AEs", N_row, col_order = NULL, subset = NULL){
+qc_cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"), row_text = "Subjects with 1 or more AEs", N_row, col_order = NULL, subset = NULL){
   ### first N row
   row1 <- input %>%
     group_by(.data[[colvar]], .drop = F) %>% 
@@ -78,7 +87,7 @@ cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD")
       relocate(row_text) %>% 
       mutate(across(everything(), ~replace(., is.na(.), "0")))
     
-  } else {
+  } else if (length(rowvar) == 1){
     # row variables - if only one level variable exist
     tab1 <- input %>% 
       group_by(.data[[colvar]], .data[[rowvar]]) %>% 
@@ -99,6 +108,8 @@ cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD")
       mutate(across(everything(), ~replace(., is.na(.), "0"))) %>% 
       ungroup()
     
+  } else {
+    stop("rowvar has to have 1 or 2 elements")
   }
   
   colnames(tab_final) <- c("row_text", levels(as.factor(pull(N_row, colvar))))

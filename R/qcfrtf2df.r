@@ -5,12 +5,12 @@
 #' @param level Choose from "PDEV", "PREPROD" or "PROD". If left blank, find the rtf file in output folder on different levels in sequence of "PDEV", "PREPROD" and "PROD"
 #' @return a dataframe containing all the information from the rtf
 #' @examples 
-#' dat <- rtf2df("tsidem01", "PREPROD");
+#' dat <- qc_rtf2df("tsidem01", "PREPROD")
+#' dat
 #' @export
 #' @import dplyr
 #' @import stringr
-
-rtf2df <- function(filename = "tsidem01", level = NULL){
+qc_rtf2df <- function(filename = "tsidem01", level = NULL){
   
   if (is.null(level)) {
     a_rtf <- striprtf::read_rtf(read_path(opath, paste0(str_to_lower(filename), ".rtf")))

@@ -10,11 +10,11 @@
 #' @param max_diff_per_var maximum number of differences per variable to report
 #' @return compare result in xlsx
 #' @examples 
-#' compare2xlsx(qc = tab_qc, rtf = tab_rtf, path = qc, filename = "tableid")
+#' qc_compare2xlsx(qc = tab_qc, rtf = tab_rtf, path = qc, filename = "tableid")
 #' @export
 #' @import openxlsx
 #' @importFrom arsenal comparedf
-compare2xlsx <- function(qc, rtf, path = qc, filename = "TSIDEM01", max_diff = 50, max_diff_per_var = 10, version = TRUE) {
+qc_compare2xlsx <- function(qc, rtf, path = qc, filename = "TSIDEM01", max_diff = 50, max_diff_per_var = 10, version = TRUE) {
   
   # Check whether the number of columns matches
   if (length(qc) != length(rtf)){

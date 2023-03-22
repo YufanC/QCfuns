@@ -7,7 +7,7 @@
 #' @examples 
 #' Getdigit(adsl, "AGE")
 #' @export
-Getdigit <- function(data, var, max_digit){
+getmaxdigit <- function(data, var, max_digit){
   if (sum((data[[var]] %% 1) == 0) != length(data[[var]])){
     value <- as.character(data[[var]])[(data[[var]] %% 1) != 0]
     maxdigit <- max(nchar(matrix(unlist(strsplit(value, ".", fixed = T)), ncol = 2, byrow = T)[, 2]))

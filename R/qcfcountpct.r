@@ -8,10 +8,23 @@
 #' @param subset subset criteria. Default = NULL
 #' @return a dataframe containing count and percentage by colvar
 #' @examples 
-#' countpct(input = adae, colvar = "TRT01PN", N_row = first_row, row_text = "Subjects with 1 or more AEs", subset = "SEX == "Female")
+#' aedecod <- sample(paste0("PT", 1:3), 10, replace = T)
+#' 
+#' adae <- data.frame(
+#'   USUBJID = 1:10,
+#'   TRT01P = sample(c("A", "B", "C"), 10, replace = T),
+#'   SEX = as.factor(sample(c("Female", "Male"), 10, replace = T)),
+#'   AEBODSYS = ifelse(aedecod == "PT1", "SOC1", "SOC2"),
+#'   AEDECOD = aedecod)
+#' 
+#' ### Create analysis row first
+#' first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
+#' 
+#' tab1 <- qc_cntpct(input = adae, colvar = "TRT01P", N_row = first_row[[1]], row_text = "Subjects with 1 or more AEs", subset = "SEX == "Female")
+#' tab1
 #' @export
 #' @import tidyr
-cntpct <- function(input, colvar = "TRT01P", row_text = "Subjects with 1 or more AEs", N_row, subset = NULL){
+qc_cntpct <- function(input, colvar = "TRT01P", row_text = "Subjects with 1 or more AEs", N_row, subset = NULL){
   ### first N row
   row1 <- input %>%
     group_by(.data[[colvar]], .drop = F) %>% 
