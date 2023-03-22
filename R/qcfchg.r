@@ -14,14 +14,15 @@
 #'   USUBJID = 1:10,
 #'   TRT01P = sample(c("A", "B", "C"), 10, replace = T))
 #'   
-#' param <- c("Test1", "Test2")
-#' visit <- c("Baseline", "Visit1", "Visit2")
+#' param <- data.frame(PARAM = c("Test1", "Test2"))
+#' visit <- data.frame(AVISIT = c("Baseline", "Visit1", "Visit2"))
 #' 
 #' adlb0 <- merge(adsl, param)
-#' adlb <- merge(adlb0, visit)
+#' adlb0$BASE <- sample(1:100, 20)
 #' 
+#' adlb <- merge(adlb0, visit)
 #' adlb$AVAL <- sample(1:100, 60)
-#' adlb$CHG <- sample(seq(-10, 10, by = 0.1), 60)
+#' adlb$CHG <- ifelse(adlb$AVISIT == "Baseline", NA, adlb$AVAL - adlb$BASE)
 #' 
 #' ### Create analysis row first
 #' first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
