@@ -9,6 +9,6 @@ Imports:
   arsenal    (>= 3.6.3),
   dplyr      ,
   tidyr      ,
-  openxlsx   (>= 4.2.5),
+  openxlsx   (>= 4.2.4),
   striprtf   (>= 0.5.3),
   stringr     
