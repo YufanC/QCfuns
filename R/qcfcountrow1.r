@@ -18,6 +18,7 @@
 #' first_row[[1]]
 #' first_row[[2]]
 #' @export
+#' @import tidyr
 qc_cntrow1 <- function(input, colvar = "TRT01P", row_text = "Analysis set: Safety", subset = "TRUE"){
   first_row <- input %>% 
     filter(eval(parse(text = subset))) %>% 

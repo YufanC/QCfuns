@@ -16,7 +16,7 @@
 #' ### Create analysis row first
 #' first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
 #'   
-#' tab1 <- qc_cat_row(adsl, "TRT01P", "SEX", N_row = firstrow[[1]])
+#' tab1 <- qc_cat_row(adsl, "TRT01P", "SEX", N_row = first_row[[1]])
 #' tab1
 #' @export
 ### Categorical variable rows
@@ -44,8 +44,8 @@ qc_cat_row <- function(input, colvar = "TRT01P", rowvar = "SEX", N_row, keep = T
   
   tab4 <- cbind("N", tab3)
   
-  colnames(tab2) <- c("row_text", levels(as.factor(pull(data, colvar))))
-  colnames(tab4) <- c("row_text", levels(as.factor(pull(data, colvar))))
+  colnames(tab2) <- c("row_text", levels(as.factor(pull(input, colvar))))
+  colnames(tab4) <- c("row_text", levels(as.factor(pull(input, colvar))))
   
   tab5 <- rbind(tab4, tab2)
   
@@ -128,8 +128,8 @@ qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", stats_list, dig
   
   tab6 <- cbind("N", tab5)
   
-  colnames(tab4) <- c("row_text", levels(as.factor(pull(data, colvar))))
-  colnames(tab6) <- c("row_text", levels(as.factor(pull(data, colvar))))
+  colnames(tab4) <- c("row_text", levels(as.factor(pull(input, colvar))))
+  colnames(tab6) <- c("row_text", levels(as.factor(pull(input, colvar))))
   
   tab7 <- rbind(tab6, tab4) %>% 
     mutate(row_text = case_when(
@@ -177,7 +177,7 @@ qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", stats_list, dig
 #' ### Create analysis row first
 #' first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
 #' 
-#' tab1 <- qc_demo(adsl, colvar = "TRT01PN", N_row = first_row[[1]], var_list = var_list, 
+#' tab1 <- qc_demo(adsl, colvar = "TRT01P", N_row = first_row[[1]], var_list = var_list, 
 #'                con_var_list = var_list1)
 #' tab1
 #' @export
@@ -190,12 +190,12 @@ qc_demo <- function(input, colvar = "TRT01P", N_row, stats_list = c("Mean_SD", "
   for (i in 1:length(var_list)){
     
     # Number of decimal place in the original data
-    if (class(input[[var_list[i]]]) == "numeric"){
+    if (class(input[[var_list[i]]]) %in% c("integer", "numeric")){
       digit0 <- getmaxdigit(input, var_list[i], max_digit)
     } 
     
     # Build rows for numeric and categorical variables separately
-    if (class(input[[var_list[i]]]) == "numeric"){
+    if (class(input[[var_list[i]]]) %in% c("integer", "numeric")){
       tab <- qc_num_row(input, colvar, var_list[i], stats_list = stats_list, digit0)
     } else if (class(input[[var_list[i]]]) %in% c("factor", "character")){
       tab <- qc_cat_row(input, colvar, var_list[i], N_row, keep = !(var_list[i] %in% drop_var_list))

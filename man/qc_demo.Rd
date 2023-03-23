@@ -60,7 +60,7 @@ var_list1 <- "AGEGR1"
 ### Create analysis row first
 first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
 
-tab1 <- qc_demo(adsl, colvar = "TRT01PN", N_row = first_row[[1]], var_list = var_list, 
+tab1 <- qc_demo(adsl, colvar = "TRT01P", N_row = first_row[[1]], var_list = var_list, 
                con_var_list = var_list1)
 tab1
 }

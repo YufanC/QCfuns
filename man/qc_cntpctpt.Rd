@@ -26,8 +26,6 @@ qc_cntpctpt(
 \item{N_row}{dataframe with N}
 
 \item{col_order}{ordering column name. e.g. "n_5". Default is NULL and PTs will be ordered by row-wise sum}
-
-\item{subset}{subset criteria. Default = NULL}
 }
 \value{
 a dataframe containing count and percentage of SOC/PT by colvar
@@ -48,7 +46,7 @@ adae <- data.frame(
 ### Create analysis row first
 first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
 
-tab1 <- cntpctpt(qc = adae, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"),
+tab1 <- qc_cntpctpt(input = adae, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"),
            row_text = "Subjects with 1 or more AEs", N_row = first_row[[1]])
 tab1
 }

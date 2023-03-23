@@ -44,8 +44,8 @@ visit <- data.frame(AVISIT = c("Baseline", "Visit1", "Visit2"))
 adlb0 <- merge(adsl, param)
 adlb <- merge(adlb0, visit)
 
-adlb$ANRIND <- factor(sample(c("Low", "Medium", "High"), 60), levels = c("Low", "Medium", "High"))
-adlb$BNRIND <- factor(sample(c("Low", "Medium", "High"), 60), levels = c("Low", "Medium", "High"))
+adlb$ANRIND <- factor(sample(c("Low", "Medium", "High"), 60, replace = T), levels = c("Low", "Medium", "High"))
+adlb$BNRIND <- factor(sample(c("Low", "Medium", "High"), 60, replace = T), levels = c("Low", "Medium", "High"))
 
 tab1 <- qc_shift(adlb, "ANRIND", "BNRIND", rowvar = c("PARAM", "TRT01P", "AVISIT"))
 tab1

@@ -1,8 +1,10 @@
 #' Compute count and percentage of SOC/PT
 #'
 #' compute count and percentage of SOC(class)/PT by column variable with an ordering
-#' @inheritParams qc_cntpct
+#' @param input input dataframe 
+#' @param colvar column variable 
 #' @param rowvar row variable (can be single variable such as "AEDECOD" or multiple variable such as c("AEBODSYS", "AEDECOD"))
+#' @param row_text row text 
 #' @param N_row dataframe with N 
 #' @param col_order ordering column name. e.g. "n_5". Default is NULL and PTs will be ordered by row-wise sum 
 #' @return a dataframe containing count and percentage of SOC/PT by colvar
@@ -19,7 +21,7 @@
 #' ### Create analysis row first
 #' first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
 #' 
-#' tab1 <- cntpctpt(qc = adae, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"),
+#' tab1 <- qc_cntpctpt(input = adae, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"),
 #'            row_text = "Subjects with 1 or more AEs", N_row = first_row[[1]])
 #' tab1
 #' @export
@@ -56,7 +58,7 @@ qc_cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECO
                   values_from = c(col, n)) %>% 
       rowwise() %>% 
       mutate(across(starts_with("n"), ~replace(., is.na(.), 0)),
-             order1 = ifelse(is.null(.data[[col_order]]), rowSums(across(starts_with("n")), na.rm = T), as.numeric(.data[[col_order]])),
+             order1 = ifelse(is.null(col_order), rowSums(across(starts_with("n")), na.rm = T), as.numeric(.data[[col_order]])),
              order2 = Inf) %>% 
       select(-starts_with("n"))
     
@@ -73,7 +75,7 @@ qc_cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECO
                   values_from = c(col, n)) %>% 
       rowwise() %>% 
       mutate(across(starts_with("n"), ~replace(., is.na(.), 0)),
-             order2 = ifelse(is.null(.data[[col_order]]), rowSums(across(starts_with("n")), na.rm = T), as.numeric(.data[[col_order]]))) %>% 
+             order2 = ifelse(is.null(col_order), rowSums(across(starts_with("n")), na.rm = T), as.numeric(.data[[col_order]]))) %>% 
       select(-starts_with("n")) %>% 
       ungroup()
     

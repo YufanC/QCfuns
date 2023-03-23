@@ -29,3 +29,20 @@ a dataframe containing count and percentage by colvar
 \description{
 compute count and percentage by column variable
 }
+\examples{
+aedecod <- sample(paste0("PT", 1:3), 10, replace = T)
+
+adae <- data.frame(
+  USUBJID = 1:10,
+  TRT01P = sample(c("A", "B", "C"), 10, replace = T),
+  SEX = as.factor(sample(c("Female", "Male"), 10, replace = T)),
+  AEBODSYS = ifelse(aedecod == "PT1", "SOC1", "SOC2"),
+  AEDECOD = aedecod)
+
+### Create analysis row first
+first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
+
+tab1 <- qc_cntpct(input = adae, colvar = "TRT01P", row_text = "Subjects with 1 or more AEs", 
+                  N_row = first_row[[1]])
+tab1
+}

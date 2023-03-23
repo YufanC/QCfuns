@@ -32,6 +32,6 @@ adsl <- data.frame(
 ### Create analysis row first
 first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
   
-tab1 <- qc_cat_row(adsl, "TRT01P", "SEX", N_row = firstrow[[1]])
+tab1 <- qc_cat_row(adsl, "TRT01P", "SEX", N_row = first_row[[1]])
 tab1
 }
