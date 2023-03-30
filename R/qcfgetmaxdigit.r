@@ -10,7 +10,7 @@
 getmaxdigit <- function(data, var, max_digit){
   if (sum((data[[var]] %% 1) == 0, na.rm = T) != length(data[[var]][!is.na(data[[var]])])){
     value <- as.character(data[[var]])[(data[[var]] %% 1) != 0]
-    maxdigit <- max(nchar(matrix(unlist(strsplit(value, ".", fixed = T)), ncol = 2, byrow = T)[, 2]))
+    maxdigit <- max(nchar(matrix(unlist(strsplit(value, ".", fixed = T)), ncol = 2, byrow = T)[, 2]), na.rm = T)
     
     if (maxdigit > max_digit){
       return(max_digit)
