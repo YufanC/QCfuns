@@ -32,7 +32,7 @@ library(stringr)
 library(tidyr)
 library(QCfuns)
 
-files.sources <- list.files(path = read_path(rptdrv, "qc"), pattern = "^\qcf.*\.r", full.names = T)
+files.sources <- list.files(path = read_path(rptdrv, "qc"), pattern = "^\\qcf.*\\.r", full.names = T)
 sapply(files.sources, source)
 
 ###########################
@@ -46,16 +46,23 @@ adsl <- read_sas(read_path(a_in, "adsl.sas7bdat")) %>%
 ###  Generate QC table  ###
 ###########################
 
+first_row <- qc_cntrow1(adsl, "TRT01P", row_text = "Analysis set: Safety")
+
+tab1 <- qc_cat_row(adsl, "TRT01P", rowvar = "SEX", N_row = first_row[[1]])
+
+tab_qc <- bind_rows(first_row[[2]], tab1) %>% 
+  mutate(across(everything(), ~replace(., is.na(.), "")))
+
 ###################
 ### Read in RTF ###
 ###################
 
 tableid <- "tableid"
-tab_rtf <- rtf2df(tableid)
+tab_rtf <- qc_rtf2df(tableid)
 
 ############################
 ### Compare two datasets ###
 ############################
 
-compare2xlsx(qc = tab_final, rtf = tab_rtf, path = qc, filename = tableid)
+qc_compare2xlsx(qc = tab_qc, rtf = tab_rtf, path = qc, filename = tableid)
 ```
