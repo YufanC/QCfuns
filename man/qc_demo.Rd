@@ -24,9 +24,7 @@ qc_demo(
 
 \item{stats_list}{stats variables to display. Accepted values are c("Mean_SD", "Median", "Range", "Geo_mean", "Geo_CV", "Geo_CL") and the order of variables matters}
 
-\item{var_list}{variable list in demo table}
-
-\item{con_var_list}{List of continuous variables that concatenate to the corresponding categorical variables}
+\item{var_list}{variable list in demo table. Please see details.}
 
 \item{drop_var_list}{Variable that don't keep all levels in the output}
 
@@ -38,6 +36,13 @@ dataframe with demographic rows
 \description{
 Function to create demographic rows
 }
+\details{
+var_list should be a dataframe with desired variable names as column names,
+the label of each variable display in tables as the first row, and optionally,
+the number of decimal places to keep in the output as the second row. If the 
+label row of a variable is empty, the row text and N row for this variable
+will be missing.
+}
 \examples{
 age <- sample(18:65, 10, replace = T)
 
@@ -48,19 +53,18 @@ adsl <- data.frame(
   AGEGR1 = ifelse(age < 45, "< 45", ">= 45"),
   SEX = as.factor(sample(c("Female", "Male"), 10, replace = T)))
   
-### Create variable list based on DPS
-var_list <- c("AGE", "AGEGR1", "SEX")
-             
-### list of variable labels displayed in the table
-names(var_list) <- c("Age, years", "", "Sex")
-                    
-### List of continuous variables that concatenate to the corresponding categorical variables
-var_list1 <- "AGEGR1"
+### Create variable list based on DPS and assign labels to them.
+### Leave "" For variables that concatenate to the corresponding categorical variables
+var_list <- data.frame(
+  AGE = "Age, years",
+  AGEGR1 = "",
+  SEX = "Sex"
+  )
 
 ### Create analysis row first
 first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
 
-tab1 <- qc_demo(adsl, colvar = "TRT01P", N_row = first_row[[1]], var_list = var_list, 
+tab1 <- qc_demo(adsl, colvar = "TRT01P", N_row = N_row, var_list = var_list, 
                con_var_list = var_list1)
 tab1
 }

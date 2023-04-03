@@ -35,6 +35,6 @@ adae <- data.frame(
   
 first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
 
-first_row[[1]]
-first_row[[2]]
+first_row$N_row
+first_row$first_row
 }

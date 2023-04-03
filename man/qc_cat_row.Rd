@@ -4,7 +4,14 @@
 \alias{qc_cat_row}
 \title{Create Rows for Categorical Variables}
 \usage{
-qc_cat_row(input, colvar = "TRT01P", rowvar = "SEX", N_row, keep = TRUE)
+qc_cat_row(
+  input,
+  colvar = "TRT01P",
+  rowvar = "SEX",
+  row_text = "Sex",
+  N_row,
+  keep = TRUE
+)
 }
 \arguments{
 \item{input}{input dataframe}
@@ -12,6 +19,8 @@ qc_cat_row(input, colvar = "TRT01P", rowvar = "SEX", N_row, keep = TRUE)
 \item{colvar}{column variable}
 
 \item{rowvar}{row variable}
+
+\item{row_text}{row text}
 
 \item{N_row}{a dataframe with denominator N}
 

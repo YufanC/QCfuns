@@ -43,6 +43,6 @@ adae <- data.frame(
 first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
 
 tab1 <- qc_cntpct(input = adae, colvar = "TRT01P", row_text = "Subjects with 1 or more AEs", 
-                  N_row = first_row[[1]])
+                  N_row = N_row)
 tab1
 }

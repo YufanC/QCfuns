@@ -22,7 +22,7 @@
 #' first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
 #' 
 #' tab1 <- qc_cntpctpt(input = adae, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"),
-#'            row_text = "Subjects with 1 or more AEs", N_row = first_row[[1]])
+#'            row_text = "Subjects with 1 or more AEs", N_row = N_row)
 #' tab1
 #' @export
 qc_cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"), row_text = "Subjects with 1 or more AEs", N_row, col_order = NULL, subset = NULL){
@@ -31,12 +31,12 @@ qc_cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECO
     group_by(.data[[colvar]], .drop = F) %>% 
     summarise(n = ifelse(is.null(subset), n_distinct(USUBJID), n_distinct(USUBJID[eval(parse(text = subset))])), .groups = "drop") %>% 
     left_join(., N_row, by = colvar) %>% 
-    mutate(pct = (round(n * 100 / N_trt, 1)),
+    mutate(pct = (round_sas(n * 100 / N_trt, 1)),
            col = ifelse(pct == 0, "0", paste0(n, ' (', formatC(pct, format = "f", digits = 1), '%)')))
   
   row2 <- row1 %>% 
     select(.data[[colvar]], col) %>% 
-    pivot_wider(names_from = .data[[colvar]],
+    pivot_wider(names_from = all_of(colvar),
                 values_from = col)
   
   row3 <- cbind(row_text, row2)
@@ -49,12 +49,12 @@ qc_cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECO
       group_by(.data[[colvar]], .data[[rowvar[1]]]) %>% 
       summarise(n = ifelse(is.null(subset), n_distinct(USUBJID), n_distinct(USUBJID[eval(parse(text = subset))])), .groups = "drop") %>% 
       left_join(., N_row, by = colvar) %>% 
-      mutate(pct = (round(n * 100 / N_trt, 1)),
+      mutate(pct = (round_sas(n * 100 / N_trt, 1)),
              col = ifelse(pct == 0, "0", paste0(n, ' (', formatC(pct, format = "f", digits = 1), '%)')))
     
     tab2 <- tab1 %>%
       select(.data[[colvar]], .data[[rowvar[1]]], col, n) %>%
-      pivot_wider(names_from = colvar, 
+      pivot_wider(names_from = all_of(colvar), 
                   values_from = c(col, n)) %>% 
       rowwise() %>% 
       mutate(across(starts_with("n"), ~replace(., is.na(.), 0)),
@@ -66,12 +66,12 @@ qc_cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECO
       group_by(.data[[colvar]], .data[[rowvar[1]]], .data[[rowvar[2]]]) %>% 
       summarise(n = ifelse(is.null(subset), n_distinct(USUBJID), n_distinct(USUBJID[eval(parse(text = subset))])), .groups = "drop") %>% 
       left_join(., N_row, by = colvar) %>% 
-      mutate(pct = (round(n * 100 / N_trt, 1)),
+      mutate(pct = (round_sas(n * 100 / N_trt, 1)),
              col = ifelse(pct == 0, "0", paste0(n, ' (', formatC(pct, format = "f", digits = 1), '%)')))
     
     tab4 <- tab3 %>%
       select(.data[[colvar]], .data[[rowvar[1]]], .data[[rowvar[2]]], col, n) %>%
-      pivot_wider(names_from = colvar, 
+      pivot_wider(names_from = all_of(colvar), 
                   values_from = c(col, n)) %>% 
       rowwise() %>% 
       mutate(across(starts_with("n"), ~replace(., is.na(.), 0)),
@@ -95,12 +95,12 @@ qc_cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECO
       group_by(.data[[colvar]], .data[[rowvar]]) %>% 
       summarise(n = ifelse(is.null(subset), n_distinct(USUBJID), n_distinct(USUBJID[eval(parse(text = subset))])), .groups = "drop") %>% 
       left_join(., N_row, by = colvar) %>% 
-      mutate(pct = (round(n * 100 / N_trt, 1)),
+      mutate(pct = (round_sas(n * 100 / N_trt, 1)),
              col = ifelse(pct == 0, "0", paste0(n, ' (', formatC(pct, format = "f", digits = 1), '%)')))
     
     tab_final <- tab1 %>%
       select(.data[[colvar]], .data[[rowvar]], col, n) %>%
-      pivot_wider(names_from = colvar, 
+      pivot_wider(names_from = all_of(colvar), 
                   values_from = c(col, n)) %>% 
       rowwise() %>% 
       mutate(across(starts_with("n"), ~replace(., is.na(.), 0)),

@@ -32,7 +32,7 @@ qc_compare2xlsx <- function(qc, rtf, path = qc, filename = "TSIDEM01", max_diff 
     assign("rtfdf", rtfdf, envir = .GlobalEnv)
     assign("qcdf", qcdf, envir = .GlobalEnv)
     
-    result <- summary(comparedf(rtfdf, qcdf))[-9]
+    result <- summary(comparedf(rtfdf, qcdf))[c(1, 8)]
     result$diffs.table$values.x <- unlist(result$diffs.table$values.x)
     result$diffs.table$values.y <- unlist(result$diffs.table$values.y)
     

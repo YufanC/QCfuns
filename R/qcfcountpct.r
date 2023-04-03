@@ -21,7 +21,7 @@
 #' first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
 #' 
 #' tab1 <- qc_cntpct(input = adae, colvar = "TRT01P", row_text = "Subjects with 1 or more AEs", 
-#'                   N_row = first_row[[1]])
+#'                   N_row = N_row)
 #' tab1
 #' @export
 qc_cntpct <- function(input, colvar = "TRT01P", row_text = "Subjects with 1 or more AEs", N_row, subset = NULL){
@@ -30,12 +30,12 @@ qc_cntpct <- function(input, colvar = "TRT01P", row_text = "Subjects with 1 or m
     group_by(.data[[colvar]], .drop = F) %>% 
     summarise(n = ifelse(is.null(subset), n_distinct(USUBJID), n_distinct(USUBJID[eval(parse(text = subset))])), .groups = "drop") %>% 
     left_join(., N_row, by = colvar) %>% 
-    mutate(pct = (round(n * 100 / N_trt, 1)),
+    mutate(pct = (round_sas(n * 100 / N_trt, 1)),
            col = ifelse(pct == 0, "0", paste0(n, ' (', formatC(pct, format = "f", digits = 1), '%)')))
   
   row2 <- row1 %>% 
     select(.data[[colvar]], col) %>% 
-    pivot_wider(names_from = .data[[colvar]],
+    pivot_wider(names_from = all_of(colvar),
                 values_from = col)
   
   row3 <- cbind(row_text, row2)

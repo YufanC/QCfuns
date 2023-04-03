@@ -27,13 +27,18 @@ qc_chgfb(
 
 \item{max_digit}{largest number of digit to display}
 
-\item{keep}{if = TRUE, keep all levels. Default = FALSE}
+\item{keep}{if = TRUE, keep all levels. Default = TRUE}
 }
 \value{
 change from baseline table
 }
 \description{
 create change from basline over time table, table can be ordered by param, treatment group and visit
+}
+\details{
+The number of decimal places the results will keep depends on a variable "digit" 
+in the input dataset. If digit variable does not exist in input dataset, the number
+of decimal places will depend on the number of decimal places of AVAL/CHG
 }
 \examples{
 adsl <- data.frame(

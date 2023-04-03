@@ -1,13 +1,17 @@
 #' Create change from basline over time table
 #'
 #' create change from basline over time table, table can be ordered by param, treatment group and visit
+#' 
+#' The number of decimal places the results will keep depends on a variable "digit" 
+#' in the input dataset. If digit variable does not exist in input dataset, the number
+#' of decimal places will depend on the number of decimal places of AVAL/CHG
 #' @param input input dataframe 
 #' @param val measurement variable
 #' @param chg change from baseline measurement variable
 #' @param rowvar row variable (can be a set of two variables such as c("TRT01P", "AVISIT") or three variables such as c("PARAM", "TRT01P", "AVISIT"))
 #' @param stats_list stats variables to display. Accepted values are c("N", "Mean", "SD", "Median", "Min", "Max", "CV", "Base_mean") and the order of variables matters
 #' @param max_digit largest number of digit to display 
-#' @param keep if = TRUE, keep all levels. Default = FALSE
+#' @param keep if = TRUE, keep all levels. Default = TRUE
 #' @return change from baseline table
 #' @examples 
 #' adsl <- data.frame(
@@ -23,6 +27,7 @@
 #' adlb <- merge(adlb0, visit)
 #' adlb$AVAL <- sample(1:100, 60)
 #' adlb$CHG <- ifelse(adlb$AVISIT == "Baseline", NA, adlb$AVAL - adlb$BASE)
+#' adlb$digit <- ifelse(adlb$PARAM == "Test1", 0, 2)
 #' 
 #' ### Create analysis row first
 #' first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
@@ -39,16 +44,18 @@ qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT0
       filter(!is.na(.data[[val]])) %>% 
       # Get the original decimal place
       rowwise() %>% 
-      mutate(digit0 = getdigit(.data[[val]], max_digit = max_digit)) %>% 
+      mutate(digit0 = ifelse(exists("digit", input), digit, NA),
+             digit0 = ifelse(!is.na(digit0), digit0,
+                             getdigit(.data[[val]], max_digit = max_digit))) %>% 
       ungroup() %>% 
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .drop = !keep) %>% 
       summarise(N      = ifelse(sum(!is.na(.data[[val]])) == 0, 0, sum(!is.na(.data[[val]]))),
-                Mean   = formatC(mean(.data[[val]], na.rm = T), format = "f", digits = max(digit0) + 1), 
-                SD     = formatC(sd(.data[[val]], na.rm = T), format = "f", digits = max(digit0) + 2), 
-                Median = formatC(median(.data[[val]], na.rm = T), format = "f", digits = max(digit0) + 1), 
-                Min    = formatC(min(.data[[val]], na.rm = T), format = "f", digits = max(digit0)), 
-                Max    = formatC(max(.data[[val]], na.rm = T), format = "f", digits = max(digit0)),
-                CV     = formatC(sd(.data[[val]], na.rm = T)/mean(.data[[val]], na.rm = T), format = "f", digits = max(digit0) + 1),
+                Mean   = formatC(round_sas(mean(.data[[val]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1), 
+                SD     = formatC(round_sas(sd(.data[[val]], na.rm = T), max(digit0) + 2), format = "f", digits = max(digit0) + 2), 
+                Median = formatC(round_sas(median(.data[[val]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1), 
+                Min    = formatC(round_sas(min(.data[[val]], na.rm = T), max(digit0)), format = "f", digits = max(digit0)), 
+                Max    = formatC(round_sas(max(.data[[val]], na.rm = T), max(digit0)), format = "f", digits = max(digit0)),
+                CV     = formatC(round_sas(sd(.data[[val]], na.rm = T)/mean(.data[[val]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1),
                 .groups = "drop") %>% 
       mutate(across(everything(), ~replace(., trimws(.)=="NaN"|trimws(.)=="NA"|trimws(.)=="Inf"|trimws(.)=="-Inf", NA))) %>% 
       select(rowvar[1], rowvar[2], stats_list[!stats_list %in% "Base_mean"])
@@ -58,19 +65,20 @@ qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT0
       filter(!is.na(.data[[chg]])) %>% 
       # Get the original decimal place
       rowwise() %>% 
-      mutate(digit0 = ifelse(chg != "PCHG", 
-                             getdigit(.data[[chg]], max_digit = max_digit),
-                             getdigit(.data[[val]], max_digit = max_digit))) %>% 
+      mutate(digit0 = ifelse(exists("digit", input), digit, NA),
+             digit0 = ifelse(!is.na(digit0), digit0,
+                             ifelse(chg != "PCHG", getdigit(.data[[chg]], max_digit = max_digit),
+                                    getdigit(.data[[val]], max_digit = max_digit)))) %>% 
       ungroup() %>% 
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .drop = !keep) %>% 
-      summarise(Base_mean  = formatC(mean(BASE, na.rm = T), format = "f", digits = max(digit0) + 1), 
+      summarise(Base_mean  = formatC(round_sas(mean(BASE, na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1), 
                 N      = ifelse(sum(!is.na(.data[[chg]])) == 0, 0, sum(!is.na(.data[[chg]]))),
-                Mean   = formatC(mean(.data[[chg]], na.rm = T), format = "f", digits = max(digit0) + 1), 
-                SD     = formatC(sd(.data[[chg]], na.rm = T), format = "f", digits = max(digit0) + 2), 
-                Median = formatC(median(.data[[chg]], na.rm = T), format = "f", digits = max(digit0) + 1), 
-                Min    = formatC(min(.data[[chg]], na.rm = T), format = "f", digits = max(digit0)), 
-                Max    = formatC(max(.data[[chg]], na.rm = T), format = "f", digits = max(digit0)),
-                CV     = formatC(sd(.data[[chg]], na.rm = T)/mean(.data[[chg]], na.rm = T), format = "f", digits = max(digit0) + 1),
+                Mean   = formatC(round_sas(mean(.data[[chg]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1), 
+                SD     = formatC(round_sas(sd(.data[[chg]], na.rm = T), max(digit0) + 2), format = "f", digits = max(digit0) + 2), 
+                Median = formatC(round_sas(median(.data[[chg]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1), 
+                Min    = formatC(round_sas(min(.data[[chg]], na.rm = T), max(digit0)), format = "f", digits = max(digit0)), 
+                Max    = formatC(round_sas(max(.data[[chg]], na.rm = T), max(digit0)), format = "f", digits = max(digit0)),
+                CV     = formatC(round_sas(sd(.data[[chg]], na.rm = T)/mean(.data[[chg]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1),
                 .groups = "drop") %>% 
       mutate(across(everything(), ~replace(., trimws(.)=="NaN"|trimws(.)=="NA"|trimws(.)=="Inf"|trimws(.)=="-Inf", NA))) %>% 
       select(rowvar[1], rowvar[2], stats_list)
@@ -96,7 +104,8 @@ qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT0
     tab_combine <- bind_rows(param_row, visit_row) %>% 
       arrange(ord_param, ord_visit) %>% 
       mutate(across(c(.data[[rowvar[1]]], .data[[rowvar[2]]]), ~as.character(.)),
-             row_text = if_else(ord_visit == 0, .data[[rowvar[1]]], .data[[rowvar[2]]])) %>% 
+             row_text = if_else(ord_visit == 0, .data[[rowvar[1]]], .data[[rowvar[2]]]),
+             N.y = ifelse(row_text == "Baseline", NA, N.y)) %>% 
       select(row_text, everything(), -c(.data[[rowvar[1]]], .data[[rowvar[2]]], ord_param, ord_visit))
     
   } else if (length(rowvar) == 3) {
@@ -106,16 +115,18 @@ qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT0
       filter(!is.na(.data[[val]])) %>% 
       # Get the original decimal place
       rowwise() %>% 
-      mutate(digit0 = getdigit(.data[[val]], max_digit = max_digit)) %>% 
+      mutate(digit0 = ifelse(exists("digit", input), digit, NA),
+             digit0 = ifelse(!is.na(digit0), digit0,
+                             getdigit(.data[[val]], max_digit = max_digit))) %>% 
       ungroup() %>% 
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .data[[rowvar[3]]], .drop = !keep) %>% 
       summarise(N      = ifelse(sum(!is.na(.data[[val]])) == 0, 0, sum(!is.na(.data[[val]]))),
-                Mean   = formatC(mean(.data[[val]], na.rm = T), format = "f", digits = max(digit0) + 1), 
-                SD     = formatC(sd(.data[[val]], na.rm = T), format = "f", digits = max(digit0) + 2), 
-                Median = formatC(median(.data[[val]], na.rm = T), format = "f", digits = max(digit0) + 1), 
-                Min    = formatC(min(.data[[val]], na.rm = T), format = "f", digits = max(digit0)), 
-                Max    = formatC(max(.data[[val]], na.rm = T), format = "f", digits = max(digit0)),
-                CV     = formatC(sd(.data[[val]], na.rm = T)/mean(.data[[val]], na.rm = T), format = "f", digits = max(digit0) + 1),
+                Mean   = formatC(round_sas(mean(.data[[val]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1), 
+                SD     = formatC(round_sas(sd(.data[[val]], na.rm = T), max(digit0) + 2), format = "f", digits = max(digit0) + 2), 
+                Median = formatC(round_sas(median(.data[[val]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1), 
+                Min    = formatC(round_sas(min(.data[[val]], na.rm = T), max(digit0)), format = "f", digits = max(digit0)), 
+                Max    = formatC(round_sas(max(.data[[val]], na.rm = T), max(digit0)), format = "f", digits = max(digit0)),
+                CV     = formatC(round_sas(sd(.data[[val]], na.rm = T)/mean(.data[[val]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1),
                 .groups = "drop") %>% 
       mutate(across(everything(), ~replace(., trimws(.)=="NaN"|trimws(.)=="NA"|trimws(.)=="Inf"|trimws(.)=="-Inf", NA))) %>% 
       select(rowvar[1], rowvar[2], rowvar[3], stats_list[!stats_list %in% "Base_mean"])
@@ -125,19 +136,20 @@ qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT0
       filter(!is.na(.data[[chg]])) %>% 
       # Get the original decimal place
       rowwise() %>% 
-      mutate(digit0 = ifelse(chg != "PCHG", 
-                             getdigit(.data[[chg]], max_digit = max_digit),
-                             getdigit(.data[[val]], max_digit = max_digit))) %>% 
+      mutate(digit0 = ifelse(exists("digit", input), digit, NA),
+             digit0 = ifelse(!is.na(digit0), digit0,
+                             ifelse(chg != "PCHG", getdigit(.data[[chg]], max_digit = max_digit),
+                                    getdigit(.data[[val]], max_digit = max_digit)))) %>% 
       ungroup() %>% 
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .data[[rowvar[3]]], .drop = !keep) %>% 
-      summarise(Base_mean  = formatC(mean(BASE, na.rm = T), format = "f", digits = max(digit0) + 1), 
+      summarise(Base_mean  = formatC(round_sas(mean(BASE, na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1), 
                 N      = ifelse(sum(!is.na(.data[[chg]])) == 0, 0, sum(!is.na(.data[[chg]]))),
-                Mean   = formatC(mean(.data[[chg]], na.rm = T), format = "f", digits = max(digit0) + 1), 
-                SD     = formatC(sd(.data[[chg]], na.rm = T), format = "f", digits = max(digit0) + 2), 
-                Median = formatC(median(.data[[chg]], na.rm = T), format = "f", digits = max(digit0) + 1), 
-                Min    = formatC(min(.data[[chg]], na.rm = T), format = "f", digits = max(digit0)), 
-                Max    = formatC(max(.data[[chg]], na.rm = T), format = "f", digits = max(digit0)),
-                CV     = formatC(sd(.data[[chg]], na.rm = T)/mean(.data[[chg]], na.rm = T), format = "f", digits = max(digit0) + 1),
+                Mean   = formatC(round_sas(mean(.data[[chg]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1), 
+                SD     = formatC(round_sas(sd(.data[[chg]], na.rm = T), max(digit0) + 2), format = "f", digits = max(digit0) + 2), 
+                Median = formatC(round_sas(median(.data[[chg]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1), 
+                Min    = formatC(round_sas(min(.data[[chg]], na.rm = T), max(digit0)), format = "f", digits = max(digit0)), 
+                Max    = formatC(round_sas(max(.data[[chg]], na.rm = T), max(digit0)), format = "f", digits = max(digit0)),
+                CV     = formatC(round_sas(sd(.data[[chg]], na.rm = T)/mean(.data[[chg]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1),
                 .groups = "drop") %>% 
       mutate(across(everything(), ~replace(., trimws(.)=="NaN"|trimws(.)=="NA"|trimws(.)=="Inf"|trimws(.)=="-Inf", NA))) %>% 
       select(rowvar[1], rowvar[2], rowvar[3], stats_list)
@@ -175,7 +187,8 @@ qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT0
       arrange(ord_param, ord_trt, ord_visit) %>% 
       mutate(across(c(.data[[rowvar[1]]], .data[[rowvar[2]]], .data[[rowvar[3]]]), ~as.character(.)),
              row_text = if_else(ord_trt == 0, .data[[rowvar[1]]], 
-                                if_else(ord_visit == 0, .data[[rowvar[2]]], .data[[rowvar[3]]]))) %>% 
+                                if_else(ord_visit == 0, .data[[rowvar[2]]], .data[[rowvar[3]]])),
+             N.y = ifelse(row_text == "Baseline", NA, N.y)) %>% 
       select(row_text, everything(), -c(.data[[rowvar[1]]], .data[[rowvar[2]]], .data[[rowvar[3]]], ord_param, ord_trt, ord_visit))
     
   } else {

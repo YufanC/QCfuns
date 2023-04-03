@@ -15,8 +15,8 @@
 #'   
 #' first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
 #' 
-#' first_row[[1]]
-#' first_row[[2]]
+#' first_row$N_row
+#' first_row$first_row
 #' @export
 #' @import tidyr
 qc_cntrow1 <- function(input, colvar = "TRT01P", row_text = "Analysis set: Safety", subset = "TRUE"){
@@ -29,7 +29,7 @@ qc_cntrow1 <- function(input, colvar = "TRT01P", row_text = "Analysis set: Safet
   
   first_row1 <- first_row %>% 
     distinct(.data[[colvar]], N_trt) %>% 
-    pivot_wider(names_from = .data[[colvar]],
+    pivot_wider(names_from = all_of(colvar),
                 values_from = N_trt)  %>% 
     mutate(across(where(is.numeric), as.character))
   
@@ -37,5 +37,8 @@ qc_cntrow1 <- function(input, colvar = "TRT01P", row_text = "Analysis set: Safet
   
   colnames(first_row2) <- c("row_text", levels(as.factor(pull(first_row, colvar))))
   
-  return(list(first_row, first_row2))
+  # Assign N_row to global environment
+  assign("N_row", first_row, envir = .GlobalEnv)
+
+  return(first_row2)
 }

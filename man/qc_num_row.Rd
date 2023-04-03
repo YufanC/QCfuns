@@ -4,7 +4,14 @@
 \alias{qc_num_row}
 \title{Create Rows for Continuous Variables}
 \usage{
-qc_num_row(input, colvar = "TRT01P", rowvar = "AGE", stats_list, digit)
+qc_num_row(
+  input,
+  colvar = "TRT01P",
+  rowvar = "AGE",
+  row_text = "Age, years",
+  stats_list,
+  digit
+)
 }
 \arguments{
 \item{input}{input dataframe}
@@ -12,6 +19,8 @@ qc_num_row(input, colvar = "TRT01P", rowvar = "AGE", stats_list, digit)
 \item{colvar}{column variable}
 
 \item{rowvar}{row variable}
+
+\item{row_text}{row text}
 
 \item{stats_list}{stats variables to display. Accepted values are c("Mean_SD", "Median", "Range", "Geo_mean", "Geo_CV", "Geo_CL") and the order of variables matters}
 
