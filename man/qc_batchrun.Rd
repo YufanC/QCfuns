@@ -9,7 +9,7 @@ qc_batchrun(files, path = qc)
 \arguments{
 \item{files}{one or more filenames}
 
-\item{path}{the path of where temp1.txt is stored. Default is qc}
+\item{path}{the path where temp1.txt is stored. Default is qc}
 }
 \value{
 A summary table of comparison results will display in Viewer

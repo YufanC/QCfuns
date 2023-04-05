@@ -2,7 +2,7 @@
 #'
 #' Execute R qc scripts with \code{qc_compare2xlsx}
 #' @param files one or more filenames 
-#' @param path the path of where temp1.txt is stored. Default is qc
+#' @param path the path where temp1.txt is stored. Default is qc
 #'
 #' @return A summary table of comparison results will display in Viewer
 #' @export

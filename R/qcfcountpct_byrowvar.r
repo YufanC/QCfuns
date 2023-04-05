@@ -22,11 +22,11 @@
 #' ### Create analysis row first
 #' first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
 #' 
-#' tab1 <- qc_cntpctpt(input = adae, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"),
+#' tab1 <- qc_cntpct_byrowvar(input = adae, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"),
 #'            row_text = "Subjects with 1 or more AEs", N_row = first_row$N_row)
 #' tab1
 #' @export
-qc_cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"), row_text = "Subjects with 1 or more AEs", N_row, col_order = NULL, subset = NULL){
+qc_cntpct_byrowvar <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"), row_text = "Subjects with 1 or more AEs", N_row, col_order = NULL, subset = NULL){
   ### first N row
   row1 <- input %>%
     group_by(.data[[colvar]], .drop = F) %>% 
