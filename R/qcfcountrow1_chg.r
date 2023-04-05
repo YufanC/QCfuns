@@ -12,6 +12,10 @@
 #' first_row
 #' @export
 qc_cntrow1_chg <- function(input, colvar = "TRT01P", row_text = "Analysis set: Full", subset = "TRUE"){
+  
+  assertthat::assert_that(not_empty(input))
+  assertthat::assert_that(assertthat::has_name(input, colvar))
+  
   first_row <- input %>%
     filter(eval(parse(text = subset))) %>% 
     group_by(.data[[colvar]]) %>%

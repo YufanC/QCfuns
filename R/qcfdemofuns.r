@@ -21,6 +21,10 @@
 #' @export
 ### Categorical variable rows
 qc_cat_row <- function(input, colvar = "TRT01P", rowvar = "SEX", row_text = "Sex", N_row, keep = TRUE){
+  
+  assertthat::assert_that(not_empty(input))
+  assertthat::assert_that(assertthat::has_name(input, c(colvar, rowvar)))
+  
   # Calculate count and percentage
   tab1 <- input %>% 
     filter(!is.na(.data[[rowvar]])) %>% 
@@ -74,6 +78,11 @@ qc_cat_row <- function(input, colvar = "TRT01P", rowvar = "SEX", row_text = "Sex
 #' @export
 ### Numeric variable rows
 qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", row_text = "Age, years", stats_list, digit){
+  
+  assertthat::assert_that(not_empty(input))
+  assertthat::assert_that(assertthat::has_name(input, c(colvar, rowvar)))
+  assertthat::assert_that(stats_accept_num(stats_list))
+  
   # Calculate statistics
   tab1 <- input %>% 
     filter(!is.na(.data[[rowvar]])) %>% 

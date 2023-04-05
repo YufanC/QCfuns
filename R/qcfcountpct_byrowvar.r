@@ -1,4 +1,4 @@
-#' Compute count and percentage of SOC/PT
+#' Compute count and percentage by Row Variables
 #'
 #' compute count and percentage of SOC(class)/PT by column variable with an ordering
 #' @param input input dataframe 
@@ -27,6 +27,10 @@
 #' tab1
 #' @export
 qc_cntpct_byrowvar <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"), row_text = "Subjects with 1 or more AEs", N_row, col_order = NULL, subset = NULL){
+  
+  assertthat::assert_that(not_empty(input))
+  assertthat::assert_that(assertthat::has_name(input, c(colvar, rowvar)))
+  
   ### first N row
   row1 <- input %>%
     group_by(.data[[colvar]], .drop = F) %>% 
@@ -47,7 +51,7 @@ qc_cntpct_byrowvar <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", 
   # row variables - if first level variable exist
   if (length(rowvar) == 2) {
     tab1 <- input %>% 
-      group_by(.data[[colvar]], .data[[rowvar[1]]]) %>% 
+      group_by(.data[[colvar]], .data[[rowvar[1]]], .drop = F) %>% 
       summarise(n = ifelse(is.null(subset), n_distinct(USUBJID), n_distinct(USUBJID[eval(parse(text = subset))])), .groups = "drop") %>% 
       left_join(., N_row, by = colvar) %>% 
       mutate(pct = (round_sas(n * 100 / N_trt, 1)),
@@ -64,7 +68,7 @@ qc_cntpct_byrowvar <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", 
       select(-starts_with("n"))
     
     tab3 <- input %>% 
-      group_by(.data[[colvar]], .data[[rowvar[1]]], .data[[rowvar[2]]]) %>% 
+      group_by(.data[[colvar]], .data[[rowvar[1]]], .data[[rowvar[2]]], .drop = F) %>% 
       summarise(n = ifelse(is.null(subset), n_distinct(USUBJID), n_distinct(USUBJID[eval(parse(text = subset))])), .groups = "drop") %>% 
       left_join(., N_row, by = colvar) %>% 
       mutate(pct = (round_sas(n * 100 / N_trt, 1)),
@@ -88,12 +92,13 @@ qc_cntpct_byrowvar <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", 
       mutate(row_text = if_else(order2 == Inf, .data[[rowvar[1]]], .data[[rowvar[2]]])) %>% 
       select(-all_of(rowvar), -c(order1, order2)) %>% 
       relocate(row_text) %>% 
-      mutate(across(everything(), ~replace(., is.na(.), "0")))
+      mutate(across(everything(), ~replace(., is.na(.), "0"))) %>% 
+      filter(!if_all(!contains("row_text") , ~ . == '0'))
     
   } else if (length(rowvar) == 1){
     # row variables - if only one level variable exist
     tab1 <- input %>% 
-      group_by(.data[[colvar]], .data[[rowvar]]) %>% 
+      group_by(.data[[colvar]], .data[[rowvar]], .drop = F) %>% 
       summarise(n = ifelse(is.null(subset), n_distinct(USUBJID), n_distinct(USUBJID[eval(parse(text = subset))])), .groups = "drop") %>% 
       left_join(., N_row, by = colvar) %>% 
       mutate(pct = (round_sas(n * 100 / N_trt, 1)),
@@ -105,10 +110,11 @@ qc_cntpct_byrowvar <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", 
                   values_from = c(col, n)) %>% 
       rowwise() %>% 
       mutate(across(starts_with("n"), ~replace(., is.na(.), 0)),
-             n_order = ifelse(is.null(.data[[col_order]]), rowSums(across(starts_with("n")), na.rm = T), as.numeric(.data[[col_order]]))) %>% 
-      arrange(desc(order1)) %>% 
+             n_order = ifelse(is.null(col_order), rowSums(across(starts_with("n")), na.rm = T), as.numeric(.data[[col_order]]))) %>% 
+      arrange(desc(n_order), .data[[rowvar]]) %>% 
       select(-starts_with("n")) %>% 
       mutate(across(everything(), ~replace(., is.na(.), "0"))) %>% 
+      filter(!if_all(!contains("row_text") , ~ . == '0'))
       ungroup()
     
   } else {
@@ -118,7 +124,7 @@ qc_cntpct_byrowvar <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", 
   colnames(tab_final) <- c("row_text", levels(as.factor(pull(N_row, colvar))))
   
   if (nrow(tab_final) == 0){
-    tab2[1,1] <- "No data to report"
+    tab_final[1,1] <- "No data to report"
   }
   
   tab_combine <- bind_rows(row3, tab_final)

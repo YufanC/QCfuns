@@ -13,6 +13,10 @@
 #' @export
 ### Create the analysis set row
 qc_cntrow1_shift <- function(input, colvar = "TRT01P", row_text = "Analysis set: Full", subset = "TRUE"){
+  
+  assertthat::assert_that(not_empty(input))
+  assertthat::assert_that(assertthat::has_name(input, colvar))
+  
   tab1 <- input %>% 
     mutate("{colvar}" := "Total")
   

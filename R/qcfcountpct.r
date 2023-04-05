@@ -25,6 +25,10 @@
 #' tab1
 #' @export
 qc_cntpct <- function(input, colvar = "TRT01P", row_text = "Subjects with 1 or more AEs", N_row, subset = NULL){
+  
+  assertthat::assert_that(not_empty(input))
+  assertthat::assert_that(assertthat::has_name(input, colvar))
+  
   ### first N row
   row1 <- input %>%
     group_by(.data[[colvar]], .drop = F) %>% 

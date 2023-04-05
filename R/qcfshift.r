@@ -29,6 +29,9 @@
 #' @export
 qc_shift <- function(input, acat = "ANRIND", bcat = "BNRIND", rowvar = c("PARAM", "AVISIT", "TRT01P"), drop_zero = TRUE){
   
+  assertthat::assert_that(not_empty(input))
+  assertthat::assert_that(assertthat::has_name(input, c(acat, bcat, rowvar)))
+  
   if(length(rowvar) == 1){
     
     # Create frequency table

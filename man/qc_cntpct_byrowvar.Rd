@@ -2,7 +2,7 @@
 % Please edit documentation in R/qcfcountpct_byrowvar.r
 \name{qc_cntpct_byrowvar}
 \alias{qc_cntpct_byrowvar}
-\title{Compute count and percentage of SOC/PT}
+\title{Compute count and percentage by Row Variables}
 \usage{
 qc_cntpct_byrowvar(
   input,

@@ -1,6 +1,6 @@
 #' Batch Run QC Scripts
 #'
-#' Execute R qc scripts with \code{qc_compare2xlsx}
+#' Execute R qc scripts end with \code{\link{qc_compare2xlsx}}
 #' @param files one or more filenames 
 #' @param path the path where temp1.txt is stored. Default is qc
 #'
@@ -16,6 +16,7 @@
 qc_batchrun <- function(files, path = qc){
   
   assertthat::assert_that(all(file.exists(files)))
+  assertthat::assert_that(is.dir(path))
   
   ### Delete temp1.txt if it exists
   if (file.exists(file.path(envsetup::write_path(path), "temp1.txt"))) {

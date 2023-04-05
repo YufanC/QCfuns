@@ -41,6 +41,10 @@
 #' @export
 qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT01P", "AVISIT"), stats_list = c("N", "Mean", "SD", "Median", "Min", "Max"), max_digit = 2, keep = TRUE){
   
+  assertthat::assert_that(not_empty(input))
+  assertthat::assert_that(assertthat::has_name(input, c(val, chg, rowvar)))
+  assertthat::assert_that(stats_accept(stats_list))
+  
   if(length(rowvar) == 2){
     
     # Measured Value

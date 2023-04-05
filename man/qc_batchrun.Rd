@@ -15,7 +15,7 @@ qc_batchrun(files, path = qc)
 A summary table of comparison results will display in Viewer
 }
 \description{
-Execute R qc scripts with \code{qc_compare2xlsx}
+Execute R qc scripts end with \code{\link{qc_compare2xlsx}}
 }
 \examples{
 \dontshow{if (exists("rptdrv")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
