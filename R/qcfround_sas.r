@@ -1,16 +1,16 @@
 #' @title Round a numeric vector; halves will be rounded up as in SAS.
 #'
 #' @description
-#' Please see janitor::round_half_up
+#' Please see \code{janitor::round_half_up}
 #' 
 #' @param x a numeric vector to round.
 #' @param digits how many digits should be displayed after the decimal point?
 #' @export
 #' @examples
-#' round_half_up(12.5)
-#' round_half_up(1.125, 2)
-#' round_half_up(1.125, 1)
-#' round_half_up(-0.5, 0) # negatives get rounded away from zero
+#' round_sas(12.5)
+#' round_sas(1.125, 2)
+#' round_sas(1.125, 1)
+#' round_sas(-0.5, 0) # negatives get rounded away from zero
 #'
 round_sas <- function(x, digits = 0) {
   posneg <- sign(x)

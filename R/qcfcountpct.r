@@ -8,12 +8,12 @@
 #' @param subset subset criteria. Default = NULL
 #' @return a dataframe containing count and percentage by colvar
 #' @examples 
-#' aedecod <- sample(paste0("PT", 1:3), 10, replace = T)
+#' aedecod <- sample(paste0("PT", 1:3), 10, replace = TRUE)
 #' 
 #' adae <- data.frame(
 #'   USUBJID = 1:10,
-#'   TRT01P = sample(c("A", "B", "C"), 10, replace = T),
-#'   SEX = as.factor(sample(c("Female", "Male"), 10, replace = T)),
+#'   TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
+#'   SEX = as.factor(sample(c("Female", "Male"), 10, replace = TRUE)),
 #'   AEBODSYS = ifelse(aedecod == "PT1", "SOC1", "SOC2"),
 #'   AEDECOD = aedecod)
 #' 
@@ -21,7 +21,7 @@
 #' first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
 #' 
 #' tab1 <- qc_cntpct(input = adae, colvar = "TRT01P", row_text = "Subjects with 1 or more AEs", 
-#'                   N_row = N_row)
+#'                   N_row = first_row$N_row)
 #' tab1
 #' @export
 qc_cntpct <- function(input, colvar = "TRT01P", row_text = "Subjects with 1 or more AEs", N_row, subset = NULL){
@@ -34,7 +34,7 @@ qc_cntpct <- function(input, colvar = "TRT01P", row_text = "Subjects with 1 or m
            col = ifelse(pct == 0, "0", paste0(n, ' (', formatC(pct, format = "f", digits = 1), '%)')))
   
   row2 <- row1 %>% 
-    select(.data[[colvar]], col) %>% 
+    select(all_of(colvar), col) %>% 
     pivot_wider(names_from = all_of(colvar),
                 values_from = col)
   

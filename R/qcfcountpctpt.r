@@ -7,14 +7,15 @@
 #' @param row_text row text 
 #' @param N_row dataframe with N 
 #' @param col_order ordering column name. e.g. "n_5". Default is NULL and PTs will be ordered by row-wise sum 
+#' @param subset subset criteria. Default = NULL
 #' @return a dataframe containing count and percentage of SOC/PT by colvar
 #' @examples 
-#' aedecod <- sample(paste0("PT", 1:3), 10, replace = T)
+#' aedecod <- sample(paste0("PT", 1:3), 10, replace = TRUE)
 #' 
 #' adae <- data.frame(
 #'   USUBJID = 1:10,
-#'   TRT01P = sample(c("A", "B", "C"), 10, replace = T),
-#'   SEX = as.factor(sample(c("Female", "Male"), 10, replace = T)),
+#'   TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
+#'   SEX = as.factor(sample(c("Female", "Male"), 10, replace = TRUE)),
 #'   AEBODSYS = ifelse(aedecod == "PT1", "SOC1", "SOC2"),
 #'   AEDECOD = aedecod)
 #' 
@@ -22,7 +23,7 @@
 #' first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
 #' 
 #' tab1 <- qc_cntpctpt(input = adae, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"),
-#'            row_text = "Subjects with 1 or more AEs", N_row = N_row)
+#'            row_text = "Subjects with 1 or more AEs", N_row = first_row$N_row)
 #' tab1
 #' @export
 qc_cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"), row_text = "Subjects with 1 or more AEs", N_row, col_order = NULL, subset = NULL){
@@ -35,7 +36,7 @@ qc_cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECO
            col = ifelse(pct == 0, "0", paste0(n, ' (', formatC(pct, format = "f", digits = 1), '%)')))
   
   row2 <- row1 %>% 
-    select(.data[[colvar]], col) %>% 
+    select(all_of(colvar), col) %>% 
     pivot_wider(names_from = all_of(colvar),
                 values_from = col)
   
@@ -53,7 +54,7 @@ qc_cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECO
              col = ifelse(pct == 0, "0", paste0(n, ' (', formatC(pct, format = "f", digits = 1), '%)')))
     
     tab2 <- tab1 %>%
-      select(.data[[colvar]], .data[[rowvar[1]]], col, n) %>%
+      select(all_of(c(colvar, rowvar[1])), col, n) %>%
       pivot_wider(names_from = all_of(colvar), 
                   values_from = c(col, n)) %>% 
       rowwise() %>% 
@@ -70,7 +71,7 @@ qc_cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECO
              col = ifelse(pct == 0, "0", paste0(n, ' (', formatC(pct, format = "f", digits = 1), '%)')))
     
     tab4 <- tab3 %>%
-      select(.data[[colvar]], .data[[rowvar[1]]], .data[[rowvar[2]]], col, n) %>%
+      select(all_of(c(colvar, rowvar)), col, n) %>%
       pivot_wider(names_from = all_of(colvar), 
                   values_from = c(col, n)) %>% 
       rowwise() %>% 
@@ -85,7 +86,7 @@ qc_cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECO
     tab_final <- bind_rows(tab2, tab5) %>% 
       arrange(desc(order1), .data[[rowvar[1]]], desc(order2), .data[[rowvar[2]]]) %>% 
       mutate(row_text = if_else(order2 == Inf, .data[[rowvar[1]]], .data[[rowvar[2]]])) %>% 
-      select(-c( .data[[rowvar[1]]], .data[[rowvar[2]]], order1, order2)) %>% 
+      select(-all_of(rowvar), -c(order1, order2)) %>% 
       relocate(row_text) %>% 
       mutate(across(everything(), ~replace(., is.na(.), "0")))
     
@@ -99,7 +100,7 @@ qc_cntpctpt <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECO
              col = ifelse(pct == 0, "0", paste0(n, ' (', formatC(pct, format = "f", digits = 1), '%)')))
     
     tab_final <- tab1 %>%
-      select(.data[[colvar]], .data[[rowvar]], col, n) %>%
+      select(all_of(c(colvar, rowvar)), col, n) %>%
       pivot_wider(names_from = all_of(colvar), 
                   values_from = c(col, n)) %>% 
       rowwise() %>% 

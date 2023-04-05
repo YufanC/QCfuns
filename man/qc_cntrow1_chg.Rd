@@ -29,7 +29,7 @@ Function to create analysis set row for change from baseline table
 \examples{
 adlb <- data.frame(
   USUBJID = 1:10,
-  TRT01P = sample(c("A", "B", "C"), 10, replace = T))
+  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE))
   
 first_row <- qc_cntrow1_chg(input = adlb, colvar = "TRT01P", row_text = "Analysis set: Full")
 first_row

@@ -1,14 +1,24 @@
-Package: QCfuns
-Authors@R: person("Yufan", "Chen", email = "ychen209@its.jnj.com", role = c("aut", "cre"))
 Type: Package
-Title: Collection of R QC functions 
+Package: QCfuns
+Title: Collection of R QC functions
+Description: A fast and user-friendly QC working flow.  
 Version: 1.0.0
-Encoding: UTF-8
-RoxygenNote: 7.1.1
+Authors@R: 
+    person("Yufan", "Chen", , "ychen209@its.jnj.com", role = c("aut", "cre"))
+License: Apache License (>= 2)
 Imports:
-  arsenal    (>= 3.6.3),
-  dplyr      ,
-  tidyr      ,
-  openxlsx   (>= 4.2.4),
-  striprtf   (>= 0.5.3),
-  stringr     
+    arsenal (>= 3.6.3),
+    dplyr,
+    openxlsx (>= 4.2.4),
+    stringr,
+    striprtf (>= 0.5.3),
+    tidyr
+Suggests: 
+    assertthat,
+    envsetup,
+    testthat (>= 3.0.0)
+Remotes:
+    pharmaverse/envsetup
+Config/testthat/edition: 3
+Encoding: UTF-8
+RoxygenNote: 7.2.3

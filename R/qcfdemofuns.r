@@ -10,13 +10,13 @@
 #' @examples 
 #' adsl <- data.frame(
 #'   USUBJID = 1:10,
-#'   TRT01P = sample(c("A", "B", "C"), 10, replace = T),
-#'   SEX = as.factor(sample(c("Female", "Male"), 10, replace = T)))
+#'   TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
+#'   SEX = as.factor(sample(c("Female", "Male"), 10, replace = TRUE)))
 #' 
 #' ### Create analysis row first
 #' first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
 #'   
-#' tab1 <- qc_cat_row(adsl, "TRT01P", "SEX", N_row = first_row[[1]])
+#' tab1 <- qc_cat_row(adsl, "TRT01P", "SEX", N_row = first_row$N_row)
 #' tab1
 #' @export
 ### Categorical variable rows
@@ -32,7 +32,7 @@ qc_cat_row <- function(input, colvar = "TRT01P", rowvar = "SEX", row_text = "Sex
   
   # Transpose data
   tab2 <- tab1 %>%
-    select(.data[[rowvar]], .data[[colvar]], col) %>%
+    select(all_of(c(rowvar, colvar)), col) %>%
     pivot_wider(names_from = all_of(colvar), 
                 values_from = col)
   
@@ -40,7 +40,8 @@ qc_cat_row <- function(input, colvar = "TRT01P", rowvar = "SEX", row_text = "Sex
   tab3 <- tab1 %>% 
     distinct(.data[[colvar]], N_trt) %>% 
     pivot_wider(names_from = all_of(colvar),
-                values_from = N_trt)
+                values_from = N_trt) %>% 
+    mutate(across(where(is.numeric), as.character))
   
   tab4 <- cbind("N", tab3)
   
@@ -58,14 +59,14 @@ qc_cat_row <- function(input, colvar = "TRT01P", rowvar = "SEX", row_text = "Sex
 #' Function to create rows for continuous variables in demographic table
 #' @inheritParams qc_cntrow1
 #' @param rowvar row variable
-#' @param stats_list stats variables to display. Accepted values are c("Mean_SD", "Median", "Range", "Geo_mean", "Geo_CV", "Geo_CL") and the order of variables matters
+#' @param stats_list stats variables to display. Accepted values are \code{c("Mean_SD", "Median", "Range", "Geo_mean", "Geo_CV", "Geo_CL")} and the order of variables matters
 #' @param digit number of decimal place to report
 #' @return dataframe with demographic rows 
 #' @examples 
 #' adsl <- data.frame(
 #'   USUBJID = 1:10,
-#'   TRT01P = sample(c("A", "B", "C"), 10, replace = T),
-#'   AGE = sample(18:65, 10, replace = T))
+#'   TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
+#'   AGE = sample(18:65, 10, replace = TRUE))
 #'   
 #' tab1 <- qc_num_row(input = adsl, colvar = "TRT01P", rowvar = "AGE", 
 #'                         stats_list = c("Mean_SD", "Median", "Range"), digit = 0)
@@ -108,7 +109,7 @@ qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", row_text = "Age
                                   formatC(round_sas(Gmean_HL, digit + 1), format = "f", digits = (digit + 1)), ")")))
   
   tab2 <- tab1 %>%
-    select(.data[[colvar]], all_of(stats_list))
+    select(all_of(c(colvar, stats_list)))
   
   # Transpose dataset
   tab3 <- as.data.frame(t(tab2), row.names = F)
@@ -126,7 +127,8 @@ qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", row_text = "Age
   tab5 <- tab1 %>% 
     distinct(.data[[colvar]], N_trt) %>% 
     pivot_wider(names_from = all_of(colvar),
-                values_from = N_trt)
+                values_from = N_trt) %>% 
+    mutate(across(where(is.numeric), as.character))
   
   tab6 <- cbind("N", tab5)
   
@@ -150,7 +152,7 @@ qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", row_text = "Age
 #'
 #' Function to create demographic rows 
 #' 
-#' var_list should be a dataframe with desired variable names as column names,
+#' \code{var_list} should be a dataframe with desired variable names as column names,
 #' the label of each variable display in tables as the first row, and optionally,
 #' the number of decimal places to keep in the output as the second row. If the 
 #' label row of a variable is empty, the row text and N row for this variable
@@ -163,14 +165,14 @@ qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", row_text = "Age
 #' @param max_digit maximum number of decimal place to report
 #' @return dataframe with demographic rows 
 #' @examples 
-#' age <- sample(18:65, 10, replace = T)
+#' age <- sample(18:65, 10, replace = TRUE)
 #' 
 #' adsl <- data.frame(
 #'   USUBJID = 1:10,
-#'   TRT01P = sample(c("A", "B", "C"), 10, replace = T),
+#'   TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
 #'   AGE = age,
 #'   AGEGR1 = ifelse(age < 45, "< 45", ">= 45"),
-#'   SEX = as.factor(sample(c("Female", "Male"), 10, replace = T)))
+#'   SEX = as.factor(sample(c("Female", "Male"), 10, replace = TRUE)))
 #'   
 #' ### Create variable list based on DPS and assign labels to them.
 #' ### Leave "" For variables that concatenate to the corresponding categorical variables
@@ -183,12 +185,11 @@ qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", row_text = "Age
 #' ### Create analysis row first
 #' first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
 #' 
-#' tab1 <- qc_demo(adsl, colvar = "TRT01P", N_row = N_row, var_list = var_list, 
-#'                con_var_list = var_list1)
+#' tab1 <- qc_demo(adsl, colvar = "TRT01P", N_row = first_row$N_row, var_list = var_list)
 #' tab1
 #' @export
 ### create demo table 
-qc_demo <- function(input, colvar = "TRT01P", N_row, stats_list = c("Mean_SD", "Median", "Range"), var_list = c("AGE", "AGEGR1", "SEX"), con_var_list = "AGEGR1", drop_var_list = NULL, max_digit = 2){
+qc_demo <- function(input, colvar = "TRT01P", N_row, stats_list = c("Mean_SD", "Median", "Range"), var_list, drop_var_list = NULL, max_digit = 2){
   
   tab_final <- data.frame()
   
@@ -204,9 +205,9 @@ qc_demo <- function(input, colvar = "TRT01P", N_row, stats_list = c("Mean_SD", "
     
     # Build rows for numeric and categorical variables separately
     if (class(input[[colnames(var_list)[i]]]) %in% c("integer", "numeric")){
-      tab <- qc_num_row(input, colvar, colnames(var_list)[i], stats_list = stats_list, digit0)
+      tab <- qc_num_row(input, colvar, colnames(var_list)[i], stats_list = stats_list, digit = digit0)
     } else if (class(input[[colnames(var_list)[i]]]) %in% c("factor", "character")){
-      tab <- qc_cat_row(input, colvar, colnames(var_list)[i], N_row, keep = !(colnames(var_list)[i] %in% drop_var_list))
+      tab <- qc_cat_row(input, colvar, colnames(var_list)[i], N_row = N_row, keep = !(colnames(var_list)[i] %in% drop_var_list))
     }
     # Append them together, combine group variable with its continuous counterpart
     if (colnames(var_list)[i] %in% colnames(var_list[which(str_trim(var_list[1, ]) == "")])){

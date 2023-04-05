@@ -22,7 +22,7 @@ qc_num_row(
 
 \item{row_text}{row text}
 
-\item{stats_list}{stats variables to display. Accepted values are c("Mean_SD", "Median", "Range", "Geo_mean", "Geo_CV", "Geo_CL") and the order of variables matters}
+\item{stats_list}{stats variables to display. Accepted values are \code{c("Mean_SD", "Median", "Range", "Geo_mean", "Geo_CV", "Geo_CL")} and the order of variables matters}
 
 \item{digit}{number of decimal place to report}
 }
@@ -35,8 +35,8 @@ Function to create rows for continuous variables in demographic table
 \examples{
 adsl <- data.frame(
   USUBJID = 1:10,
-  TRT01P = sample(c("A", "B", "C"), 10, replace = T),
-  AGE = sample(18:65, 10, replace = T))
+  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
+  AGE = sample(18:65, 10, replace = TRUE))
   
 tab1 <- qc_num_row(input = adsl, colvar = "TRT01P", rowvar = "AGE", 
                         stats_list = c("Mean_SD", "Median", "Range"), digit = 0)

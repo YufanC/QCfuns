@@ -26,6 +26,8 @@ qc_cntpctpt(
 \item{N_row}{dataframe with N}
 
 \item{col_order}{ordering column name. e.g. "n_5". Default is NULL and PTs will be ordered by row-wise sum}
+
+\item{subset}{subset criteria. Default = NULL}
 }
 \value{
 a dataframe containing count and percentage of SOC/PT by colvar
@@ -34,12 +36,12 @@ a dataframe containing count and percentage of SOC/PT by colvar
 compute count and percentage of SOC(class)/PT by column variable with an ordering
 }
 \examples{
-aedecod <- sample(paste0("PT", 1:3), 10, replace = T)
+aedecod <- sample(paste0("PT", 1:3), 10, replace = TRUE)
 
 adae <- data.frame(
   USUBJID = 1:10,
-  TRT01P = sample(c("A", "B", "C"), 10, replace = T),
-  SEX = as.factor(sample(c("Female", "Male"), 10, replace = T)),
+  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
+  SEX = as.factor(sample(c("Female", "Male"), 10, replace = TRUE)),
   AEBODSYS = ifelse(aedecod == "PT1", "SOC1", "SOC2"),
   AEDECOD = aedecod)
 
@@ -47,6 +49,6 @@ adae <- data.frame(
 first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
 
 tab1 <- qc_cntpctpt(input = adae, colvar = "TRT01P", rowvar = c("AEBODSYS", "AEDECOD"),
-           row_text = "Subjects with 1 or more AEs", N_row = N_row)
+           row_text = "Subjects with 1 or more AEs", N_row = first_row$N_row)
 tab1
 }

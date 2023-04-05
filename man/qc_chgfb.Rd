@@ -21,9 +21,11 @@ qc_chgfb(
 
 \item{chg}{change from baseline measurement variable}
 
-\item{rowvar}{row variable (can be a set of two variables such as c("TRT01P", "AVISIT") or three variables such as c("PARAM", "TRT01P", "AVISIT"))}
+\item{rowvar}{row variable (can be a set of two variables such as 
+\code{c("TRT01P", "AVISIT")} or three variables such as \code{c("PARAM", "TRT01P", "AVISIT")})}
 
-\item{stats_list}{stats variables to display. Accepted values are c("N", "Mean", "SD", "Median", "Min", "Max", "CV", "Base_mean") and the order of variables matters}
+\item{stats_list}{stats variables to display. Accepted values are 
+\code{c("N", "Mean", "SD", "Median", "Min", "Max", "CV", "Base_mean")} and the order of variables matters}
 
 \item{max_digit}{largest number of digit to display}
 
@@ -43,7 +45,7 @@ of decimal places will depend on the number of decimal places of AVAL/CHG
 \examples{
 adsl <- data.frame(
   USUBJID = 1:10,
-  TRT01P = sample(c("A", "B", "C"), 10, replace = T))
+  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE))
   
 param <- data.frame(PARAM = c("Test1", "Test2"))
 visit <- data.frame(AVISIT = c("Baseline", "Visit1", "Visit2"))
@@ -54,10 +56,13 @@ adlb0$BASE <- sample(1:100, 20)
 adlb <- merge(adlb0, visit)
 adlb$AVAL <- sample(1:100, 60)
 adlb$CHG <- ifelse(adlb$AVISIT == "Baseline", NA, adlb$AVAL - adlb$BASE)
+adlb$digit <- ifelse(adlb$PARAM == "Test1", 0, 2)
 
 ### Create analysis row first
-first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
+first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", 
+                        row_text = "Analysis set: Safety")
 
-tab1 <- qc_chgfb(adlb, "AVAL", "CHG", rowvar = c("PARAM", "TRT01P", "AVISIT"), max_digit = 0, keep = FALSE)
+tab1 <- qc_chgfb(adlb, "AVAL", "CHG", rowvar = c("PARAM", "TRT01P", "AVISIT"), 
+                 max_digit = 0, keep = FALSE)
 tab1
 }

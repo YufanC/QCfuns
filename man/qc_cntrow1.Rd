@@ -22,8 +22,8 @@ qc_cntrow1(
 }
 \value{
 Analysis set row list containing two elements.
-The first element is a dataframe with N that can be passed to following functions
-The second element is the analysis set row that can be combined with other following rows
+$N_row is a dataframe with N that can be passed to following functions
+$row1 is the analysis set row that can be combined with other following rows
 }
 \description{
 Function to create analysis set row
@@ -31,10 +31,10 @@ Function to create analysis set row
 \examples{
 adae <- data.frame(
   USUBJID = 1:10,
-  TRT01P = sample(c("A", "B", "C"), 10, replace = T))
+  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE))
   
 first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
 
 first_row$N_row
-first_row$first_row
+first_row$row1
 }

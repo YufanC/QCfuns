@@ -5,7 +5,12 @@
 #' @param var a continuous variable in the input dataframe
 #' @param max_digit maximum number of digit to report
 #' @examples 
-#' Getdigit(adsl, "AGE")
+#' adsl <- data.frame(
+#'   USUBJID = 1:10,
+#'   TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
+#'   AGE = sample(18:65, 10, replace = TRUE))
+#'   
+#' getmaxdigit(adsl, "AGE", 1)
 #' @export
 getmaxdigit <- function(data, var, max_digit){
   if (sum((data[[var]] %% 1) == 0, na.rm = T) != length(data[[var]][!is.na(data[[var]])])){

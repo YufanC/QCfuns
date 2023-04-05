@@ -8,15 +8,17 @@
 #' @param input input dataframe 
 #' @param val measurement variable
 #' @param chg change from baseline measurement variable
-#' @param rowvar row variable (can be a set of two variables such as c("TRT01P", "AVISIT") or three variables such as c("PARAM", "TRT01P", "AVISIT"))
-#' @param stats_list stats variables to display. Accepted values are c("N", "Mean", "SD", "Median", "Min", "Max", "CV", "Base_mean") and the order of variables matters
+#' @param rowvar row variable (can be a set of two variables such as 
+#' \code{c("TRT01P", "AVISIT")} or three variables such as \code{c("PARAM", "TRT01P", "AVISIT")})
+#' @param stats_list stats variables to display. Accepted values are 
+#' \code{c("N", "Mean", "SD", "Median", "Min", "Max", "CV", "Base_mean")} and the order of variables matters
 #' @param max_digit largest number of digit to display 
 #' @param keep if = TRUE, keep all levels. Default = TRUE
 #' @return change from baseline table
 #' @examples 
 #' adsl <- data.frame(
 #'   USUBJID = 1:10,
-#'   TRT01P = sample(c("A", "B", "C"), 10, replace = T))
+#'   TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE))
 #'   
 #' param <- data.frame(PARAM = c("Test1", "Test2"))
 #' visit <- data.frame(AVISIT = c("Baseline", "Visit1", "Visit2"))
@@ -30,9 +32,11 @@
 #' adlb$digit <- ifelse(adlb$PARAM == "Test1", 0, 2)
 #' 
 #' ### Create analysis row first
-#' first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
+#' first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", 
+#'                         row_text = "Analysis set: Safety")
 #' 
-#' tab1 <- qc_chgfb(adlb, "AVAL", "CHG", rowvar = c("PARAM", "TRT01P", "AVISIT"), max_digit = 0, keep = FALSE)
+#' tab1 <- qc_chgfb(adlb, "AVAL", "CHG", rowvar = c("PARAM", "TRT01P", "AVISIT"), 
+#'                  max_digit = 0, keep = FALSE)
 #' tab1
 #' @export
 qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT01P", "AVISIT"), stats_list = c("N", "Mean", "SD", "Median", "Min", "Max"), max_digit = 2, keep = TRUE){
@@ -58,7 +62,7 @@ qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT0
                 CV     = formatC(round_sas(sd(.data[[val]], na.rm = T)/mean(.data[[val]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1),
                 .groups = "drop") %>% 
       mutate(across(everything(), ~replace(., trimws(.)=="NaN"|trimws(.)=="NA"|trimws(.)=="Inf"|trimws(.)=="-Inf", NA))) %>% 
-      select(rowvar[1], rowvar[2], stats_list[!stats_list %in% "Base_mean"])
+      select(all_of(c(rowvar, stats_list[!stats_list %in% "Base_mean"])))
     
     # Change from Baseline
     tab2 <- input %>% 
@@ -81,7 +85,7 @@ qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT0
                 CV     = formatC(round_sas(sd(.data[[chg]], na.rm = T)/mean(.data[[chg]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1),
                 .groups = "drop") %>% 
       mutate(across(everything(), ~replace(., trimws(.)=="NaN"|trimws(.)=="NA"|trimws(.)=="Inf"|trimws(.)=="-Inf", NA))) %>% 
-      select(rowvar[1], rowvar[2], stats_list)
+      select(all_of(c(rowvar, stats_list)))
     
     tab3 <- tab1 %>% 
       left_join(., tab2, by = c(rowvar[1], rowvar[2]))
@@ -106,7 +110,7 @@ qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT0
       mutate(across(c(.data[[rowvar[1]]], .data[[rowvar[2]]]), ~as.character(.)),
              row_text = if_else(ord_visit == 0, .data[[rowvar[1]]], .data[[rowvar[2]]]),
              N.y = ifelse(row_text == "Baseline", NA, N.y)) %>% 
-      select(row_text, everything(), -c(.data[[rowvar[1]]], .data[[rowvar[2]]], ord_param, ord_visit))
+      select(row_text, everything(), -all_of(rowvar), -c(ord_param, ord_visit))
     
   } else if (length(rowvar) == 3) {
     
@@ -129,7 +133,7 @@ qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT0
                 CV     = formatC(round_sas(sd(.data[[val]], na.rm = T)/mean(.data[[val]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1),
                 .groups = "drop") %>% 
       mutate(across(everything(), ~replace(., trimws(.)=="NaN"|trimws(.)=="NA"|trimws(.)=="Inf"|trimws(.)=="-Inf", NA))) %>% 
-      select(rowvar[1], rowvar[2], rowvar[3], stats_list[!stats_list %in% "Base_mean"])
+      select(all_of(c(rowvar, stats_list[!stats_list %in% "Base_mean"])))
     
     # Change from Baseline
     tab2 <- input %>% 
@@ -152,7 +156,7 @@ qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT0
                 CV     = formatC(round_sas(sd(.data[[chg]], na.rm = T)/mean(.data[[chg]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1),
                 .groups = "drop") %>% 
       mutate(across(everything(), ~replace(., trimws(.)=="NaN"|trimws(.)=="NA"|trimws(.)=="Inf"|trimws(.)=="-Inf", NA))) %>% 
-      select(rowvar[1], rowvar[2], rowvar[3], stats_list)
+      select(all_of(c(rowvar, stats_list)))
     
     tab3 <- tab1 %>% 
       left_join(., tab2, by = c(rowvar[1], rowvar[2], rowvar[3]))
@@ -189,7 +193,7 @@ qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT0
              row_text = if_else(ord_trt == 0, .data[[rowvar[1]]], 
                                 if_else(ord_visit == 0, .data[[rowvar[2]]], .data[[rowvar[3]]])),
              N.y = ifelse(row_text == "Baseline", NA, N.y)) %>% 
-      select(row_text, everything(), -c(.data[[rowvar[1]]], .data[[rowvar[2]]], .data[[rowvar[3]]], ord_param, ord_trt, ord_visit))
+      select(row_text, everything(), -all_of(rowvar), -c(ord_param, ord_trt, ord_visit))
     
   } else {
     stop("rowvar has to have 2 or 3 elements")

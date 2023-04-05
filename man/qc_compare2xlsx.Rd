@@ -36,5 +36,7 @@ compare result in xlsx
 compare two dataframe and output the result to xlsx
 }
 \examples{
+\dontshow{if (exists("qc") ) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 qc_compare2xlsx(qc = tab_qc, rtf = tab_rtf, path = qc, filename = "tableid")
+\dontshow{\}) # examplesIf}
 }

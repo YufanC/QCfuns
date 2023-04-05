@@ -2,6 +2,7 @@
 
 export(getdigit)
 export(getmaxdigit)
+export(qc_batchrun)
 export(qc_cat_row)
 export(qc_chgfb)
 export(qc_cntpct)

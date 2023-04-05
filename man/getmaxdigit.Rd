@@ -17,5 +17,10 @@ getmaxdigit(data, var, max_digit)
 Function to get maximum decimal place for continuous variable
 }
 \examples{
-Getdigit(adsl, "AGE")
+adsl <- data.frame(
+  USUBJID = 1:10,
+  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
+  AGE = sample(18:65, 10, replace = TRUE))
+  
+getmaxdigit(adsl, "AGE", 1)
 }

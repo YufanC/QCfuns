@@ -17,15 +17,12 @@ qc_shift(
 
 \item{acat}{measurement variable}
 
-\item{rowvar}{row variable (can be a set of two variables such as c("TRT01P", "AVISIT") or three variables such as c("PARAM", "TRT01P", "AVISIT"))}
+\item{bcat}{baseline variable}
 
-\item{chg}{change from baseline measurement variable}
+\item{rowvar}{row variable, Accepted values are a set of two variables such as 
+\code{c("TRT01P", "AVISIT")} or three variables such as \code{c("PARAM", "TRT01P", "AVISIT")}}
 
-\item{stats_list}{stats variables to display. Accepted values are c("N", "Mean", "SD", "Median", "Min", "Max", "CV", "Base_mean") and the order of variables matters}
-
-\item{max_digit}{largest number of digit to display}
-
-\item{keep}{if = TRUE, keep all levels. Default = FALSE}
+\item{drop_zero}{if true, replace '0' with NA in N column}
 }
 \value{
 shift table by rowvar
@@ -36,7 +33,7 @@ create shift table, accept up to 3 levels of row variables
 \examples{
 adsl <- data.frame(
   USUBJID = 1:10,
-  TRT01P = sample(c("A", "B", "C"), 10, replace = T))
+  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE))
   
 param <- data.frame(PARAM = c("Test1", "Test2"))
 visit <- data.frame(AVISIT = c("Baseline", "Visit1", "Visit2"))
@@ -44,8 +41,10 @@ visit <- data.frame(AVISIT = c("Baseline", "Visit1", "Visit2"))
 adlb0 <- merge(adsl, param)
 adlb <- merge(adlb0, visit)
 
-adlb$ANRIND <- factor(sample(c("Low", "Medium", "High"), 60, replace = T), levels = c("Low", "Medium", "High"))
-adlb$BNRIND <- factor(sample(c("Low", "Medium", "High"), 60, replace = T), levels = c("Low", "Medium", "High"))
+adlb$ANRIND <- factor(sample(c("Low", "Medium", "High"), 60, replace = TRUE), 
+                      levels = c("Low", "Medium", "High"))
+adlb$BNRIND <- factor(sample(c("Low", "Medium", "High"), 60, replace = TRUE), 
+                      levels = c("Low", "Medium", "High"))
 
 tab1 <- qc_shift(adlb, "ANRIND", "BNRIND", rowvar = c("PARAM", "TRT01P", "AVISIT"))
 tab1

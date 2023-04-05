@@ -17,5 +17,7 @@ getdigit(var, max_digit, criteria = 10)
 Function to get the decimal place of a numeric column
 }
 \examples{
-Getdigit(adsl, "AGE")
+age <- sample(18:65, 10, replace = TRUE)
+
+getdigit(age , 1)
 }

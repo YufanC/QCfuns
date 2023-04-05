@@ -6,7 +6,7 @@
 #' @examples 
 #' adlb <- data.frame(
 #'   USUBJID = 1:10,
-#'   TRT01P = sample(c("A", "B", "C"), 10, replace = T))
+#'   TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE))
 #'   
 #' first_row <- qc_cntrow1_shift(input = adlb, colvar = "TRT01P", row_text = "Analysis set: Full")
 #' first_row
@@ -22,7 +22,7 @@ qc_cntrow1_shift <- function(input, colvar = "TRT01P", row_text = "Analysis set:
     summarise(n = n_distinct(USUBJID), .groups = "drop") %>%
     mutate(N = n,
            row_text = if_else(.data[[colvar]] == "Total", row_text, .data[[colvar]])) %>% 
-    select(-c(n, .data[[colvar]]))
+    select(-n, -all_of(colvar))
   
   return(first_row)
 }

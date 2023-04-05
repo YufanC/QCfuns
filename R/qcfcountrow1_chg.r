@@ -6,7 +6,7 @@
 #' @examples 
 #' adlb <- data.frame(
 #'   USUBJID = 1:10,
-#'   TRT01P = sample(c("A", "B", "C"), 10, replace = T))
+#'   TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE))
 #'   
 #' first_row <- qc_cntrow1_chg(input = adlb, colvar = "TRT01P", row_text = "Analysis set: Full")
 #' first_row
@@ -19,7 +19,7 @@ qc_cntrow1_chg <- function(input, colvar = "TRT01P", row_text = "Analysis set: F
     mutate(N.x = n,
            N.y = n,
            row_text = .data[[colvar]]) %>% 
-    select(-c(n, .data[[colvar]])) %>% 
+    select(-n, -all_of(colvar)) %>% 
     bind_rows(c(row_text = row_text), .)
   
   return(first_row)

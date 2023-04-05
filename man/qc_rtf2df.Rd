@@ -18,6 +18,8 @@ a dataframe containing all the information from the rtf
 read in rtf and convert it to dataframe
 }
 \examples{
+\dontshow{if (exists("opath") ) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 dat <- qc_rtf2df("tsidem01", "PREPROD")
 dat
+\dontshow{\}) # examplesIf}
 }

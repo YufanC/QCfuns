@@ -9,8 +9,7 @@ qc_demo(
   colvar = "TRT01P",
   N_row,
   stats_list = c("Mean_SD", "Median", "Range"),
-  var_list = c("AGE", "AGEGR1", "SEX"),
-  con_var_list = "AGEGR1",
+  var_list,
   drop_var_list = NULL,
   max_digit = 2
 )
@@ -22,7 +21,7 @@ qc_demo(
 
 \item{N_row}{a dataframe with denominator N}
 
-\item{stats_list}{stats variables to display. Accepted values are c("Mean_SD", "Median", "Range", "Geo_mean", "Geo_CV", "Geo_CL") and the order of variables matters}
+\item{stats_list}{stats variables to display. Accepted values are \code{c("Mean_SD", "Median", "Range", "Geo_mean", "Geo_CV", "Geo_CL")} and the order of variables matters}
 
 \item{var_list}{variable list in demo table. Please see details.}
 
@@ -37,21 +36,21 @@ dataframe with demographic rows
 Function to create demographic rows
 }
 \details{
-var_list should be a dataframe with desired variable names as column names,
+\code{var_list} should be a dataframe with desired variable names as column names,
 the label of each variable display in tables as the first row, and optionally,
 the number of decimal places to keep in the output as the second row. If the 
 label row of a variable is empty, the row text and N row for this variable
 will be missing.
 }
 \examples{
-age <- sample(18:65, 10, replace = T)
+age <- sample(18:65, 10, replace = TRUE)
 
 adsl <- data.frame(
   USUBJID = 1:10,
-  TRT01P = sample(c("A", "B", "C"), 10, replace = T),
+  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
   AGE = age,
   AGEGR1 = ifelse(age < 45, "< 45", ">= 45"),
-  SEX = as.factor(sample(c("Female", "Male"), 10, replace = T)))
+  SEX = as.factor(sample(c("Female", "Male"), 10, replace = TRUE)))
   
 ### Create variable list based on DPS and assign labels to them.
 ### Leave "" For variables that concatenate to the corresponding categorical variables
@@ -64,7 +63,6 @@ var_list <- data.frame(
 ### Create analysis row first
 first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
 
-tab1 <- qc_demo(adsl, colvar = "TRT01P", N_row = N_row, var_list = var_list, 
-               con_var_list = var_list1)
+tab1 <- qc_demo(adsl, colvar = "TRT01P", N_row = first_row$N_row, var_list = var_list)
 tab1
 }

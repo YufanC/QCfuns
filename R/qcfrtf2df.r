@@ -4,7 +4,7 @@
 #' @param filename the rtf filename you want to read in
 #' @param level Choose from "PDEV", "PREPROD" or "PROD". If left blank, find the rtf file in output folder on different levels in sequence of "PDEV", "PREPROD" and "PROD"
 #' @return a dataframe containing all the information from the rtf
-#' @examples 
+#' @examplesIf exists("opath") 
 #' dat <- qc_rtf2df("tsidem01", "PREPROD")
 #' dat
 #' @export
@@ -13,9 +13,9 @@
 qc_rtf2df <- function(filename = "tsidem01", level = NULL){
   
   if (is.null(level)) {
-    a_rtf <- striprtf::read_rtf(read_path(opath, paste0(str_to_lower(filename), ".rtf")))
+    a_rtf <- striprtf::read_rtf(envsetup::read_path(opath, paste0(str_to_lower(filename), ".rtf")))
   } else {
-    a_rtf <- striprtf::read_rtf(read_path(opath[level], paste0(str_to_lower(filename), ".rtf")))
+    a_rtf <- striprtf::read_rtf(envsetup::read_path(opath[level], paste0(str_to_lower(filename), ".rtf")))
   }
   
   # Get the valuable lines 

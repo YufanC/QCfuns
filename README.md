@@ -32,7 +32,7 @@ library(stringr)
 library(tidyr)
 library(QCfuns)
 
-files.sources <- list.files(path = read_path(rptdrv, "qc"), pattern = "^\\qcf.*\\.r", full.names = T)
+files.sources <- list.files(path = read_path(rptdrv, "qc"), pattern = "qcf.*\\.r", full.names = T)
 sapply(files.sources, source)
 
 ###########################
@@ -48,9 +48,9 @@ adsl <- read_sas(read_path(a_in, "adsl.sas7bdat")) %>%
 
 first_row <- qc_cntrow1(adsl, "TRT01P", row_text = "Analysis set: Safety")
 
-tab1 <- qc_cat_row(adsl, "TRT01P", rowvar = "SEX", N_row = N_row)
+tab1 <- qc_cat_row(adsl, "TRT01P", rowvar = "SEX", N_row = first_row$N_row)
 
-tab_qc <- bind_rows(first_row[[2]], tab1) %>% 
+tab_qc <- bind_rows(first_row$row1, tab1) %>% 
   mutate(across(everything(), ~replace(., is.na(.), "")))
 
 ###################
