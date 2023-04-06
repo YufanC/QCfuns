@@ -81,11 +81,6 @@ addQCscript <- function() {
     #
     snippetsToCopy <- setdiff(trimws(pckgSnippetsFileDefinitions), trimws(rstudioSnippetDefinitions))
     snippetsNotToCopy <- intersect(trimws(pckgSnippetsFileDefinitions), trimws(rstudioSnippetDefinitions))
-    if (length(snippetsToCopy) == 0) {
-      # cat(paste0("(\nFollowing snippets will NOT be added because there is already a snippet with that name: ",
-      #            paste0(snippetsNotToCopy, collapse=", ") ,")"))
-      next()
-    }
     
     # Inform user about changes, ask to confirm action
     #
@@ -143,5 +138,4 @@ addQCscript <- function() {
   return(invisible(added))
   
 }
-
 
