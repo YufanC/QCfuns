@@ -39,8 +39,8 @@ qc_compare2xlsx <- function(qc, rtf, path = qc, filename = "TSIDEM01", max_diff 
     result$diffs.table$values.y <- unlist(result$diffs.table$values.y)
     
     ### Output comparison result to temp1.txt
-    check1 <- result$frame.summary.table$ncol[1] == result0$frame.summary.table$ncol[2]
-    check2 <- result$frame.summary.table$nrow[1] == result0$frame.summary.table$nrow[2]
+    check1 <- result$frame.summary.table$ncol[1] == result$frame.summary.table$ncol[2]
+    check2 <- result$frame.summary.table$nrow[1] == result$frame.summary.table$nrow[2]
     check3 <- nrow(result$diffs.table) == 0
     check_final <- ifelse(check1 & check2 & check3, "Yes", "No")
     ### Append all compare results and store them in temp1.txt
