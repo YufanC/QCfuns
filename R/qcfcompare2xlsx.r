@@ -16,7 +16,7 @@
 #' @importFrom arsenal comparedf
 qc_compare2xlsx <- function(qc, rtf, path = qc, filename = "TSIDEM01", max_diff = 50, max_diff_per_var = 10, version = TRUE) {
   
-  assertthat::assert_that(assertthat::is.dir(envsetup::write_path(path)))
+  assertthat::is.dir(envsetup::write_path(path))
   
   # Check whether the number of columns matches
   if (length(qc) != length(rtf)){
@@ -66,7 +66,7 @@ qc_compare2xlsx <- function(qc, rtf, path = qc, filename = "TSIDEM01", max_diff 
     
     # Save workbook to excel file 
     result_path <- file.path(envsetup::write_path(path), "results")
-    if (!exists(result_path)) dir.create(result_path)
+    if (is.na(file.info(result_path)$isdir)|file.info(result_path)$isdir == FALSE) dir.create(result_path)
     saveWorkbook(wb, file = file.path(result_path, filename1), overwrite = TRUE)
     
     # Output the summary of compare result in the log
