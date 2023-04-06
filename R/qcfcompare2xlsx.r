@@ -16,7 +16,7 @@
 #' @importFrom arsenal comparedf
 qc_compare2xlsx <- function(qc, rtf, path = qc, filename = "TSIDEM01", max_diff = 50, max_diff_per_var = 10, version = TRUE) {
   
-  assertthat::assert_that(is.dir(path))
+  assertthat::assert_that(assertthat::is.dir(envsetup::write_path(path)))
   
   # Check whether the number of columns matches
   if (length(qc) != length(rtf)){

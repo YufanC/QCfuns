@@ -16,7 +16,7 @@
 qc_batchrun <- function(files, path = qc){
   
   assertthat::assert_that(all(file.exists(files)))
-  assertthat::assert_that(is.dir(path))
+  assertthat::assert_that(assertthat::is.dir(envsetup::write_path(path)))
   
   ### Delete temp1.txt if it exists
   if (file.exists(file.path(envsetup::write_path(path), "temp1.txt"))) {
