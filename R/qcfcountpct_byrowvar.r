@@ -14,7 +14,7 @@
 #' 
 #' adae <- data.frame(
 #'   USUBJID = 1:10,
-#'   TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
+#'   TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)),
 #'   SEX = as.factor(sample(c("Female", "Male"), 10, replace = TRUE)),
 #'   AEBODSYS = ifelse(aedecod == "PT1", "SOC1", "SOC2"),
 #'   AEDECOD = aedecod)
@@ -30,6 +30,7 @@ qc_cntpct_byrowvar <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", 
   
   assertthat::assert_that(not_empty(input))
   assertthat::assert_that(assertthat::has_name(input, c(colvar, rowvar)))
+  assertthat::assert_that(is.factor(input[[colvar]]))
   
   ### first N row
   row1 <- input %>%

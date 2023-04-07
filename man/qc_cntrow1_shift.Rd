@@ -8,7 +8,7 @@ qc_cntrow1_shift(
   input,
   colvar = "TRT01P",
   row_text = "Analysis set: Full",
-  subset = "TRUE"
+  subset = NULL
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ qc_cntrow1_shift(
 
 \item{row_text}{row text}
 
-\item{subset}{subset criteria. Default = "TRUE" means no subsetting}
+\item{subset}{subset criteria. Default = NULL means no subsetting}
 }
 \value{
 Analysis set row for shift table
@@ -29,7 +29,7 @@ Function to create analysis set row for shift table
 \examples{
 adlb <- data.frame(
   USUBJID = 1:10,
-  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE))
+  TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)))
   
 first_row <- qc_cntrow1_shift(input = adlb, colvar = "TRT01P", row_text = "Analysis set: Full")
 first_row

@@ -8,7 +8,7 @@ qc_cntrow1_chg(
   input,
   colvar = "TRT01P",
   row_text = "Analysis set: Full",
-  subset = "TRUE"
+  subset = NULL
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ qc_cntrow1_chg(
 
 \item{row_text}{row text}
 
-\item{subset}{subset criteria. Default = "TRUE" means no subsetting}
+\item{subset}{subset criteria. Default = NULL means no subsetting}
 }
 \value{
 Analysis set row for change from baseline table
@@ -29,7 +29,7 @@ Function to create analysis set row for change from baseline table
 \examples{
 adlb <- data.frame(
   USUBJID = 1:10,
-  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE))
+  TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)))
   
 first_row <- qc_cntrow1_chg(input = adlb, colvar = "TRT01P", row_text = "Analysis set: Full")
 first_row

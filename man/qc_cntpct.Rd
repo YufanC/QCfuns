@@ -34,8 +34,8 @@ aedecod <- sample(paste0("PT", 1:3), 10, replace = TRUE)
 
 adae <- data.frame(
   USUBJID = 1:10,
-  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
-  SEX = as.factor(sample(c("Female", "Male"), 10, replace = TRUE)),
+  TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)),
+  SEX = factor(sample(c("Female", "Male"), 10, replace = TRUE)),
   AEBODSYS = ifelse(aedecod == "PT1", "SOC1", "SOC2"),
   AEDECOD = aedecod)
 

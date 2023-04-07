@@ -19,7 +19,7 @@ Function to get maximum decimal place for continuous variable
 \examples{
 adsl <- data.frame(
   USUBJID = 1:10,
-  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
+  TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)),
   AGE = sample(18:65, 10, replace = TRUE))
   
 getmaxdigit(adsl, "AGE", 1)

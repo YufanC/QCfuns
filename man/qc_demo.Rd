@@ -47,10 +47,10 @@ age <- sample(18:65, 10, replace = TRUE)
 
 adsl <- data.frame(
   USUBJID = 1:10,
-  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
+  TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)),
   AGE = age,
   AGEGR1 = ifelse(age < 45, "< 45", ">= 45"),
-  SEX = as.factor(sample(c("Female", "Male"), 10, replace = TRUE)))
+  SEX = factor(sample(c("Female", "Male"), 10, replace = TRUE)))
   
 ### Create variable list based on DPS and assign labels to them.
 ### Leave "" For variables that concatenate to the corresponding categorical variables

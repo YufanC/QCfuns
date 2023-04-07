@@ -35,8 +35,8 @@ Function to create rows for categorical variables in demographic table
 \examples{
 adsl <- data.frame(
   USUBJID = 1:10,
-  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
-  SEX = as.factor(sample(c("Female", "Male"), 10, replace = TRUE)))
+  TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)),
+  SEX = factor(sample(c("Female", "Male"), 10, replace = TRUE)))
 
 ### Create analysis row first
 first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")

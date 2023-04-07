@@ -14,10 +14,6 @@ test_that("error message works for qc_chgfb", {
   adlb$CHG <- ifelse(adlb$AVISIT == "Baseline", NA, adlb$AVAL - adlb$BASE)
   adlb$digit <- ifelse(adlb$PARAM == "Test1", 0, 2)
   
-  ### Create analysis row first
-  first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", 
-                          row_text = "Analysis set: Safety")
-  
   expect_error(qc_chgfb(adlb, "AVAL", "CHG", rowvar = c("PARAM", "TRT01P", "AVISIT"), 
                         stats_list = c("N", "Med"), max_digit = 0, keep = FALSE))
 })

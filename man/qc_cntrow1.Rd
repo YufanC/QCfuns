@@ -8,7 +8,7 @@ qc_cntrow1(
   input,
   colvar = "TRT01P",
   row_text = "Analysis set: Safety",
-  subset = "TRUE"
+  subset = NULL
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ qc_cntrow1(
 
 \item{row_text}{row text}
 
-\item{subset}{subset criteria. Default = "TRUE" means no subsetting}
+\item{subset}{subset criteria. Default = NULL means no subsetting}
 }
 \value{
 Analysis set row list containing two elements.
@@ -31,7 +31,7 @@ Function to create analysis set row
 \examples{
 adae <- data.frame(
   USUBJID = 1:10,
-  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE))
+  TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)))
   
 first_row <- qc_cntrow1(input = adae, colvar = "TRT01P", row_text = "Analysis set: Safety")
 

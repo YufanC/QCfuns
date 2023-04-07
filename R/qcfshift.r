@@ -11,7 +11,7 @@
 #' @examples 
 #' adsl <- data.frame(
 #'   USUBJID = 1:10,
-#'   TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE))
+#'   TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)))
 #'   
 #' param <- data.frame(PARAM = c("Test1", "Test2"))
 #' visit <- data.frame(AVISIT = c("Baseline", "Visit1", "Visit2"))
@@ -31,6 +31,7 @@ qc_shift <- function(input, acat = "ANRIND", bcat = "BNRIND", rowvar = c("PARAM"
   
   assertthat::assert_that(not_empty(input))
   assertthat::assert_that(assertthat::has_name(input, c(acat, bcat, rowvar)))
+  assertthat::assert_that(is.factor(input[[bcat]]))
   
   if(length(rowvar) == 1){
     

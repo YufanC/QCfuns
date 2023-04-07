@@ -18,7 +18,7 @@
 #' @examples 
 #' adsl <- data.frame(
 #'   USUBJID = 1:10,
-#'   TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE))
+#'   TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)))
 #'   
 #' param <- data.frame(PARAM = c("Test1", "Test2"))
 #' visit <- data.frame(AVISIT = c("Baseline", "Visit1", "Visit2"))
@@ -30,10 +30,6 @@
 #' adlb$AVAL <- sample(1:100, 60)
 #' adlb$CHG <- ifelse(adlb$AVISIT == "Baseline", NA, adlb$AVAL - adlb$BASE)
 #' adlb$digit <- ifelse(adlb$PARAM == "Test1", 0, 2)
-#' 
-#' ### Create analysis row first
-#' first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", 
-#'                         row_text = "Analysis set: Safety")
 #' 
 #' tab1 <- qc_chgfb(adlb, "AVAL", "CHG", rowvar = c("PARAM", "TRT01P", "AVISIT"), 
 #'                  max_digit = 0, keep = FALSE)

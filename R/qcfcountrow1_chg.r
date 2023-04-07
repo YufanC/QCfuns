@@ -6,20 +6,20 @@
 #' @examples 
 #' adlb <- data.frame(
 #'   USUBJID = 1:10,
-#'   TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE))
+#'   TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)))
 #'   
 #' first_row <- qc_cntrow1_chg(input = adlb, colvar = "TRT01P", row_text = "Analysis set: Full")
 #' first_row
 #' @export
-qc_cntrow1_chg <- function(input, colvar = "TRT01P", row_text = "Analysis set: Full", subset = "TRUE"){
+qc_cntrow1_chg <- function(input, colvar = "TRT01P", row_text = "Analysis set: Full", subset = NULL){
   
   assertthat::assert_that(not_empty(input))
   assertthat::assert_that(assertthat::has_name(input, colvar))
+  assertthat::assert_that(is.factor(input[[colvar]]))
   
   first_row <- input %>%
-    filter(eval(parse(text = subset))) %>% 
     group_by(.data[[colvar]]) %>%
-    summarise(n = n_distinct(USUBJID), .groups = "drop") %>%
+    summarise(n = ifelse(is.null(subset), n_distinct(USUBJID), n_distinct(USUBJID[eval(parse(text = subset))])), .groups = "drop") %>% 
     mutate(N.x = n,
            N.y = n,
            row_text = .data[[colvar]]) %>% 

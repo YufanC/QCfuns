@@ -10,8 +10,8 @@
 #' @examples 
 #' adsl <- data.frame(
 #'   USUBJID = 1:10,
-#'   TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
-#'   SEX = as.factor(sample(c("Female", "Male"), 10, replace = TRUE)))
+#'   TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)),
+#'   SEX = factor(sample(c("Female", "Male"), 10, replace = TRUE)))
 #' 
 #' ### Create analysis row first
 #' first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
@@ -24,6 +24,7 @@ qc_cat_row <- function(input, colvar = "TRT01P", rowvar = "SEX", row_text = "Sex
   
   assertthat::assert_that(not_empty(input))
   assertthat::assert_that(assertthat::has_name(input, c(colvar, rowvar)))
+  assertthat::assert_that(is.factor(input[[colvar]]))
   
   # Calculate count and percentage
   tab1 <- input %>% 
@@ -49,8 +50,8 @@ qc_cat_row <- function(input, colvar = "TRT01P", rowvar = "SEX", row_text = "Sex
   
   tab4 <- cbind("N", tab3)
   
-  colnames(tab2) <- c("row_text", levels(as.factor(pull(input, colvar))))
-  colnames(tab4) <- c("row_text", levels(as.factor(pull(input, colvar))))
+  colnames(tab2) <- c("row_text", levels(input[[colvar]]))
+  colnames(tab4) <- c("row_text", levels(input[[colvar]]))
   
   tab5 <- bind_rows(data.frame(row_text = row_text), tab4, tab2)
   
@@ -69,7 +70,7 @@ qc_cat_row <- function(input, colvar = "TRT01P", rowvar = "SEX", row_text = "Sex
 #' @examples 
 #' adsl <- data.frame(
 #'   USUBJID = 1:10,
-#'   TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
+#'   TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)),
 #'   AGE = sample(18:65, 10, replace = TRUE))
 #'   
 #' tab1 <- qc_num_row(input = adsl, colvar = "TRT01P", rowvar = "AGE", 
@@ -82,6 +83,7 @@ qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", row_text = "Age
   assertthat::assert_that(not_empty(input))
   assertthat::assert_that(assertthat::has_name(input, c(colvar, rowvar)))
   assertthat::assert_that(stats_accept_num(stats_list))
+  assertthat::assert_that(is.factor(input[[colvar]]))
   
   # Calculate statistics
   tab1 <- input %>% 
@@ -141,8 +143,8 @@ qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", row_text = "Age
   
   tab6 <- cbind("N", tab5)
   
-  colnames(tab4) <- c("row_text", levels(as.factor(pull(input, colvar))))
-  colnames(tab6) <- c("row_text", levels(as.factor(pull(input, colvar))))
+  colnames(tab4) <- c("row_text", levels(input[[colvar]]))
+  colnames(tab6) <- c("row_text", levels(input[[colvar]]))
   
   tab7 <- bind_rows(data.frame(row_text = row_text), tab6, tab4) %>% 
     mutate(row_text = case_when(
@@ -178,10 +180,10 @@ qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", row_text = "Age
 #' 
 #' adsl <- data.frame(
 #'   USUBJID = 1:10,
-#'   TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
+#'   TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)),
 #'   AGE = age,
 #'   AGEGR1 = ifelse(age < 45, "< 45", ">= 45"),
-#'   SEX = as.factor(sample(c("Female", "Male"), 10, replace = TRUE)))
+#'   SEX = factor(sample(c("Female", "Male"), 10, replace = TRUE)))
 #'   
 #' ### Create variable list based on DPS and assign labels to them.
 #' ### Leave "" For variables that concatenate to the corresponding categorical variables

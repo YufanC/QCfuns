@@ -35,7 +35,7 @@ Function to create rows for continuous variables in demographic table
 \examples{
 adsl <- data.frame(
   USUBJID = 1:10,
-  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE),
+  TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)),
   AGE = sample(18:65, 10, replace = TRUE))
   
 tab1 <- qc_num_row(input = adsl, colvar = "TRT01P", rowvar = "AGE", 

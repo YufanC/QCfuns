@@ -45,7 +45,7 @@ of decimal places will depend on the number of decimal places of AVAL/CHG
 \examples{
 adsl <- data.frame(
   USUBJID = 1:10,
-  TRT01P = sample(c("A", "B", "C"), 10, replace = TRUE))
+  TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)))
   
 param <- data.frame(PARAM = c("Test1", "Test2"))
 visit <- data.frame(AVISIT = c("Baseline", "Visit1", "Visit2"))
