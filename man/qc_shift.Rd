@@ -6,8 +6,8 @@
 \usage{
 qc_shift(
   input,
-  acat = "ANRIND",
-  bcat = "BNRIND",
+  rowcat = "ANRIND",
+  colcat = "BNRIND",
   rowvar = c("PARAM", "AVISIT", "TRT01P"),
   drop_zero = TRUE
 )
@@ -15,9 +15,9 @@ qc_shift(
 \arguments{
 \item{input}{input dataframe}
 
-\item{acat}{measurement variable}
+\item{rowcat}{row category variable}
 
-\item{bcat}{baseline variable}
+\item{colcat}{column category variable}
 
 \item{rowvar}{row variable, Accepted values are a set of two variables such as 
 \code{c("TRT01P", "AVISIT")} or three variables such as \code{c("PARAM", "TRT01P", "AVISIT")}}

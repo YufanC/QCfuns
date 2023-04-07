@@ -2,8 +2,8 @@
 #'
 #' create shift table, accept up to 3 levels of row variables 
 #' @param input input dataframe 
-#' @param acat measurement variable
-#' @param bcat baseline variable
+#' @param rowcat row category variable
+#' @param colcat column category variable
 #' @param rowvar row variable, Accepted values are a set of two variables such as 
 #' \code{c("TRT01P", "AVISIT")} or three variables such as \code{c("PARAM", "TRT01P", "AVISIT")}
 #' @param drop_zero if true, replace '0' with NA in N column
@@ -27,16 +27,16 @@
 #' tab1 <- qc_shift(adlb, "ANRIND", "BNRIND", rowvar = c("PARAM", "TRT01P", "AVISIT"))
 #' tab1
 #' @export
-qc_shift <- function(input, acat = "ANRIND", bcat = "BNRIND", rowvar = c("PARAM", "AVISIT", "TRT01P"), drop_zero = TRUE){
+qc_shift <- function(input, rowcat = "ANRIND", colcat = "BNRIND", rowvar = c("PARAM", "AVISIT", "TRT01P"), drop_zero = TRUE){
   
   assertthat::assert_that(not_empty(input))
-  assertthat::assert_that(assertthat::has_name(input, c(acat, bcat, rowvar)))
-  assertthat::assert_that(is.factor(input[[bcat]]))
+  assertthat::assert_that(assertthat::has_name(input, c(rowcat, colcat, rowvar)))
+  assertthat::assert_that(is.factor(input[[colcat]]))
   
   if(length(rowvar) == 1){
     
     # Create frequency table
-    tab1 <- table(input[[acat]], input[[bcat]], input[[rowvar[1]]], useNA = "always")
+    tab1 <- table(input[[rowcat]], input[[colcat]], input[[rowvar[1]]], useNA = "always")
     tab2 <- ftable(addmargins(tab1), row.vars = c(3,1))
     tab3 <- as.matrix(tab2)
     
@@ -45,11 +45,11 @@ qc_shift <- function(input, acat = "ANRIND", bcat = "BNRIND", rowvar = c("PARAM"
     
     # Combine the row names and frequency table together
     tab4 <- as.data.frame(cbind(rnames, tab3))
-    colnames(tab4) <- c(rowvar, acat, levels(input[[bcat]]), "NA_col", "Sum")
+    colnames(tab4) <- c(rowvar, rowcat, levels(input[[colcat]]), "NA_col", "Sum")
     
     # Get rid of the NA and sum rows and NA cols
     tab5 <- tab4 %>% 
-      filter(!.data[[rowvar[1]]] %in% c("NA", "Sum") & .data[[acat]] != "NA") %>% 
+      filter(!.data[[rowvar[1]]] %in% c("NA", "Sum") & .data[[rowcat]] != "NA") %>% 
       mutate(across(c(NA_col, Sum), as.numeric), 
              Total = Sum - NA_col) %>%  # Divide NA counts from total
       select(-c(NA_col, Sum)) %>% 
@@ -72,22 +72,22 @@ qc_shift <- function(input, acat = "ANRIND", bcat = "BNRIND", rowvar = c("PARAM"
       left_join(param_row, by = rowvar[1]) %>% 
       group_by(.data[[rowvar[1]]], .drop = F) %>% 
       mutate(ord_ind = 1:n(),
-             across(c(levels(input[[bcat]]), "Total"), ~ifelse(is.na(N), NA, .))) %>% 
+             across(c(levels(input[[colcat]]), "Total"), ~ifelse(is.na(N), NA, .))) %>% 
       ungroup() %>% 
       select(-N)
     
     tab_combine <- bind_rows(param_row, ind_row) %>% 
       arrange(ord_param, ord_ind) %>% 
-      mutate(across(all_of(c(rowvar, acat)), ~as.character(.)),
+      mutate(across(all_of(c(rowvar, rowcat)), ~as.character(.)),
              row_text = if_else(ord_ind == 0, .data[[rowvar[1]]],
-                                if_else(.data[[acat]] == "Sum", "Total", str_to_title(.data[[acat]])))) %>% 
-      select(row_text, everything(), -c(ord_param, ord_ind), -all_of(c(rowvar, acat)))
+                                if_else(.data[[rowcat]] == "Sum", "Total", str_to_title(.data[[rowcat]])))) %>% 
+      select(row_text, everything(), -c(ord_param, ord_ind), -all_of(c(rowvar, rowcat)))
     
     return(tab_combine)
     
   } else if (length(rowvar) == 2){
     # Create frequency table
-    tab1 <- table(input[[acat]], input[[bcat]], input[[rowvar[2]]], input[[rowvar[1]]], useNA = "always")
+    tab1 <- table(input[[rowcat]], input[[colcat]], input[[rowvar[2]]], input[[rowvar[1]]], useNA = "always")
     tab2 <- ftable(addmargins(tab1), row.vars = c(4,3,1))
     tab3 <- as.matrix(tab2)
     
@@ -96,11 +96,11 @@ qc_shift <- function(input, acat = "ANRIND", bcat = "BNRIND", rowvar = c("PARAM"
     
     # Combine the row names and frequency table together
     tab4 <- as.data.frame(cbind(rnames, tab3))
-    colnames(tab4) <- c(rowvar, acat, levels(input[[bcat]]), "NA_col", "Sum")
+    colnames(tab4) <- c(rowvar, rowcat, levels(input[[colcat]]), "NA_col", "Sum")
     
     # Get rid of the NA and sum rows and NA cols
     tab5 <- tab4 %>% 
-      filter(!.data[[rowvar[2]]] %in% c("NA", "Sum") & !.data[[rowvar[1]]] %in% c("NA", "Sum") & .data[[acat]] != "NA") %>% 
+      filter(!.data[[rowvar[2]]] %in% c("NA", "Sum") & !.data[[rowvar[1]]] %in% c("NA", "Sum") & .data[[rowcat]] != "NA") %>% 
       mutate(across(c(NA_col, Sum), as.numeric), 
              Total = Sum - NA_col) %>%  # Divide NA counts from total
       select(-c(NA_col, Sum)) %>% 
@@ -133,23 +133,23 @@ qc_shift <- function(input, acat = "ANRIND", bcat = "BNRIND", rowvar = c("PARAM"
       left_join(visit_row, by = c(rowvar[1], rowvar[2])) %>% 
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .drop = F) %>% 
       mutate(ord_ind = 1:n(),
-             across(c(levels(input[[bcat]]), "Total"), ~ifelse(is.na(N), NA, .))) %>% 
+             across(c(levels(input[[colcat]]), "Total"), ~ifelse(is.na(N), NA, .))) %>% 
       ungroup() %>% 
       select(-N)
     
     tab_combine <- bind_rows(param_row, visit_row, ind_row) %>% 
       arrange(ord_param, ord_visit, ord_ind) %>% 
-      mutate(across(all_of(c(rowvar, acat)), ~as.character(.)),
+      mutate(across(all_of(c(rowvar, rowcat)), ~as.character(.)),
              row_text = if_else(ord_visit == 0, .data[[rowvar[1]]], 
                                 if_else(ord_ind == 0, .data[[rowvar[2]]],
-                                        if_else(.data[[acat]] == "Sum", "Total", str_to_title(.data[[acat]]))))) %>% 
-      select(row_text, everything(), -c(ord_param, ord_visit, ord_ind), -all_of(c(rowvar, acat)))
+                                        if_else(.data[[rowcat]] == "Sum", "Total", str_to_title(.data[[rowcat]]))))) %>% 
+      select(row_text, everything(), -c(ord_param, ord_visit, ord_ind), -all_of(c(rowvar, rowcat)))
     
     return(tab_combine)
     
   } else if (length(rowvar) == 3){
     # Create frequency table
-    tab1 <- table(input[[acat]], input[[bcat]], input[[rowvar[3]]], input[[rowvar[2]]], input[[rowvar[1]]], useNA = "always")
+    tab1 <- table(input[[rowcat]], input[[colcat]], input[[rowvar[3]]], input[[rowvar[2]]], input[[rowvar[1]]], useNA = "always")
     tab2 <- ftable(addmargins(tab1), row.vars = c(5,4,3,1))
     tab3 <- as.matrix(tab2)
     
@@ -158,12 +158,12 @@ qc_shift <- function(input, acat = "ANRIND", bcat = "BNRIND", rowvar = c("PARAM"
     
     # Combine the row names and frequency table together
     tab4 <- as.data.frame(cbind(rnames, tab3))
-    colnames(tab4) <- c(rowvar, acat, levels(input[[bcat]]), "NA_col", "Sum")
+    colnames(tab4) <- c(rowvar, rowcat, levels(input[[colcat]]), "NA_col", "Sum")
     
     # Get rid of the NA and sum rows and NA cols
     tab5 <- tab4 %>% 
       filter(!.data[[rowvar[3]]] %in% c("NA", "Sum") & !.data[[rowvar[2]]] %in% c("NA", "Sum") &
-             !.data[[rowvar[1]]] %in% c("NA", "Sum") & .data[[acat]] != "NA") %>% 
+             !.data[[rowvar[1]]] %in% c("NA", "Sum") & .data[[rowcat]] != "NA") %>% 
       mutate(across(c(NA_col, Sum), as.numeric), 
              Total = Sum - NA_col) %>%  # Divide NA counts from total
       select(-c(NA_col, Sum)) %>% 
@@ -207,18 +207,18 @@ qc_shift <- function(input, acat = "ANRIND", bcat = "BNRIND", rowvar = c("PARAM"
       left_join(trt_row, by = c(rowvar[1], rowvar[2], rowvar[3])) %>% 
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .data[[rowvar[3]]], .drop = F) %>% 
       mutate(ord_ind = 1:n(),
-             across(c(levels(input[[bcat]]), "Total"), ~ifelse(is.na(N), NA, .))) %>% 
+             across(c(levels(input[[colcat]]), "Total"), ~ifelse(is.na(N), NA, .))) %>% 
       ungroup() %>% 
       select(-N)
     
     tab_combine <- bind_rows(param_row, visit_row, trt_row, ind_row) %>% 
       arrange(ord_param, ord_visit, ord_trt, ord_ind) %>% 
-      mutate(across(all_of(c(rowvar, acat)), ~as.character(.)),
+      mutate(across(all_of(c(rowvar, rowcat)), ~as.character(.)),
              row_text = if_else(ord_visit == 0, .data[[rowvar[1]]], 
                                 if_else(ord_trt == 0, .data[[rowvar[2]]], 
                                         if_else(ord_ind == 0, .data[[rowvar[3]]],
-                                                if_else(.data[[acat]] == "Sum", "Total", str_to_title(.data[[acat]])))))) %>% 
-      select(row_text, everything(), -c(ord_param, ord_trt, ord_visit, ord_ind), -all_of(c(rowvar, acat)))
+                                                if_else(.data[[rowcat]] == "Sum", "Total", str_to_title(.data[[rowcat]])))))) %>% 
+      select(row_text, everything(), -c(ord_param, ord_trt, ord_visit, ord_ind), -all_of(c(rowvar, rowcat)))
     
     return(tab_combine)
     
