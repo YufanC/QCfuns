@@ -36,6 +36,7 @@ qc_rtf2df <- function(filename = "tsidem01", level = NULL){
   
   # Delete rows with all values equal to ""
   dat3 <- dat2[rowSums(dat2 == "") != ncol(dat2), ]
+  rownames(dat3) <- NULL
   
   return(dat3)
   

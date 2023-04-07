@@ -40,7 +40,7 @@ addQCscript <- function() {
     
     # Try to get template, if template is not found skip it
     #
-    pckgSnippetsFilesPath <- system.file(pckgSnippetsFiles[i], package = "QCfuns")
+    pckgSnippetsFilesPath <- system.file("rstudio", pckgSnippetsFiles[i], package = "QCfuns")
     if (pckgSnippetsFilesPath == "") {
       next()
     }

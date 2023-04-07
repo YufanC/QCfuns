@@ -111,11 +111,14 @@ qc_cntpct_byrowvar <- function(input, colvar = "TRT01P", rowvar = c("AEBODSYS", 
       rowwise() %>% 
       mutate(across(starts_with("n"), ~replace(., is.na(.), 0)),
              n_order = ifelse(is.null(col_order), rowSums(across(starts_with("n")), na.rm = T), as.numeric(.data[[col_order]]))) %>% 
+      ungroup() %>% 
       arrange(desc(n_order), .data[[rowvar]]) %>% 
       select(-starts_with("n")) %>% 
-      mutate(across(everything(), ~replace(., is.na(.), "0"))) %>% 
+      mutate(across(everything(), ~replace(., is.na(.), "0")),
+             row_text = .data[[rowvar]]) %>% 
+      select(-all_of(rowvar)) %>% 
+      relocate(row_text) %>% 
       filter(!if_all(!contains("row_text") , ~ . == '0'))
-      ungroup()
     
   } else {
     stop("rowvar has to have 1 or 2 elements")
