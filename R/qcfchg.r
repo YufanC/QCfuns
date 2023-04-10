@@ -41,17 +41,26 @@ qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT0
   assertthat::assert_that(assertthat::has_name(input, c(val, chg, rowvar)))
   assertthat::assert_that(stats_accept(stats_list))
   
+  ### Get maxium digit
+  tab_digit <- input %>% 
+    filter(!is.na(.data[[val]])) %>% 
+    # Get the original decimal place
+    rowwise() %>% 
+    mutate(digit0 = ifelse(exists("digit", input), digit, NA),
+           digit0 = ifelse(!is.na(digit0), digit0,
+                           getdigit(.data[[val]], max_digit = max_digit))) %>% 
+    ungroup() %>% 
+    group_by(.data[[rowvar[1]]]) %>% 
+    summarise(digit0 = max(digit0)) %>% 
+    select(all_of(rowvar[1]), digit0) %>% 
+    ungroup()
+  
   if(length(rowvar) == 2){
     
     # Measured Value
     tab1 <- input %>% 
       filter(!is.na(.data[[val]])) %>% 
-      # Get the original decimal place
-      rowwise() %>% 
-      mutate(digit0 = ifelse(exists("digit", input), digit, NA),
-             digit0 = ifelse(!is.na(digit0), digit0,
-                             getdigit(.data[[val]], max_digit = max_digit))) %>% 
-      ungroup() %>% 
+      left_join(tab_digit, by = rowvar[1]) %>%
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .drop = !keep) %>% 
       summarise(N      = ifelse(sum(!is.na(.data[[val]])) == 0, 0, sum(!is.na(.data[[val]]))),
                 Mean   = formatC(round_sas(mean(.data[[val]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1), 
@@ -67,13 +76,7 @@ qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT0
     # Change from Baseline
     tab2 <- input %>% 
       filter(!is.na(.data[[chg]])) %>% 
-      # Get the original decimal place
-      rowwise() %>% 
-      mutate(digit0 = ifelse(exists("digit", input), digit, NA),
-             digit0 = ifelse(!is.na(digit0), digit0,
-                             ifelse(chg != "PCHG", getdigit(.data[[chg]], max_digit = max_digit),
-                                    getdigit(.data[[val]], max_digit = max_digit)))) %>% 
-      ungroup() %>% 
+      left_join(tab_digit, by = rowvar[1]) %>%
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .drop = !keep) %>% 
       summarise(Base_mean  = formatC(round_sas(mean(BASE, na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1), 
                 N      = ifelse(sum(!is.na(.data[[chg]])) == 0, 0, sum(!is.na(.data[[chg]]))),
@@ -117,12 +120,7 @@ qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT0
     # Measured Value
     tab1 <- input %>% 
       filter(!is.na(.data[[val]])) %>% 
-      # Get the original decimal place
-      rowwise() %>% 
-      mutate(digit0 = ifelse(exists("digit", input), digit, NA),
-             digit0 = ifelse(!is.na(digit0), digit0,
-                             getdigit(.data[[val]], max_digit = max_digit))) %>% 
-      ungroup() %>% 
+      left_join(tab_digit, by = rowvar[1]) %>%
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .data[[rowvar[3]]], .drop = !keep) %>% 
       summarise(N      = ifelse(sum(!is.na(.data[[val]])) == 0, 0, sum(!is.na(.data[[val]]))),
                 Mean   = formatC(round_sas(mean(.data[[val]], na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1), 
@@ -138,13 +136,7 @@ qc_chgfb <- function(input, val = "AVAL", chg = "CHG", rowvar = c("PARAM", "TRT0
     # Change from Baseline
     tab2 <- input %>% 
       filter(!is.na(.data[[chg]])) %>% 
-      # Get the original decimal place
-      rowwise() %>% 
-      mutate(digit0 = ifelse(exists("digit", input), digit, NA),
-             digit0 = ifelse(!is.na(digit0), digit0,
-                             ifelse(chg != "PCHG", getdigit(.data[[chg]], max_digit = max_digit),
-                                    getdigit(.data[[val]], max_digit = max_digit)))) %>% 
-      ungroup() %>% 
+      left_join(tab_digit, by = rowvar[1]) %>%
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .data[[rowvar[3]]], .drop = !keep) %>% 
       summarise(Base_mean  = formatC(round_sas(mean(BASE, na.rm = T), max(digit0) + 1), format = "f", digits = max(digit0) + 1), 
                 N      = ifelse(sum(!is.na(.data[[chg]])) == 0, 0, sum(!is.na(.data[[chg]]))),
