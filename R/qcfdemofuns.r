@@ -216,17 +216,23 @@ qc_demo <- function(input, colvar = "TRT01P", N_row, stats_list = c("Mean_SD", "
     
     # Build rows for numeric and categorical variables separately
     if (class(input[[colnames(var_list)[i]]]) %in% c("integer", "numeric")){
-      tab <- qc_num_row(input, colvar, colnames(var_list)[i], stats_list = stats_list, digit = digit0)
+      tab <- qc_num_row(input, colvar, colnames(var_list)[i], stats_list = stats_list, 
+                        digit = digit0, row_text = var_list[1, i])
     } else if (class(input[[colnames(var_list)[i]]]) %in% c("factor", "character")){
-      tab <- qc_cat_row(input, colvar, colnames(var_list)[i], N_row = N_row, keep = !(colnames(var_list)[i] %in% drop_var_list))
+      
+      # combine group variable with its continuous counterpart
+      if (colnames(var_list)[i] %in% colnames(var_list[which(str_trim(var_list[1, ]) == "")])) {
+        tab <- qc_cat_row(input, colvar, colnames(var_list)[i], N_row = N_row, 
+                                  keep = !(colnames(var_list)[i] %in% drop_var_list)) %>% 
+          filter(!row_text %in% c("Sex", "N"))
+      } else {
+        tab <- qc_cat_row(input, colvar, colnames(var_list)[i], N_row = N_row, 
+                          keep = !(colnames(var_list)[i] %in% drop_var_list), row_text = var_list[1, i])
+      }
+     
     }
-    # Append them together, combine group variable with its continuous counterpart
-    if (colnames(var_list)[i] %in% colnames(var_list[which(str_trim(var_list[1, ]) == "")])){
-      tab <- tab[-1, ]
-      tab_final <- bind_rows(tab_final, tab)
-    } else {
-      tab_final <- bind_rows(tab_final, data.frame(row_text = var_list[1, i]), tab)
-    }
+    # Append them together 
+    tab_final <- bind_rows(tab_final, tab)
   }
   
   return(tab_final)
