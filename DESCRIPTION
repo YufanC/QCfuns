@@ -8,13 +8,13 @@ Authors@R:
 License: Apache License (>= 2)
 Imports:
     arsenal (>= 3.6.3),
+    assertthat,
     dplyr,
     openxlsx (>= 4.2.4),
     stringr,
     striprtf (>= 0.5.3),
     tidyr
 Suggests: 
-    assertthat,
     envsetup,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
