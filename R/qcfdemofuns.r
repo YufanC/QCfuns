@@ -107,15 +107,18 @@ qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", row_text = "Age
                                 exp(mean(log(.data[[rowvar]][.data[[rowvar]] > 0]), na.rm = T) + qt(0.975,df=n()-1)*sd(log(.data[[rowvar]][.data[[rowvar]] > 0]))/sqrt(n()))),
               .groups = "drop") %>% 
     arrange(.data[[colvar]]) %>% 
-    mutate(Mean_SD = ifelse(!is.na(SD), 
-                            paste0(formatC(round_sas(Mean, digit + 1), format = "f", digits = (digit + 1)), 
-                                   ' (', formatC(SD, format = "f", digits = (digit + 2)), ')'), 
-                            paste0(formatC(Mean, format = "f", digits = (digit + 1)), 
-                                   ' (-)')),
-           Median = formatC(round_sas(Median, digit + 1), format = "f", digits = (digit + 1)),
-           Range = paste0("(", formatC(round_sas(Min, digit), format = "f", digits = digit), "; ", 
-                          formatC(round_sas(Max, digit), format = "f", digits = digit), ")"),
-           Geo_CL = ifelse(is.na(Gmean_LL), NA, 
+    mutate(Mean_SD = ifelse(is.na(Mean), NA,
+                            ifelse(!is.na(SD), 
+                                   paste0(formatC(round_sas(Mean, digit + 1), format = "f", digits = (digit + 1)), 
+                                          ' (', formatC(SD, format = "f", digits = (digit + 2)), ')'), 
+                                   paste0(formatC(Mean, format = "f", digits = (digit + 1)), 
+                                          ' (-)'))),
+           Median = ifelse(is.na(Median), NA, 
+                           formatC(round_sas(Median, digit + 1), format = "f", digits = (digit + 1))),
+           Range = ifelse(is.na(Min)|is.na(Max), NA,
+                          paste0("(", formatC(round_sas(Min, digit), format = "f", digits = digit), "; ", 
+                          formatC(round_sas(Max, digit), format = "f", digits = digit), ")")),
+           Geo_CL = ifelse(is.na(Gmean_LL)|is.na(Gmean_HL), NA, 
                            paste0("(", formatC(round_sas(Gmean_LL, digit + 1), format = "f", digits = (digit + 1)), "; ", 
                                   formatC(round_sas(Gmean_HL, digit + 1), format = "f", digits = (digit + 1)), ")")))
   
