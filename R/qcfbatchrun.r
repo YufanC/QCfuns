@@ -44,7 +44,7 @@ qc_batchrun <- function(files, path = qc){
   
   # vie file in Viewer window
   viewer <- getOption("viewer")
-  viewer(temp_file)
+  rstudioapi::viewer(temp_file)
   # diverts output back to console
   sink()
   
