@@ -4,7 +4,6 @@
 #' Function to create rows for categorical variables in demographic table
 #' @inheritParams qc_cntrow1
 #' @param rowvar row variable
-#' @param N_row a dataframe with denominator N
 #' @param keep if = TRUE, keep all factor levels
 #' @return dataframe with demographic rows 
 #' @examples 
@@ -12,19 +11,31 @@
 #'   USUBJID = 1:10,
 #'   TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)),
 #'   SEX = factor(sample(c("Female", "Male"), 10, replace = TRUE)))
-#' 
-#' ### Create analysis row first
-#' first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
 #'   
-#' tab1 <- qc_cat_row(adsl, "TRT01P", "SEX", N_row = first_row$N_row)
+#' tab1 <- qc_cat_row(adsl, "TRT01P", "SEX")
 #' tab1
 #' @export
 ### Categorical variable rows
-qc_cat_row <- function(input, colvar = "TRT01P", rowvar = "SEX", row_text = "Sex", N_row, keep = TRUE){
+qc_cat_row <- function(input, colvar = "TRT01P", rowvar = "SEX", row_text = "Sex", keep = TRUE){
   
   assertthat::assert_that(not_empty(input))
   assertthat::assert_that(assertthat::has_name(input, c(colvar, rowvar)))
   assertthat::assert_that(is.factor(input[[colvar]]))
+  
+  N_row <- input %>% 
+    filter(!is.na(.data[[rowvar]])) %>% 
+    group_by(.data[[colvar]], .drop = F) %>% 
+    summarise(n = n_distinct(USUBJID), .groups = "drop") %>% 
+    mutate(N_trt = n) %>% 
+    select(-n)
+  
+  N_row1 <- N_row %>% 
+    distinct(.data[[colvar]], N_trt) %>% 
+    pivot_wider(names_from = all_of(colvar),
+                values_from = N_trt)  %>% 
+    mutate(across(where(is.numeric), as.character))
+  
+  N_row2 <- cbind("N", N_row1)
   
   # Calculate count and percentage
   tab1 <- input %>% 
@@ -41,19 +52,10 @@ qc_cat_row <- function(input, colvar = "TRT01P", rowvar = "SEX", row_text = "Sex
     pivot_wider(names_from = all_of(colvar), 
                 values_from = col)
   
-  # Total counts row
-  tab3 <- tab1 %>% 
-    distinct(.data[[colvar]], N_trt) %>% 
-    pivot_wider(names_from = all_of(colvar),
-                values_from = N_trt) %>% 
-    mutate(across(where(is.numeric), as.character))
-  
-  tab4 <- cbind("N", tab3)
-  
   colnames(tab2) <- c("row_text", levels(input[[colvar]]))
-  colnames(tab4) <- c("row_text", levels(input[[colvar]]))
+  colnames(N_row2) <- c("row_text", levels(input[[colvar]]))
   
-  tab5 <- bind_rows(data.frame(row_text = row_text), tab4, tab2)
+  tab5 <- bind_rows(data.frame(row_text = row_text), N_row2, tab2)
   
   return(tab5)
 }
@@ -172,7 +174,6 @@ qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", row_text = "Age
 #' label row of a variable is empty, the row text and N row for this variable
 #' will be missing.
 #' @inheritParams qc_cntrow1
-#' @param N_row a dataframe with denominator N
 #' @inheritParams qc_num_row
 #' @param var_list variable list in demo table. Please see details.
 #' @param drop_var_list Variable that don't keep all levels in the output
@@ -195,15 +196,12 @@ qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", row_text = "Age
 #'   AGEGR1 = "",
 #'   SEX = "Sex"
 #'   )
-#'
-#' ### Create analysis row first
-#' first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
 #' 
-#' tab1 <- qc_demo(adsl, colvar = "TRT01P", N_row = first_row$N_row, var_list = var_list)
+#' tab1 <- qc_demo(adsl, colvar = "TRT01P", var_list = var_list)
 #' tab1
 #' @export
 ### create demo table 
-qc_demo <- function(input, colvar = "TRT01P", N_row, stats_list = c("Mean_SD", "Median", "Range"), var_list, drop_var_list = NULL, max_digit = 2){
+qc_demo <- function(input, colvar = "TRT01P", stats_list = c("Mean_SD", "Median", "Range"), var_list, drop_var_list = NULL, max_digit = 2){
   
   tab_final <- data.frame()
   
@@ -225,12 +223,13 @@ qc_demo <- function(input, colvar = "TRT01P", N_row, stats_list = c("Mean_SD", "
       
       # combine group variable with its continuous counterpart
       if (colnames(var_list)[i] %in% colnames(var_list[which(str_trim(var_list[1, ]) == "")])) {
-        tab <- qc_cat_row(input, colvar, colnames(var_list)[i], N_row = N_row, 
-                                  keep = !(colnames(var_list)[i] %in% drop_var_list)) %>% 
+        tab <- qc_cat_row(input, colvar, colnames(var_list)[i], 
+                          keep = !(colnames(var_list)[i] %in% drop_var_list)) %>% 
           filter(!row_text %in% c("Sex", "N"))
       } else {
-        tab <- qc_cat_row(input, colvar, colnames(var_list)[i], N_row = N_row, 
-                          keep = !(colnames(var_list)[i] %in% drop_var_list), row_text = var_list[1, i])
+        tab <- qc_cat_row(input, colvar, colnames(var_list)[i], 
+                          keep = !(colnames(var_list)[i] %in% drop_var_list), 
+                          row_text = var_list[1, i])
       }
      
     }

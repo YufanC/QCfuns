@@ -9,7 +9,6 @@ qc_cat_row(
   colvar = "TRT01P",
   rowvar = "SEX",
   row_text = "Sex",
-  N_row,
   keep = TRUE
 )
 }
@@ -21,8 +20,6 @@ qc_cat_row(
 \item{rowvar}{row variable}
 
 \item{row_text}{row text}
-
-\item{N_row}{a dataframe with denominator N}
 
 \item{keep}{if = TRUE, keep all factor levels}
 }
@@ -37,10 +34,7 @@ adsl <- data.frame(
   USUBJID = 1:10,
   TRT01P = factor(sample(c("A", "B", "C"), 10, replace = TRUE)),
   SEX = factor(sample(c("Female", "Male"), 10, replace = TRUE)))
-
-### Create analysis row first
-first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
   
-tab1 <- qc_cat_row(adsl, "TRT01P", "SEX", N_row = first_row$N_row)
+tab1 <- qc_cat_row(adsl, "TRT01P", "SEX")
 tab1
 }

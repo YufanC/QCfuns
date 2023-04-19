@@ -7,7 +7,6 @@
 qc_demo(
   input,
   colvar = "TRT01P",
-  N_row,
   stats_list = c("Mean_SD", "Median", "Range"),
   var_list,
   drop_var_list = NULL,
@@ -18,8 +17,6 @@ qc_demo(
 \item{input}{input dataframe}
 
 \item{colvar}{column variable}
-
-\item{N_row}{a dataframe with denominator N}
 
 \item{stats_list}{stats variables to display. Accepted values are \code{c("Mean_SD", "Median", "Range", "Geo_mean", "Geo_CV", "Geo_CL")} and the order of variables matters}
 
@@ -60,9 +57,6 @@ var_list <- data.frame(
   SEX = "Sex"
   )
 
-### Create analysis row first
-first_row <- qc_cntrow1(input = adsl, colvar = "TRT01P", row_text = "Analysis set: Safety")
-
-tab1 <- qc_demo(adsl, colvar = "TRT01P", N_row = first_row$N_row, var_list = var_list)
+tab1 <- qc_demo(adsl, colvar = "TRT01P", var_list = var_list)
 tab1
 }
