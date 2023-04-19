@@ -2,7 +2,7 @@
 % Please edit documentation in R/qcfchg.r
 \name{qc_chgfb}
 \alias{qc_chgfb}
-\title{Create change from basline over time table}
+\title{Create Change From Baseline Over Time Table}
 \usage{
 qc_chgfb(
   input,
@@ -35,7 +35,7 @@ qc_chgfb(
 change from baseline table
 }
 \description{
-create change from basline over time table, table can be ordered by param, treatment group and visit
+create change from baseline over time table, table can be ordered by param, treatment group and visit
 }
 \details{
 The number of decimal places the results will keep depends on a variable "digit" 

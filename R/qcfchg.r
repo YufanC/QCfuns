@@ -1,6 +1,6 @@
-#' Create change from basline over time table
+#' Create Change From Baseline Over Time Table
 #'
-#' create change from basline over time table, table can be ordered by param, treatment group and visit
+#' create change from baseline over time table, table can be ordered by param, treatment group and visit
 #' 
 #' The number of decimal places the results will keep depends on a variable "digit" 
 #' in the input dataset. If digit variable does not exist in input dataset, the number

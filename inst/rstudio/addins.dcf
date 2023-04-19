@@ -1,0 +1,5 @@
+Name: Add QC script
+Description: Add QC script template to your code snippet library
+Binding: addQCscript
+Interactive: true
+

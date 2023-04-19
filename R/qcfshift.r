@@ -1,4 +1,4 @@
-#' Create Shift table
+#' Create Shift Table
 #'
 #' create shift table, accept up to 3 levels of row variables 
 #' @param input input dataframe 

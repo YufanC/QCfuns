@@ -1,4 +1,4 @@
-#' Compute count and percentage
+#' Create Count and Percentage Row
 #'
 #' compute count and percentage by column variable
 #' @param input input dataframe 

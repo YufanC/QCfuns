@@ -1,4 +1,4 @@
-#' Compute count and percentage by Row Variables
+#' Create Count and Percentage Table by Row Variables
 #'
 #' compute count and percentage of SOC(class)/PT by column variable with an ordering
 #' @param input input dataframe 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/qcfshift.r
 \name{qc_shift}
 \alias{qc_shift}
-\title{Create Shift table}
+\title{Create Shift Table}
 \usage{
 qc_shift(
   input,

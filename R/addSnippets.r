@@ -92,7 +92,7 @@ addQCscript <- function() {
         cat(paste0("\n(The following snippets will NOT be added because there is already a snippet with that name:\n",
                    paste0(snippetsNotToCopy, collapse=", ") ,")"))
       }
-      answer <- readline(prompt="Do you want to procedd (y/n): ")
+      answer <- readline(prompt="Do you want to proceed (y/n): ")
       if (substr(answer, 1, 1) == "n") {
         next()
       }

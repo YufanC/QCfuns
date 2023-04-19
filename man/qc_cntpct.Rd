@@ -2,7 +2,7 @@
 % Please edit documentation in R/qcfcountpct.r
 \name{qc_cntpct}
 \alias{qc_cntpct}
-\title{Compute count and percentage}
+\title{Create Count and Percentage Row}
 \usage{
 qc_cntpct(
   input,
