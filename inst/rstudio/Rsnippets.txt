@@ -31,6 +31,7 @@ snippet qcscript
 	###########################
 	
 	adsl <- read_sas(read_path(a_in, "adsl.sas7bdat")) %>% 
+  ### Convert empty strings into missing values using zap_empty function
 	  mutate(across(where(is.character), zap_empty))
 	  
 	###########################

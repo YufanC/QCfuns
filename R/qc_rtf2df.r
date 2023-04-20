@@ -1,9 +1,9 @@
-#' Convert rtf to dataframe
+#' Convert RTF files to Data frame
 #'
-#' read in rtf and convert it to dataframe
-#' @param filename the rtf filename you want to read in
-#' @param level Choose from "PDEV", "PREPROD" or "PROD". If left blank, find the rtf file in output folder on different levels in sequence of "PDEV", "PREPROD" and "PROD"
-#' @return a dataframe containing all the information from the rtf
+#' Read in RTF files and convert it to data frame
+#' @param filename the RTF file name you want to read in
+#' @param level Choose from "PDEV", "PREPROD" or "PROD". The default is to find the RTF file in output folder on different levels in sequence of "PDEV", "PREPROD" and "PROD"
+#' @return a data frame containing all data information from the RTF excluding titles and footnotes
 #' @examplesIf exists("opath") 
 #' dat <- qc_rtf2df("tsidem01", "PREPROD")
 #' dat
@@ -34,8 +34,6 @@ qc_rtf2df <- function(filename = "tsidem01", level = NULL){
     mutate(across(1:length(dat1), ~replace(., is.na(.), "")),
            across(1:length(dat1), ~replace(., .=="-", "")))
   
-  # Delete rows with all values equal to ""
-  # dat3 <- dat2[rowSums(dat2 == "") != ncol(dat2), ]
   # Delte rows with the first column equal to ""
   dat3 <- dat2[dat2[[1]] != "", ]
   rownames(dat3) <- NULL

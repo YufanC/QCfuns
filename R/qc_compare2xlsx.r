@@ -1,14 +1,14 @@
-#' Compare dataframes
+#' Compare QC and RTF Read-in Data Frames
 #'
-#' compare two dataframe and output the result to xlsx
-#' @param qc the dataframe you create in QC
-#' @param rtf the dataframe read in from rtf
-#' @param path the path to put xlsx format compare result
-#' @param filename tableid
-#' @param version add version control by current date. Default = TURE
+#' Tool used to compare QC data frame with RTF read-in data frame, and output comparison results to XLSX file   
+#' @param qc the name of data frame you create in QC
+#' @param rtf the name of data frame read in from RTF
+#' @param path the folder name/path to save XLSX output file
+#' @param filename output XLSX file name, which is typically tableid
+#' @param version whether to add time stamp in file name. Default is TRUE to add the current date in file name
 #' @param max_diff maximum number of differences to report
 #' @param max_diff_per_var maximum number of differences per variable to report
-#' @return compare result in xlsx
+#' @return the output of comparison in XLSX
 #' @examplesIf exists("qc") 
 #' qc_compare2xlsx(qc = tab_qc, rtf = tab_rtf, path = qc, filename = "tableid")
 #' @export
