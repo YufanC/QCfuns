@@ -51,7 +51,7 @@ adsl <- read_sas(read_path(a_in, "adsl.sas7bdat")) %>%
 
 first_row <- qc_cntrow1(adsl, "TRT01P", row_text = "Analysis set: Safety")
 
-tab1 <- qc_cat_row(adsl, "TRT01P", rowvar = "SEX", N_row = first_row$N_row)
+tab1 <- qc_cat_row(adsl, "TRT01P", rowvar = "SEX")
 
 tab_qc <- bind_rows(first_row$row1, tab1) %>% 
   mutate(across(everything(), ~replace(., is.na(.), "")))
