@@ -23,7 +23,13 @@ qc_batchrun <- function(files, path = qc){
     unlink(envsetup::read_path(path, "temp1.txt"))
   }
   
-  sapply(files, source)
+  ### Create a message for debugging
+  source_debug <- function(x){
+    message(paste("Running", x))
+    source(x)
+  }
+  
+  sapply(files, source_debug)
   temp_result <- file.path(envsetup::read_path(path, "temp1.txt"))
   
   if (interactive()){
