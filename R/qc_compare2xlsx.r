@@ -38,14 +38,14 @@ qc_compare2xlsx <- function(qc, rtf, path = qc, filename = "TSIDEM01", max_diff 
     result$diffs.table$values.x <- unlist(result$diffs.table$values.x)
     result$diffs.table$values.y <- unlist(result$diffs.table$values.y)
     
-    ### Output comparison result to temp1.txt
+    ### Store comparison result to result_temp for batchrun 
     check1 <- result$frame.summary.table$ncol[1] == result$frame.summary.table$ncol[2]
     check2 <- result$frame.summary.table$nrow[1] == result$frame.summary.table$nrow[2]
     check3 <- nrow(result$diffs.table) == 0
     check_final <- ifelse(check1 & check2 & check3, "Yes", "No")
-    ### Append all compare results and store them in temp1.txt
-    cat("<tr>\n", sprintf("<td>%s</td>", filename), "\n", 
-        sprintf("<td>%s</td>", check_final), "\n</tr>", file = file.path(write_path(path), "temp1.txt"), sep = "", append = T)
+    
+    result_temp <<- paste0("<tr>\n", sprintf("<td>%s</td>", filename), "\n", 
+                           sprintf("<td>%s</td>", check_final), "\n</tr>")
     
     # Create workbook
     wb <- createWorkbook()

@@ -2,7 +2,7 @@
 #'
 #' Execute R qc scripts end with \code{\link{qc_compare2xlsx}}
 #' @param files one or more filenames 
-#' @param path the path where temp1.txt is stored. Default is qc
+#' @param path the path where batchrun result compare_results.html stores. Default is qc
 #'
 #' @return A summary table of comparison results will display in Viewer
 #' @export
@@ -18,19 +18,22 @@ qc_batchrun <- function(files, path = qc){
   assertthat::assert_that(all(file.exists(files)))
   assertthat::is.dir(envsetup::write_path(path))
   
-  ### Delete temp1.txt if it exists
-  if (file.exists(file.path(envsetup::write_path(path), "temp1.txt"))) {
-    unlink(envsetup::read_path(path, "temp1.txt"))
+  ### source all r scripts in files
+  source_batch <- function(files) {
+    op <- options(); on.exit(options(op)) # to reset after each 
+    result_combine = ""
+    for (i in files) {
+      # Create a message for debugging
+      message(paste("Running", i))
+      source(i)
+      # Combine result_temp
+      result_combine <- c(result_combine, result_temp)
+      options(op)
+    }
+    return(result_combine)
   }
   
-  ### Create a message for debugging
-  source_debug <- function(x){
-    message(paste("Running", x))
-    source(x)
-  }
-  
-  sapply(files, source_debug)
-  temp_result <- file.path(envsetup::read_path(path, "temp1.txt"))
+  temp_result <- source_batch(files)
   
   if (interactive()){
     ### Output comparison result to viewer
@@ -46,7 +49,8 @@ qc_batchrun <- function(files, path = qc){
     cat("<th>Table id</th>")
     cat("<th>Results match</th>")
     cat("</tr>")
-    cat(readLines(temp_result, warn = F))
+    cat(temp_result)
+    # cat(readLines(temp_result, warn = F))
     cat("</table>")
     
     # vie file in Viewer window
@@ -76,7 +80,6 @@ qc_batchrun <- function(files, path = qc){
     unlink(html_output)
   }
   
-  unlink(temp_result)
-  
 }
+
 
