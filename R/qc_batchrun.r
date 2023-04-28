@@ -50,7 +50,6 @@ qc_batchrun <- function(files, path = qc){
     cat("<th>Results match</th>")
     cat("</tr>")
     cat(temp_result)
-    # cat(readLines(temp_result, warn = F))
     cat("</table>")
     
     # vie file in Viewer window
@@ -70,7 +69,7 @@ qc_batchrun <- function(files, path = qc){
     ### Create compare_results.html when run not interactively
     cat("<h2>Comparison Results</h2>", "<table border='1'>", "<tr>", 
         "<th>Table id</th>", "<th>Results match</th>", "</tr>", 
-        paste(readLines(temp_result, warn = F), collapse = ""), "</table>",
+        temp_result, "</table>",
         file = file.path(write_path(path), "html_output.txt"), sep = "")
     
     html_output <- file.path(envsetup::read_path(path, "html_output.txt"))
