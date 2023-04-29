@@ -1,13 +1,13 @@
 #' @title Add qcscript Snippets to Rstudio
 #'
-#' @description \code{addQCscript} copies all (missing) snippet definitions
+#' @description \code{add_snippets} copies all (missing) snippet definitions
 #'   in 'inst/Rsnippets.txt' to the RStudios user snippet location.
 #'
 #' @return boolean invisible(FALSE) if nothing was added, invisible(TRUE) if snipped definitions were added
 #' @export
 #'
-#' @examples \dontrun{addPackageSnippets()}
-addQCscript <- function() {
+#' @examples \dontrun{add_snippets()}
+add_snippets <- function() {
   
   added <- FALSE
   

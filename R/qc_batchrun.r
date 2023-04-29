@@ -6,13 +6,16 @@
 #'
 #' @return A summary table of comparison results will display in Viewer
 #' @export
-#'
 #' @examplesIf exists("rptdrv")
 #' ### select all r scripts start with 'qct' on SPACE
 #' qc_files <- list.files(path = read_path(rptdrv, "qc"), pattern = "qct.*\\.r", 
 #'                        full.names = TRUE)
 #' 
 #' qc_batchrun(qc_files)
+#' @importFrom rstudioapi viewer
+#' @importFrom knitr knit
+#' @importFrom envsetup write_path
+#' @importFrom envsetup read_path
 qc_batchrun <- function(files, path = qc){
   
   assertthat::assert_that(all(file.exists(files)))

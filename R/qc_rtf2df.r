@@ -10,6 +10,7 @@
 #' @export
 #' @import dplyr
 #' @import stringr
+#' @importFrom striprtf read_rtf
 qc_rtf2df <- function(filename = "tsidem01", level = NULL){
   
   if (is.null(level)) {
