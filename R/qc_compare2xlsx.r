@@ -9,8 +9,10 @@
 #' @param max_diff maximum number of differences to report. NA will print all differences overall with the constraint of max_diff_per_var
 #' @param max_diff_per_var maximum number of differences per variable to report. NA will print all differences for each variable with the constraint of max_diff
 #' @return the output of comparison in XLSX
-#' @examplesIf exists("qc") 
+#' @examples
+#' \dontrun{
 #' qc_compare2xlsx(qc = tab_qc, rtf = tab_rtf, path = qc, filename = "tableid")
+#' }
 #' @export
 #' @import openxlsx
 #' @importFrom arsenal comparedf

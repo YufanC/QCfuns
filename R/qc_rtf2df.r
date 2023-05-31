@@ -4,9 +4,11 @@
 #' @param filename the RTF file name you want to read in
 #' @param path the path of RTF file
 #' @return a data frame containing all data information from the RTF excluding titles and footnotes
-#' @examplesIf exists("opath") 
+#' @examples
+#' \dontrun{
 #' dat <- qc_rtf2df("tsidem01", "PREPROD")
 #' dat
+#' }
 #' @export
 #' @import dplyr
 #' @import stringr
