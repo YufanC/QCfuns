@@ -4,12 +4,12 @@
 \alias{qc_batchrun}
 \title{Batch Run QC Scripts}
 \usage{
-qc_batchrun(files, path = qc)
+qc_batchrun(files, path = NULL)
 }
 \arguments{
 \item{files}{one or more filenames}
 
-\item{path}{the path where batchrun result compare_results.html stores. Default is qc}
+\item{path}{the path where batchrun result compare_results.html stores.}
 }
 \value{
 A summary table of comparison results will display in Viewer
@@ -18,11 +18,11 @@ A summary table of comparison results will display in Viewer
 Execute R qc scripts end with \code{\link{qc_compare2xlsx}}
 }
 \examples{
-\dontshow{if (exists("rptdrv")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontrun{
 ### select all r scripts start with 'qct' on SPACE
 qc_files <- list.files(path = read_path(rptdrv, "qc"), pattern = "qct.*\\\\.r", 
                        full.names = TRUE)
 
 qc_batchrun(qc_files)
-\dontshow{\}) # examplesIf}
+}
 }

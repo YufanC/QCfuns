@@ -4,12 +4,12 @@
 \alias{qc_rtf2df}
 \title{Convert RTF files to Data frame}
 \usage{
-qc_rtf2df(filename = "tsidem01", level = NULL)
+qc_rtf2df(filename = "tsidem01", path = NULL)
 }
 \arguments{
 \item{filename}{the RTF file name you want to read in}
 
-\item{level}{Choose from "PDEV", "PREPROD" or "PROD". The default is to find the RTF file in output folder on different levels in sequence of "PDEV", "PREPROD" and "PROD"}
+\item{path}{the path of RTF file}
 }
 \value{
 a data frame containing all data information from the RTF excluding titles and footnotes
@@ -18,8 +18,8 @@ a data frame containing all data information from the RTF excluding titles and f
 Read in RTF files and convert it to data frame
 }
 \examples{
-\dontshow{if (exists("opath") ) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontrun{
 dat <- qc_rtf2df("tsidem01", "PREPROD")
 dat
-\dontshow{\}) # examplesIf}
+}
 }

@@ -7,8 +7,8 @@
 qc_compare2xlsx(
   qc,
   rtf,
-  path = qc,
-  filename = "TSIDEM01",
+  path = NULL,
+  filename = NULL,
   max_diff = 50,
   max_diff_per_var = 10,
   version = TRUE
@@ -19,13 +19,13 @@ qc_compare2xlsx(
 
 \item{rtf}{the name of data frame read in from RTF}
 
-\item{path}{the folder name/path to save XLSX output file}
+\item{path}{the path to save XLSX output file folder}
 
 \item{filename}{output XLSX file name, which is typically tableid}
 
-\item{max_diff}{maximum number of differences to report}
+\item{max_diff}{maximum number of differences to report. NA will print all differences overall with the constraint of max_diff_per_var}
 
-\item{max_diff_per_var}{maximum number of differences per variable to report}
+\item{max_diff_per_var}{maximum number of differences per variable to report. NA will print all differences for each variable with the constraint of max_diff}
 
 \item{version}{whether to add time stamp in file name. Default is TRUE to add the current date in file name}
 }
@@ -36,7 +36,7 @@ the output of comparison in XLSX
 Tool used to compare QC data frame with RTF read-in data frame, and output comparison results to XLSX file
 }
 \examples{
-\dontshow{if (exists("qc") ) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontrun{
 qc_compare2xlsx(qc = tab_qc, rtf = tab_rtf, path = qc, filename = "tableid")
-\dontshow{\}) # examplesIf}
+}
 }
