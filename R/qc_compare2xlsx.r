@@ -3,20 +3,20 @@
 #' Tool used to compare QC data frame with RTF read-in data frame, and output comparison results to XLSX file   
 #' @param qc the name of data frame you create in QC
 #' @param rtf the name of data frame read in from RTF
-#' @param path the folder name/path to save XLSX output file
+#' @param path the path to save XLSX output file folder
 #' @param filename output XLSX file name, which is typically tableid
 #' @param version whether to add time stamp in file name. Default is TRUE to add the current date in file name
-#' @param max_diff maximum number of differences to report
-#' @param max_diff_per_var maximum number of differences per variable to report
+#' @param max_diff maximum number of differences to report. NA will print all differences overall with the constraint of max_diff_per_var
+#' @param max_diff_per_var maximum number of differences per variable to report. NA will print all differences for each variable with the constraint of max_diff
 #' @return the output of comparison in XLSX
 #' @examplesIf exists("qc") 
 #' qc_compare2xlsx(qc = tab_qc, rtf = tab_rtf, path = qc, filename = "tableid")
 #' @export
 #' @import openxlsx
 #' @importFrom arsenal comparedf
-qc_compare2xlsx <- function(qc, rtf, path = qc, filename = "TSIDEM01", max_diff = 50, max_diff_per_var = 10, version = TRUE) {
+qc_compare2xlsx <- function(qc, rtf, path = NULL, filename = NULL, max_diff = 50, max_diff_per_var = 10, version = TRUE) {
   
-  assertthat::is.dir(envsetup::write_path(path))
+  assertthat::is.dir(path)
   
   # Check whether the number of columns matches
   if (length(qc) != length(rtf)){
@@ -65,7 +65,7 @@ qc_compare2xlsx <- function(qc, rtf, path = qc, filename = "TSIDEM01", max_diff 
     }
     
     # Save workbook to excel file 
-    result_path <- file.path(envsetup::write_path(path), "results")
+    result_path <- file.path(path, "results")
     if (is.na(file.info(result_path)$isdir)|file.info(result_path)$isdir == FALSE) dir.create(result_path)
     saveWorkbook(wb, file = file.path(result_path, filename1), overwrite = TRUE)
     

@@ -62,9 +62,17 @@ add_snippets <- function() {
     # the default snippets from the 'user file'
     #
     if (!file.exists(rstudioSnippetsFilePath)) {
-      stop(paste0( "'", rstudioSnippetsFilePath, "' does not exist yet\n.",
-                   "Use RStudio -> Tools -> Global Options -> Code -> Edit Snippets\n",
-                   "To initalize user defined snippets file by adding dummy snippet\n"))
+      cat(paste0( "'", rstudioSnippetsFilePath, "' does not exist yet\n."))
+      
+      answer <- readline("Do you want to create an empty one (y/n): ")
+      
+      if (tolower(answer) == "y"){
+        dir.create(dirname(rstudioSnippetsFilePath),recursive = TRUE,showWarnings = FALSE)
+        file.create(rstudioSnippetsFilePath)
+      } else {
+        message("Snippets not added")
+        next()
+      }
     }
     
     # Extract 'names' of already existing snitppets
@@ -93,7 +101,7 @@ add_snippets <- function() {
                    paste0(snippetsNotToCopy, collapse=", ") ,")"))
       }
       answer <- readline(prompt="Do you want to proceed (y/n): ")
-      if (substr(answer, 1, 1) == "n") {
+      if (substr(tolower(answer), 1, 1) == "n") {
         next()
       }
     }
@@ -118,9 +126,10 @@ add_snippets <- function() {
       snippetText <- paste0(pckgSnippetsFileContentSanitized[startLine:endLine], collapse = "\n")
       
       # Make sure there is at least one empty line between entries
-      #
-      if (tail(readLines(rstudioSnippetsFilePath, warn = FALSE), n=1) != "") {
-        snippetText <- paste0("\n", snippetText)
+      if (length(tail(readLines(rstudioSnippetsFilePath, warn = FALSE), n=1)) != 0){
+        if (tail(readLines(rstudioSnippetsFilePath, warn = FALSE), n=1) != "") {
+          snippetText <- paste0("\n", snippetText)
+        }
       }
       
       # Append snippet block, print message

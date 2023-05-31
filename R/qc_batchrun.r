@@ -16,10 +16,10 @@
 #' @importFrom knitr knit
 #' @importFrom envsetup write_path
 #' @importFrom envsetup read_path
-qc_batchrun <- function(files, path = qc){
+qc_batchrun <- function(files, path = NULL){
   
   assertthat::assert_that(all(file.exists(files)))
-  assertthat::is.dir(envsetup::write_path(path))
+  assertthat::is.dir(path)
   
   ### source all r scripts in files
   source_batch <- function(files) {
@@ -65,17 +65,17 @@ qc_batchrun <- function(files, path = qc){
   } else {
     
     ### Delete html_output.txt if it exists
-    if (file.exists(file.path(envsetup::write_path(path), "html_output.txt"))) {
-      unlink(envsetup::read_path(path, "html_output.txt"))
+    if (file.exists(file.path(path, "html_output.txt"))) {
+      unlink(file.path(path, "html_output.txt"))
     }
     
     ### Create compare_results.html when run not interactively
     cat("<h2>Comparison Results</h2>", "<table border='1'>", "<tr>", 
         "<th>Table id</th>", "<th>Results match</th>", "</tr>", 
         temp_result, "</table>",
-        file = file.path(write_path(path), "html_output.txt"), sep = "")
+        file = file.path(path, "html_output.txt"), sep = "")
     
-    html_output <- file.path(envsetup::read_path(path, "html_output.txt"))
+    html_output <- file.path(path, "html_output.txt")
     
     knitr::knit(html_output, output = "compare_results.html")
     
