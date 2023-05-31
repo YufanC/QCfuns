@@ -18,7 +18,8 @@ test_that("Check if the output XLSX file exists and has the correct sheets", {
   expect_equal(getSheetNames(file_path), c("frame.summary.table", "diffs.table"))
   
   ### Check if the version argument works
-  file_path1 <- file.path(dir_temp, "results", "qctest_output.xlsx")
+  qc_compare2xlsx(qc, rtf, path = dir_temp, filename = "test_output", version = F)
+  file_path1 <- file.path(dir_temp, "results", "test_output.xlsx")
   expect_true(file.exists(file_path1))
 })
 
@@ -40,7 +41,7 @@ test_that("Check if max_diff and max_diff_per_var arguments work", {
   
   end_line <- which(compare_result == "Table: Non-identical attributes") - 3
   
-  n_dff <- end_line - start_line
+  n_diff <- end_line - start_line
   
   expect_equal(n_diff, 5)
   

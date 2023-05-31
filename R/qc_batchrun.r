@@ -2,7 +2,7 @@
 #'
 #' Execute R qc scripts end with \code{\link{qc_compare2xlsx}}
 #' @param files one or more filenames 
-#' @param path the path where batchrun result compare_results.html stores. Default is qc
+#' @param path the path where batchrun result compare_results.html stores. 
 #'
 #' @return A summary table of comparison results will display in Viewer
 #' @export

@@ -1,4 +1,4 @@
-
+### Read in sample rtf file
 test_file <- system.file("tsfae-st03.rtf", package = "QCfuns")
 
 test_that("Check read-in rtf dimention", {
