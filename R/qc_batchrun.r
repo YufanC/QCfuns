@@ -1,8 +1,8 @@
 #' Batch Run QC Scripts
 #'
 #' Execute R qc scripts end with \code{\link{qc_compare2xlsx}}
-#' @param files one or more filenames 
-#' @param path the folder path of generated compare results html file. 
+#' @param files a character vector of full/relative path names 
+#' @param path the folder path of html output file, in which a 'result' subfolder will be created to hold all compare results. The default corresponds to the working directory, getwd().
 #'
 #' @return A summary table of comparison results will display in Viewer
 #' @export
@@ -16,7 +16,7 @@
 #' }
 #' @importFrom rstudioapi viewer
 #' @importFrom knitr knit
-qc_batchrun <- function(files, path = NULL){
+qc_batchrun <- function(files, path = "."){
   
   assertthat::assert_that(all(file.exists(files)))
   assertthat::is.dir(path)
@@ -40,9 +40,18 @@ qc_batchrun <- function(files, path = NULL){
   
   if (interactive()){
     ### Output comparison result to viewer
-    # Create temp directory and files
-    tempDir <- tempfile(); dir.create(tempDir)
-    temp_file <- file.path(tempDir, "temp.html")
+    # Save compare result html to results folder
+    result_path <- file.path(path, "results")
+    # Create 'results' subfolder if it does not exist
+    if (is.na(file.info(result_path)$isdir)|file.info(result_path)$isdir == FALSE) dir.create(result_path)
+    
+    filename <- paste0("compare_results_", as.character(Sys.Date()), ".html")
+    file_path <- file.path(result_path, filename)
+    # Remove output html if it has the same name
+    if (file.exists(file_path)) {
+      unlink(file_path)
+    }
+    temp_file <- file_path
     
     # diverts output to a temp file
     sink(temp_file, append = TRUE)
@@ -62,25 +71,6 @@ qc_batchrun <- function(files, path = NULL){
     # diverts output back to console
     sink()
     
-    ### Create an html file to hold compare results
-    ### Delete html_output.txt if it exists
-    if (file.exists(file.path(path, "html_output.txt"))) {
-      unlink(file.path(path, "html_output.txt"))
-    }
-    
-    ### Create compare_results.html when run not interactively
-    cat("<h2>Comparison Results</h2>", "<table border='1'>", "<tr>", 
-        "<th>Table id</th>", "<th>Results match</th>", "</tr>", 
-        temp_result, "</table>",
-        file = file.path(path, "html_output.txt"), sep = "")
-    
-    html_output <- file.path(path, "html_output.txt")
-    
-    filename <- paste0("compare_results_", as.character(Sys.Date()), ".html")
-    knitr::knit(html_output, output = filename)
-    
-    unlink(html_output)
-    
   } else {
     
     ### Delete html_output.txt if it exists
@@ -97,7 +87,8 @@ qc_batchrun <- function(files, path = NULL){
     html_output <- file.path(path, "html_output.txt")
     
     filename <- paste0("compare_results_", as.character(Sys.Date()), ".html")
-    knitr::knit(html_output, output = filename)
+    file_path <- file.path(path, "results", filename)
+    knitr::knit(html_output, output = file_path)
     
     unlink(html_output)
   }

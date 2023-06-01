@@ -4,12 +4,12 @@
 \alias{qc_batchrun}
 \title{Batch Run QC Scripts}
 \usage{
-qc_batchrun(files, path = NULL)
+qc_batchrun(files, path = ".")
 }
 \arguments{
-\item{files}{one or more filenames}
+\item{files}{a character vector of full/relative path names}
 
-\item{path}{the folder path of generated compare results html file.}
+\item{path}{the folder path of html output file, in which a 'result' subfolder will be created to hold all compare results. The default corresponds to the working directory, getwd().}
 }
 \value{
 A summary table of comparison results will display in Viewer

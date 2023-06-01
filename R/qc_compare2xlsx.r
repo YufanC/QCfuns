@@ -3,7 +3,7 @@
 #' Tool used to compare QC data frame with RTF read-in data frame, and output comparison results to XLSX file   
 #' @param qc the name of data frame you create in QC
 #' @param rtf the name of data frame read in from RTF
-#' @param path the folder path of XLSX output file, in which a 'result' subfolder will be created to hold all compare results
+#' @param path the folder path of XLSX output file, in which a 'result' subfolder will be created to hold all compare results. The default corresponds to the working directory, getwd().
 #' @param filename output XLSX file name, which is typically tableid
 #' @param version whether to add time stamp in file name. Default is TRUE to add the current date in file name
 #' @param max_diff maximum number of differences to report. NA will print all differences overall with the constraint of max_diff_per_var
@@ -16,7 +16,7 @@
 #' @export
 #' @import openxlsx
 #' @importFrom arsenal comparedf
-qc_compare2xlsx <- function(qc, rtf, path = NULL, filename = NULL, max_diff = 50, max_diff_per_var = 10, version = TRUE) {
+qc_compare2xlsx <- function(qc, rtf, path = ".", filename = NULL, max_diff = 50, max_diff_per_var = 10, version = TRUE) {
   
   assertthat::is.dir(path)
   

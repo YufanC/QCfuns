@@ -7,7 +7,7 @@
 qc_compare2xlsx(
   qc,
   rtf,
-  path = NULL,
+  path = ".",
   filename = NULL,
   max_diff = 50,
   max_diff_per_var = 10,
@@ -19,7 +19,7 @@ qc_compare2xlsx(
 
 \item{rtf}{the name of data frame read in from RTF}
 
-\item{path}{the folder path of XLSX output file, in which a 'result' subfolder will be created to hold all compare results}
+\item{path}{the folder path of XLSX output file, in which a 'result' subfolder will be created to hold all compare results. The default corresponds to the working directory, getwd().}
 
 \item{filename}{output XLSX file name, which is typically tableid}
 
