@@ -10,7 +10,6 @@ Imports:
     arsenal (>= 3.6.3),
     assertthat,
     dplyr,
-    envsetup,
     knitr,
     openxlsx (>= 4.2.4),
     rstudioapi,

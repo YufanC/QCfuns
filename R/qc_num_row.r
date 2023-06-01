@@ -16,6 +16,7 @@
 #'                         stats_list = c("Mean_SD", "Median", "Range"), digit = 0)
 #' tab1
 #' @export
+#' @importFrom stats addmargins ftable median qt sd
 ### Numeric variable rows
 qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", row_text = "Age, years", stats_list, digit){
   

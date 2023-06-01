@@ -2,22 +2,20 @@
 #'
 #' Execute R qc scripts end with \code{\link{qc_compare2xlsx}}
 #' @param files one or more filenames 
-#' @param path the path where batchrun result compare_results.html stores. 
+#' @param path the folder path of generated compare results html file. 
 #'
 #' @return A summary table of comparison results will display in Viewer
 #' @export
 #' @examples
 #' \dontrun{
 #' ### select all r scripts start with 'qct' on SPACE
-#' qc_files <- list.files(path = read_path(rptdrv, "qc"), pattern = "qct.*\\.r", 
+#' qc_files <- list.files(path = qc[["PDEV"]], pattern = "qct.*\\.r", 
 #'                        full.names = TRUE)
 #' 
-#' qc_batchrun(qc_files)
+#' qc_batchrun(files = qc_files, path = qc[["PDEV"]])
 #' }
 #' @importFrom rstudioapi viewer
 #' @importFrom knitr knit
-#' @importFrom envsetup write_path
-#' @importFrom envsetup read_path
 qc_batchrun <- function(files, path = NULL){
   
   assertthat::assert_that(all(file.exists(files)))
@@ -64,6 +62,25 @@ qc_batchrun <- function(files, path = NULL){
     # diverts output back to console
     sink()
     
+    ### Create an html file to hold compare results
+    ### Delete html_output.txt if it exists
+    if (file.exists(file.path(path, "html_output.txt"))) {
+      unlink(file.path(path, "html_output.txt"))
+    }
+    
+    ### Create compare_results.html when run not interactively
+    cat("<h2>Comparison Results</h2>", "<table border='1'>", "<tr>", 
+        "<th>Table id</th>", "<th>Results match</th>", "</tr>", 
+        temp_result, "</table>",
+        file = file.path(path, "html_output.txt"), sep = "")
+    
+    html_output <- file.path(path, "html_output.txt")
+    
+    filename <- paste0("compare_results_", as.character(Sys.Date()), ".html")
+    knitr::knit(html_output, output = filename)
+    
+    unlink(html_output)
+    
   } else {
     
     ### Delete html_output.txt if it exists
@@ -79,7 +96,8 @@ qc_batchrun <- function(files, path = NULL){
     
     html_output <- file.path(path, "html_output.txt")
     
-    knitr::knit(html_output, output = "compare_results.html")
+    filename <- paste0("compare_results_", as.character(Sys.Date()), ".html")
+    knitr::knit(html_output, output = filename)
     
     unlink(html_output)
   }

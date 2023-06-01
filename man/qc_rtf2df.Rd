@@ -4,12 +4,12 @@
 \alias{qc_rtf2df}
 \title{Convert RTF files to Data frame}
 \usage{
-qc_rtf2df(filename = "tsidem01", path = NULL)
+qc_rtf2df(filename, path = NULL)
 }
 \arguments{
 \item{filename}{the RTF file name you want to read in}
 
-\item{path}{the path of RTF file}
+\item{path}{the folder path of RTF file}
 }
 \value{
 a data frame containing all data information from the RTF excluding titles and footnotes
@@ -19,7 +19,7 @@ Read in RTF files and convert it to data frame
 }
 \examples{
 \dontrun{
-dat <- qc_rtf2df("tsidem01", "PREPROD")
+dat <- qc_rtf2df(filename = "tsidem01", path = opath[["PREPROD"]])
 dat
 }
 }

@@ -3,7 +3,7 @@
 #' Tool used to compare QC data frame with RTF read-in data frame, and output comparison results to XLSX file   
 #' @param qc the name of data frame you create in QC
 #' @param rtf the name of data frame read in from RTF
-#' @param path the path to save XLSX output file folder
+#' @param path the folder path of XLSX output file, in which a 'result' subfolder will be created to hold all compare results
 #' @param filename output XLSX file name, which is typically tableid
 #' @param version whether to add time stamp in file name. Default is TRUE to add the current date in file name
 #' @param max_diff maximum number of differences to report. NA will print all differences overall with the constraint of max_diff_per_var
@@ -11,7 +11,7 @@
 #' @return the output of comparison in XLSX
 #' @examples
 #' \dontrun{
-#' qc_compare2xlsx(qc = tab_qc, rtf = tab_rtf, path = qc, filename = "tableid")
+#' qc_compare2xlsx(qc = tab_qc, rtf = tab_rtf, path = qc[["PDEV"]], filename = "tsidem01")
 #' }
 #' @export
 #' @import openxlsx

@@ -19,7 +19,7 @@ qc_compare2xlsx(
 
 \item{rtf}{the name of data frame read in from RTF}
 
-\item{path}{the path to save XLSX output file folder}
+\item{path}{the folder path of XLSX output file, in which a 'result' subfolder will be created to hold all compare results}
 
 \item{filename}{output XLSX file name, which is typically tableid}
 
@@ -37,6 +37,6 @@ Tool used to compare QC data frame with RTF read-in data frame, and output compa
 }
 \examples{
 \dontrun{
-qc_compare2xlsx(qc = tab_qc, rtf = tab_rtf, path = qc, filename = "tableid")
+qc_compare2xlsx(qc = tab_qc, rtf = tab_rtf, path = qc[["PDEV"]], filename = "tsidem01")
 }
 }

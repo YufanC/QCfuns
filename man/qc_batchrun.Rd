@@ -9,7 +9,7 @@ qc_batchrun(files, path = NULL)
 \arguments{
 \item{files}{one or more filenames}
 
-\item{path}{the path where batchrun result compare_results.html stores.}
+\item{path}{the folder path of generated compare results html file.}
 }
 \value{
 A summary table of comparison results will display in Viewer
@@ -20,9 +20,9 @@ Execute R qc scripts end with \code{\link{qc_compare2xlsx}}
 \examples{
 \dontrun{
 ### select all r scripts start with 'qct' on SPACE
-qc_files <- list.files(path = read_path(rptdrv, "qc"), pattern = "qct.*\\\\.r", 
+qc_files <- list.files(path = qc[["PDEV"]], pattern = "qct.*\\\\.r", 
                        full.names = TRUE)
 
-qc_batchrun(qc_files)
+qc_batchrun(files = qc_files, path = qc[["PDEV"]])
 }
 }
