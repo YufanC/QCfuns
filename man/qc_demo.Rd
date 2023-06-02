@@ -18,7 +18,7 @@ qc_demo(
 
 \item{colvar}{column variable}
 
-\item{stats_list}{stats variables to display. Accepted values are \code{c("Mean_SD", "Median", "Range", "Geo_mean", "Geo_CV", "Geo_CL")} and the order of variables matters}
+\item{stats_list}{stats variables to display. Accepted values are \code{c("Mean_SD", "Mean", "SD", "Median", "Range", "Min", "Max", "Geo_mean", "Geo_CV", "Geo_CL")} and the order of variables matters}
 
 \item{var_list}{variable list in demo table. Please see details.}
 

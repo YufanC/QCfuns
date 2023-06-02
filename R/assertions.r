@@ -18,7 +18,7 @@ assertthat::on_failure(stats_accept) <- function(call, env) {
 
 ### assert values in stats_list are accepted values in qc_num_row
 stats_accept_num <- function(x){
-  all(x %in% c("Mean_SD", "Median", "Range", "Geo_mean", "Geo_CV", "Geo_CL"))
+  all(x %in% c("Mean_SD", "Mean", "SD", "Median", "Range", "Min", "Max", "Geo_mean", "Geo_CV", "Geo_CL"))
 }
 
 assertthat::on_failure(stats_accept_num) <- function(call, env) {

@@ -22,7 +22,7 @@ qc_num_row(
 
 \item{row_text}{row text}
 
-\item{stats_list}{stats variables to display. Accepted values are \code{c("Mean_SD", "Median", "Range", "Geo_mean", "Geo_CV", "Geo_CL")} and the order of variables matters}
+\item{stats_list}{stats variables to display. Accepted values are \code{c("Mean_SD", "Mean", "SD", "Median", "Range", "Min", "Max", "Geo_mean", "Geo_CV", "Geo_CL")} and the order of variables matters}
 
 \item{digit}{number of decimal place to report}
 }

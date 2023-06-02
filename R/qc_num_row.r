@@ -3,7 +3,7 @@
 #' Function to create rows for continuous variables in demographic table
 #' @inheritParams qc_cntrow1
 #' @param rowvar row variable
-#' @param stats_list stats variables to display. Accepted values are \code{c("Mean_SD", "Median", "Range", "Geo_mean", "Geo_CV", "Geo_CL")} and the order of variables matters
+#' @param stats_list stats variables to display. Accepted values are \code{c("Mean_SD", "Mean", "SD", "Median", "Range", "Min", "Max", "Geo_mean", "Geo_CV", "Geo_CL")} and the order of variables matters
 #' @param digit number of decimal place to report
 #' @return dataframe with demographic rows 
 #' @examples 
@@ -53,11 +53,19 @@ qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", row_text = "Age
                                           ' (', formatC(SD, format = "f", digits = (digit + 2)), ')'), 
                                    paste0(formatC(Mean, format = "f", digits = (digit + 1)), 
                                           ' (-)'))),
+           Mean = ifelse(is.na(Mean), NA, 
+                         formatC(round_sas(Mean, digit + 1), format = "f", digits = (digit + 1))),
+           SD = ifelse(is.na(SD), NA, 
+                       formatC(round_sas(SD, digit + 1), format = "f", digits = (digit + 1))),
            Median = ifelse(is.na(Median), NA, 
                            formatC(round_sas(Median, digit + 1), format = "f", digits = (digit + 1))),
            Range = ifelse(is.na(Min)|is.na(Max), NA,
                           paste0("(", formatC(round_sas(Min, digit), format = "f", digits = digit), "; ", 
                                  formatC(round_sas(Max, digit), format = "f", digits = digit), ")")),
+           Min = ifelse(is.na(Min), NA, 
+                        formatC(round_sas(Min, digit), format = "f", digits = digit)),
+           Max = ifelse(is.na(Max), NA, 
+                        formatC(round_sas(Max, digit), format = "f", digits = digit)),
            Geo_CL = ifelse(is.na(Gmean_LL)|is.na(Gmean_HL), NA, 
                            paste0("(", formatC(round_sas(Gmean_LL, digit + 1), format = "f", digits = (digit + 1)), "; ", 
                                   formatC(round_sas(Gmean_HL, digit + 1), format = "f", digits = (digit + 1)), ")")))
