@@ -56,7 +56,7 @@ qc_num_row <- function(input, colvar = "TRT01P", rowvar = "AGE", row_text = "Age
            Mean = ifelse(is.na(Mean), NA, 
                          formatC(round_sas(Mean, digit + 1), format = "f", digits = (digit + 1))),
            SD = ifelse(is.na(SD), NA, 
-                       formatC(round_sas(SD, digit + 1), format = "f", digits = (digit + 1))),
+                       formatC(round_sas(SD, digit + 2), format = "f", digits = (digit + 2))),
            Median = ifelse(is.na(Median), NA, 
                            formatC(round_sas(Median, digit + 1), format = "f", digits = (digit + 1))),
            Range = ifelse(is.na(Min)|is.na(Max), NA,
