@@ -61,7 +61,7 @@ tab_qc <- bind_rows(first_row$row1, tab1) %>%
 ###################
 
 tableid <- "tableid"
-tab_rtf <- qc_rtf2df(tableid)
+tab_rtf <- qc_rtf2df(tableid, path = opath[["PREPROD"]])
 
 ############################
 ### Compare two datasets ###
