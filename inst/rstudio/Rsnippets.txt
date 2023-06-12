@@ -50,7 +50,7 @@ snippet qcscript
 	###################
 	
 	tableid <- "${5:tableid}"
-	tab_rtf <- qc_rtf2df(tableid)
+	tab_rtf <- qc_rtf2df(tableid, path = opath[["PREPROD"]])
 	
 	############################
 	### Compare two datasets ###
