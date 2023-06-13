@@ -67,5 +67,5 @@ tab_rtf <- qc_rtf2df(tableid, path = opath[["PREPROD"]])
 ### Compare two datasets ###
 ############################
 
-qc_compare2xlsx(qc = tab_qc, rtf = tab_rtf, path = qc, filename = tableid)
+qc_compare2xlsx(qc = tab_qc, rtf = tab_rtf, path = qc[["PDEV"]], filename = tableid)
 ```

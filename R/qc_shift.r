@@ -61,7 +61,7 @@ qc_shift <- function(input, rowcat = "ANRIND", colcat = "BNRIND", rowvar = c("PA
     
     param_row <- input %>% 
       group_by(.data[[rowvar[1]]], .drop = FALSE) %>%
-      summarise(N = n_distinct(USUBJID), .groups = "drop") %>% 
+      summarise(N = n_distinct(USUBJID, na.rm = T), .groups = "drop") %>% 
       arrange(.data[[rowvar[1]]]) %>% 
       mutate(ord_param = 1:n(),
              ord_ind = 0,
@@ -120,7 +120,7 @@ qc_shift <- function(input, rowcat = "ANRIND", colcat = "BNRIND", rowvar = c("PA
     
     visit_row <- input %>% 
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .drop = FALSE) %>%
-      summarise(N = n_distinct(USUBJID), .groups = "drop") %>% 
+      summarise(N = n_distinct(USUBJID, na.rm = T), .groups = "drop") %>% 
       arrange(.data[[rowvar[2]]]) %>%
       left_join(param_row, by = rowvar[1]) %>%
       group_by(.data[[rowvar[1]]], .drop = FALSE) %>% 
@@ -193,7 +193,7 @@ qc_shift <- function(input, rowcat = "ANRIND", colcat = "BNRIND", rowvar = c("PA
     
     trt_row <- input %>% 
       group_by(.data[[rowvar[1]]], .data[[rowvar[2]]], .data[[rowvar[3]]], .drop = FALSE) %>%
-      summarise(N = n_distinct(USUBJID), .groups = "drop") %>% 
+      summarise(N = n_distinct(USUBJID, na.rm = T), .groups = "drop") %>% 
       ungroup() %>% 
       left_join(visit_row, by = c(rowvar[1], rowvar[2])) %>% 
       arrange(.data[[rowvar[1]]], .data[[rowvar[2]]], .data[[rowvar[3]]]) %>% 

@@ -33,7 +33,7 @@ qc_cntpct <- function(input, colvar = "TRT01P", row_text = "Subjects with 1 or m
   ### first N row
   row1 <- input %>%
     group_by(.data[[colvar]], .drop = F) %>% 
-    summarise(n = ifelse(is.null(subset), n_distinct(USUBJID), n_distinct(USUBJID[eval(parse(text = subset))])), .groups = "drop") %>% 
+    summarise(n = ifelse(is.null(subset), n_distinct(USUBJID, na.rm = T), n_distinct(USUBJID[eval(parse(text = subset))], na.rm = T)), .groups = "drop") %>% 
     left_join(., N_row, by = colvar) %>% 
     mutate(pct = (round_sas(n * 100 / N_trt, 1)),
            col = ifelse(pct == 0, "0", paste0(n, ' (', formatC(pct, format = "f", digits = 1), '%)')))

@@ -24,7 +24,7 @@ qc_cat_row <- function(input, colvar = "TRT01P", rowvar = "SEX", row_text = "Sex
   N_row <- input %>% 
     filter(!is.na(.data[[rowvar]])) %>% 
     group_by(.data[[colvar]], .drop = F) %>% 
-    summarise(n = n_distinct(USUBJID), .groups = "drop") %>% 
+    summarise(n = n_distinct(USUBJID, na.rm = T), .groups = "drop") %>% 
     mutate(N_trt = n) %>% 
     select(-n)
   
@@ -40,7 +40,7 @@ qc_cat_row <- function(input, colvar = "TRT01P", rowvar = "SEX", row_text = "Sex
   tab1 <- input %>% 
     filter(!is.na(.data[[rowvar]])) %>% 
     group_by(.data[[colvar]], .data[[rowvar]], .drop = !keep) %>% 
-    summarise(n = n_distinct(USUBJID), .groups = "drop") %>%
+    summarise(n = n_distinct(USUBJID, na.rm = T), .groups = "drop") %>%
     left_join(N_row, by = colvar) %>% 
     mutate(pct = (round_sas(n * 100 / N_trt, 1)),
            col = ifelse(pct == 0, "0", paste0(n, ' (', formatC(pct, format = "f", digits = 1), '%)')))

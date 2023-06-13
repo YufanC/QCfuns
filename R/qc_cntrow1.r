@@ -27,7 +27,7 @@ qc_cntrow1 <- function(input, colvar = "TRT01P", row_text = "Analysis set: Safet
   
   first_row <- input %>% 
     group_by(.data[[colvar]], .drop = F) %>% 
-    summarise(n = ifelse(is.null(subset), n_distinct(USUBJID), n_distinct(USUBJID[eval(parse(text = subset))])), .groups = "drop") %>% 
+    summarise(n = ifelse(is.null(subset), n_distinct(USUBJID, na.rm = T), n_distinct(USUBJID[eval(parse(text = subset))], na.rm = T)), .groups = "drop") %>% 
     mutate(N_trt = n) %>% 
     select(-n)
   
