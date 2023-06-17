@@ -16,6 +16,8 @@
 #' @importFrom utils read.table tail
 qc_rtf2df <- function(filename, path = NULL){
   
+  assertthat::assert_that(file.exists(file.path(path, paste0(str_to_lower(filename), ".rtf"))))
+  
   a_rtf <- striprtf::read_rtf(file.path(path, paste0(str_to_lower(filename), ".rtf")))
   
   # Get the valuable lines 
