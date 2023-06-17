@@ -27,7 +27,8 @@ qc_cntrow1_shift <- function(input, colvar = "TRT01P", row_text = "Analysis set:
     summarise(n = ifelse(is.null(subset), n_distinct(USUBJID, na.rm = T), n_distinct(USUBJID[eval(parse(text = subset))], na.rm = T)), .groups = "drop") %>% 
     mutate(N = n,
            row_text = if_else(.data[[colvar]] == "Total", row_text, as.character(.data[[colvar]]))) %>% 
-    select(row_text, N)
+    select(row_text, N) %>% 
+    mutate(across(where(is.numeric), as.character))
   
   return(first_row)
 }
