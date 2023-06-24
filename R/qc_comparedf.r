@@ -60,7 +60,8 @@ qc_comparedf <- function(qc, rtf, path = ".", filename = NULL, by = "row_seq", e
     # diverts output to a temp file
     sink(file_path, append = TRUE)
     
-    cat(compareDF::create_output_table(result), file = file_path)
+    cat(sprintf("<h3>Comparison Results for %s</h3>", filename),
+        compareDF::create_output_table(result), file = file_path)
     
     # Use RStudio viewer if available, otherwise open in a web browser
     if (!is.null(getOption("viewer"))) {
@@ -79,8 +80,17 @@ qc_comparedf <- function(qc, rtf, path = ".", filename = NULL, by = "row_seq", e
   # Store comparison result to result_temp for batchrun
   check_final <- ifelse(result$change_summary["changes"] == 0, "Yes", "No")
   
-  result_temp <<- paste0("<tr>\n", sprintf("<td>%s</td>", filename), "\n",
-                         sprintf("<td>%s</td>", check_final), "\n</tr>")
+  if (check_final == "Yes"){
+    result_temp <<- paste0("<tr>\n", sprintf("<td>%s</td>", filename), "\n",
+                           sprintf("<td>%s</td>", check_final), "\n</tr>")
+  } else {
+    result_temp <<- paste0("<tr>\n", 
+                           sprintf(paste0("<td><a href=", paste0("qc", filename, ".html"), ">%s</a></td>"), filename), 
+                           "\n",
+                           sprintf("<td>%s</td>", check_final), 
+                           "\n</tr>")
+  }
+  
   
 }
 

@@ -62,9 +62,15 @@ qc_batchrun <- function(files, path = "."){
     # diverts output to a temp file
     sink(file_path, append = TRUE)
     
-    cat("<h2>Comparison Results</h2>", "<table border='1'>", "<tr>", 
-        "<th>Table id</th>", "<th>Results match</th>", "</tr>", 
-        temp_result, "</table>", file = file_path)
+    cat("<h2>Comparison Results</h2>", 
+        "<table border='1'>", 
+        "<tr>", 
+        "<th>Output ID</th>", 
+        "<th>All Matched</th>", 
+        "</tr>", 
+        temp_result, 
+        "</table>", 
+        file = file_path)
     
     # Use RStudio viewer if available, otherwise open in a web browser
     if (!is.null(getOption("viewer"))) {
@@ -79,9 +85,15 @@ qc_batchrun <- function(files, path = "."){
   } else {
     
     ### Create compare_results.html
-    cat("<h2>Comparison Results</h2>", "<table border='1'>", "<tr>", 
-        "<th>Table id</th>", "<th>Results match</th>", "</tr>", 
-        temp_result, "</table>", file = file_path)
+    cat("<h2>Comparison Results</h2>", 
+        "<table border='1'>", 
+        "<tr>", 
+        "<th>Output ID</th>", 
+        "<th>All Matched</th>", 
+        "</tr>", 
+        temp_result, 
+        "</table>", 
+        file = file_path)
   }
 }
 
