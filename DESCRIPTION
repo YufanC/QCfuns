@@ -2,16 +2,16 @@ Type: Package
 Package: QCfuns
 Title: Collection of R QC functions
 Description: A fast and user-friendly QC working flow.  
-Version: 1.0.0
+Version: 0.2.1
 Authors@R: 
     person("Yufan", "Chen", , "ychen209@its.jnj.com", role = c("aut", "cre"))
 License: Apache License (>= 2)
 Imports:
-    arsenal (>= 3.6.3),
     assertthat,
+    compareDF (>= 2.3.2),
     dplyr,
     knitr,
-    openxlsx (>= 4.2.4),
+    logrx,
     rstudioapi,
     stringr,
     striprtf (>= 0.5.3),

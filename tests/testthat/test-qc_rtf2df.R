@@ -23,5 +23,5 @@ test_that("Check read-in rtf first row value", {
   result_df <- qc_rtf2df("tsfae-st03", dirname(test_file))
   row1 <- result_df[1, ]
   
-  expect_identical(dim(result_df), c(33L, 6L))
+  expect_identical(row1, expected_df)
 })

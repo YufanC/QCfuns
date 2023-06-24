@@ -9,13 +9,13 @@ qc_batchrun(files, path = ".")
 \arguments{
 \item{files}{a character vector of full/relative path names}
 
-\item{path}{the folder path of html output file, in which a 'result' subfolder will be created to hold all compare results. The default corresponds to the working directory, getwd().}
+\item{path}{the folder path of HTML output file. By default the path is the working directory, getwd().}
 }
 \value{
-A summary table of comparison results will display in Viewer
+A summary table of comparison results will display in html
 }
 \description{
-Execute R qc scripts end with \code{\link{qc_compare2xlsx}}
+Execute R qc scripts by batch with log
 }
 \examples{
 \dontrun{

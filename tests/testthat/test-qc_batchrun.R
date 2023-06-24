@@ -6,12 +6,12 @@ test_that("Check if the output html exists and is correct", {
   compare_script1 <- "dir_temp <- tempdir() \n
   qc <- data.frame(x = c(1, 2), y = c('a', 'b')) \n
   rtf <- data.frame(x = c(1, 2), y = c('a', 'b')) \n
-  qc_compare2xlsx(qc, rtf, path = dir_temp, filename = 'test_output1')"
+  qc_comparedf(qc, rtf, path = dir_temp, filename = 'test_output1')"
   
   compare_script2 <- "dir_temp <- tempdir() \n
   qc <- data.frame(x = c(1, 1), y = c('a', 'b')) \n
   rtf <- data.frame(x = c(1, 2), y = c('a', 'b')) \n
-  qc_compare2xlsx(qc, rtf, path = dir_temp, filename = 'test_output2')"
+  qc_comparedf(qc, rtf, path = dir_temp, filename = 'test_output2')"
   
   writeLines(compare_script1, con = file.path(dir_temp, "qctable1.r"))
   writeLines(compare_script2, con = file.path(dir_temp, "qctable2.r"))
@@ -20,7 +20,7 @@ test_that("Check if the output html exists and is correct", {
   qc_batchrun(file_list, dir_temp)
   
   file_name <- paste0("compare_results_", Sys.Date(), ".html")
-  file_path <- file.path(dir_temp, "results", file_name)
+  file_path <- file.path(dir_temp, file_name)
   ### Check if the output html file exists
   expect_true(file.exists(file_path))
   
