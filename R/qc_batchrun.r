@@ -35,7 +35,8 @@ qc_batchrun <- function(files, path = "."){
     )
   }
   
-  temp_result = ""
+  ### Get comparison result for each output
+  temp_result0 = data.frame()
   for (i in files) {
     # Create a message for debugging
     message(paste("Running", i))
@@ -44,8 +45,22 @@ qc_batchrun <- function(files, path = "."){
     source_batch(i)
     
     # Combine result_temp
-    temp_result <- c(temp_result, result_temp)
+    temp_result0 <- rbind(temp_result0, result_temp)
   }
+  
+  ### Create summary html report
+  temp_result1 <- temp_result0 %>% 
+    arrange(check_final) %>% 
+    mutate(html_col = ifelse(check_final == "Yes",
+                             paste0("<tr>\n", sprintf("<td>%s</td>", filename), "\n",
+                                    sprintf("<td>%s</td>", check_final), "\n</tr>"),
+                             paste0("<tr>\n", 
+                                    sprintf(paste0("<td><a href='", paste0("qc", filename, ".html"), "' target='_blank'>%s</a></td>"), filename), 
+                                    "\n",
+                                    sprintf("<td>%s</td>", check_final), 
+                                    "\n</tr>")))
+  
+  temp_result <- paste(temp_result1$html_col, collapse = "")
   
   ### Output comparison result to viewer
   # Save compare result html to path

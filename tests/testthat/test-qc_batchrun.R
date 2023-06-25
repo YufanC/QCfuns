@@ -26,6 +26,6 @@ test_that("Check if the output html exists and is correct", {
   
   ### Check if the output html file is correct
   results <- readLines(file_path, warn = F)
-  expect_equal(results[3], "<td>Yes</td>")
-  expect_equal(results[6], "<td>No</td>")
+  expect_equal(results[3], "<td>No</td>")
+  expect_equal(results[6], "<td>Yes</td>")
 })

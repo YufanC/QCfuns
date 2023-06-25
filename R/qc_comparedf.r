@@ -87,15 +87,6 @@ qc_comparedf <- function(qc, rtf, path = ".", filename = NULL, by = "row_seq", e
   # Store comparison result to result_temp for batchrun
   check_final <- ifelse(result$change_summary["changes"] == 0, "Yes", "No")
   
-  if (check_final == "Yes"){
-    result_temp <<- paste0("<tr>\n", sprintf("<td>%s</td>", filename), "\n",
-                           sprintf("<td>%s</td>", check_final), "\n</tr>")
-  } else {
-    result_temp <<- paste0("<tr>\n", 
-                           sprintf(paste0("<td><a href='", paste0("qc", filename, ".html"), "' target='_blank'>%s</a></td>"), filename), 
-                           "\n",
-                           sprintf("<td>%s</td>", check_final), 
-                           "\n</tr>")
-  }
+  result_temp <<- data.frame(filename = filename, check_final = check_final)
 }
 
