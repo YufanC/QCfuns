@@ -56,11 +56,11 @@ qc_batchrun <- function(files, path = "."){
     
     ### Display result in viewer
     # create temp file
-    # temp_dir = tempdir()
-    # temp_file <- paste0(temp_dir, "/temp.html")
+    temp_dir = tempdir()
+    temp_file <- paste0(temp_dir, "/temp.html")
     
     # diverts output to a temp file
-    sink(file_path, append = TRUE)
+    sink(temp_file, append = TRUE)
     
     cat("<h2>Comparison Results</h2>", 
         "<table border='1'>", 
@@ -70,31 +70,29 @@ qc_batchrun <- function(files, path = "."){
         "</tr>", 
         temp_result, 
         "</table>", 
-        file = file_path)
+        file = temp_file)
     
     # Use RStudio viewer if available, otherwise open in a web browser
     if (!is.null(getOption("viewer"))) {
-      rstudioapi::viewer(file_path)
+      rstudioapi::viewer(temp_file)
     } else {
-      browseURL(file_path)
+      browseURL(temp_file)
     }
     
     # diverts output back to console
     sink()
-    
-  } else {
-    
-    ### Create compare_results.html
-    cat("<h2>Comparison Results</h2>", 
-        "<table border='1'>", 
-        "<tr>", 
-        "<th>Output ID</th>", 
-        "<th>All Matched</th>", 
-        "</tr>", 
-        temp_result, 
-        "</table>", 
-        file = file_path)
-  }
+  } 
+  
+  ### save comparison result in html
+  cat("<h2>Comparison Results</h2>", 
+      "<table border='1'>", 
+      "<tr>", 
+      "<th>Output ID</th>", 
+      "<th>All Matched</th>", 
+      "</tr>", 
+      temp_result, 
+      "</table>", 
+      file = file_path)
 }
 
 

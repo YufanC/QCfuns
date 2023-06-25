@@ -49,29 +49,36 @@ qc_comparedf <- function(qc, rtf, path = ".", filename = NULL, by = "row_seq", e
                                                    stop_on_error = stop_on_error,
                                                    keep_unchanged_rows = keep_unchanged_rows, 
                                                    keep_unchanged_cols = keep_unchanged_cols,
+                                                   change_markers = c("PROD", "QC"),
                                                    round_output_to = round_output_to))
   
   ### if there is a difference detected
   if (result$change_summary["changes"] != 0){
     
-    # Store comparison result to result.html for the record and display result in viewer
-    file_path <- file.path(path, paste0("qc", filename, ".html"))
+    # display result in viewer
+    temp_dir = tempdir()
+    temp_file <- file.path(temp_dir, paste0("qc", filename, ".html"))
     
     # diverts output to a temp file
-    sink(file_path, append = TRUE)
+    sink(temp_file, append = TRUE)
     
     cat(sprintf("<h3>Comparison Results for %s</h3>", filename),
-        compareDF::create_output_table(result), file = file_path)
+        compareDF::create_output_table(result), file = temp_file)
     
     # Use RStudio viewer if available, otherwise open in a web browser
     if (!is.null(getOption("viewer"))) {
-      rstudioapi::viewer(file_path)
+      rstudioapi::viewer(temp_file)
     } else {
-      browseURL(file_path)
+      browseURL(temp_file)
     }
     
     # diverts output back to console
     sink()
+    
+    # Save comparison results in html
+    file_path <- file.path(path, paste0("qc", filename, ".html"))
+    cat(sprintf("<h3>Comparison Results for %s</h3>", filename),
+        compareDF::create_output_table(result), file = file_path)
 
   } else {
     message("The two data frames are the same after accounting for tolerance!")
@@ -85,12 +92,10 @@ qc_comparedf <- function(qc, rtf, path = ".", filename = NULL, by = "row_seq", e
                            sprintf("<td>%s</td>", check_final), "\n</tr>")
   } else {
     result_temp <<- paste0("<tr>\n", 
-                           sprintf(paste0("<td><a href=", paste0("qc", filename, ".html"), ">%s</a></td>"), filename), 
+                           sprintf(paste0("<td><a href='", paste0("qc", filename, ".html"), "' target='_blank'>%s</a></td>"), filename), 
                            "\n",
                            sprintf("<td>%s</td>", check_final), 
                            "\n</tr>")
   }
-  
-  
 }
 
