@@ -22,42 +22,63 @@ qc_batchrun <- function(files, path = "."){
   assertthat::assert_that(all(file.exists(files)))
   assertthat::is.dir(path)
   
-  ### source all r scripts in files
-  source_batch <- function(files) {
-    op <- options(log.rx = NULL); on.exit(options(op)) # to reset after each
-    axecute(
-      files,
-      log_name = str_replace(basename(i), ".r|.R", ".log"),
-      log_path = path,
-      remove_log_object = TRUE,
-      quit_on_error = FALSE,
-      to_report = c("messages", "output", "results")
-    )
-  }
+  ### Execute all scripts in sequence
+  sapply(files, source_batch)
   
-  ### Get comparison result for each output
-  temp_result0 = data.frame()
-  for (i in files) {
-    # Create a message for debugging
-    message(paste("Running", i))
+  ### Create summary html report
+  num_files <- length(files)
+  
+  output_result <- data.frame(
+    file_name = character(),
+    all_match = character(),
+    error_text = character(),
+    error_exist = integer(),
+    warning_text = character(),
+    stringsAsFactors = FALSE
+  )
+  
+  for (i in 1:num_files) {
+    file_temp <- file.path(path, str_replace(basename(files[i]), ".r|.R", ".log"))
+    extracted <- extract_errors_and_warnings(file_temp)
     
-    # Source for each
-    source_batch(i)
+    all_match <- ifelse(any(extracted$result == "Yes", na.rm = T), "Yes", "No")
+    error_text <- paste(extracted$errors, collapse = "\n")
+    error_exist <- ifelse(any(nchar(extracted$errors) > 0), 1, 2)
+    warning_text <- paste(extracted$warnings, collapse = "\n")
     
-    # Combine result_temp
-    temp_result0 <- rbind(temp_result0, result_temp)
+    row <- data.frame(
+      file_name = str_extract(basename(file_temp), "(?<=qc).*?(?=\\.log)"),
+      all_match = all_match,
+      error_text = error_text,
+      error_exist = error_exist,
+      warning_text = warning_text,
+      stringsAsFactors = FALSE
+    )
+    
+    output_result <- rbind(output_result, row)
   }
   
   ### Create summary html report
-  temp_result1 <- temp_result0 %>% 
-    arrange(check_final) %>% 
-    mutate(html_col = ifelse(check_final == "Yes",
-                             paste0("<tr>\n", sprintf("<td>%s</td>", filename), "\n",
-                                    sprintf("<td>%s</td>", check_final), "\n</tr>"),
+  temp_result1 <- output_result %>% 
+    arrange(error_exist, all_match) %>% 
+    mutate(html_col = ifelse(all_match == "Yes" | error_exist == 1,
                              paste0("<tr>\n", 
-                                    sprintf(paste0("<td><a href='", paste0("qc", filename, ".html"), "' target='_blank'>%s</a></td>"), filename), 
+                                    sprintf("<td>%s</td>", file_name), 
                                     "\n",
-                                    sprintf("<td>%s</td>", check_final), 
+                                    sprintf("<td>%s</td>", all_match), 
+                                    "\n",
+                                    sprintf("<td>%s</td>", error_text), 
+                                    "\n",
+                                    sprintf("<td>%s</td>", warning_text), 
+                                    "\n</tr>"),
+                             paste0("<tr>\n", 
+                                    sprintf(paste0("<td><a href='", paste0("qc", file_name, ".html"), "' target='_blank'>%s</a></td>"), file_name), 
+                                    "\n",
+                                    sprintf("<td>%s</td>", all_match), 
+                                    "\n",
+                                    sprintf("<td>%s</td>", error_text), 
+                                    "\n",
+                                    sprintf("<td>%s</td>", warning_text), 
                                     "\n</tr>")))
   
   temp_result <- paste(temp_result1$html_col, collapse = "")
@@ -82,6 +103,8 @@ qc_batchrun <- function(files, path = "."){
         "<tr>", 
         "<th>Output ID</th>", 
         "<th>All Matched</th>", 
+        "<th>Error</th>", 
+        "<th>Warning</th>", 
         "</tr>", 
         temp_result, 
         "</table>", 
@@ -104,10 +127,62 @@ qc_batchrun <- function(files, path = "."){
       "<tr>", 
       "<th>Output ID</th>", 
       "<th>All Matched</th>", 
+      "<th>Error</th>", 
+      "<th>Warning</th>", 
       "</tr>", 
       temp_result, 
       "</table>", 
       file = file_path)
 }
 
+source_batch <- function(script) {
+  op <- options(log.rx = NULL); on.exit(options(op)) # to reset after each
+  
+  # Create a message for tracking
+  message(paste("Running", script))
+  
+  axecute(
+    script,
+    log_name = str_replace(basename(script), ".r|.R", ".log"),
+    log_path = path,
+    remove_log_object = TRUE,
+    quit_on_error = FALSE,
+    to_report = c("messages", "output", "results")
+  )
+}
+
+extract_errors_and_warnings <- function(file_path) {
+  errors <- vector("character")
+  warnings <- vector("character")
+  result <- vector("character")
+  
+  lines <- readLines(file_path)
+  num_lines <- length(lines)
+  i <- 1
+  
+  while (i <= num_lines) {
+    if (grepl("^Errors:", lines[i])) {
+      i <- i + 1
+      while (i <= num_lines && !grepl("^Warnings:", lines[i])) {
+        errors <- c(errors, trimws(lines[i]))
+        i <- i + 1
+      }
+    } else if (grepl("^Warnings:", lines[i])) {
+      i <- i + 1
+      while (i <= num_lines && !grepl("^-+$", lines[i])) {
+        warnings <- c(warnings, trimws(lines[i]))
+        i <- i + 1
+      }
+    } else if (grepl("The two data frames are different!", lines[i])) {
+      i <- i + 1
+      result <- "No"
+    } else if (grepl("The two data frames are the same after accounting for tolerance!", lines[i])) {
+      i <- i + 1
+      result <- "Yes"
+    } else {
+      i <- i + 1
+    }
+  }
+  return(list(errors = errors, warnings = warnings, result = result))
+}
 

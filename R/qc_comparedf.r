@@ -52,8 +52,10 @@ qc_comparedf <- function(qc, rtf, path = ".", filename = NULL, by = "row_seq", e
                                                    change_markers = c("PROD", "QC"),
                                                    round_output_to = round_output_to))
   
-  ### if there is a difference detected
+  ### if there is at least a difference detected
   if (result$change_summary["changes"] != 0){
+    
+    message("The two data frames are different!")
     
     # display result in viewer
     temp_dir = tempdir()
@@ -83,10 +85,5 @@ qc_comparedf <- function(qc, rtf, path = ".", filename = NULL, by = "row_seq", e
   } else {
     message("The two data frames are the same after accounting for tolerance!")
   }
-  
-  # Store comparison result to result_temp for batchrun
-  check_final <- ifelse(result$change_summary["changes"] == 0, "Yes", "No")
-  
-  result_temp <<- data.frame(filename = filename, check_final = check_final)
 }
 
