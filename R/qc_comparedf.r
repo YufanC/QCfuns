@@ -55,7 +55,7 @@ qc_comparedf <- function(qc, rtf, path = ".", filename = NULL, by = "row_seq", e
   ### if there is at least a difference detected
   if (result$change_summary["changes"] != 0){
     
-    message("The two data frames are different!")
+    message(paste("QC and production are not matched for", filename))
     
     # display result in viewer
     temp_dir = tempdir()
@@ -83,7 +83,7 @@ qc_comparedf <- function(qc, rtf, path = ".", filename = NULL, by = "row_seq", e
         compareDF::create_output_table(result), file = file_path)
 
   } else {
-    message("The two data frames are the same after accounting for tolerance!")
+    message(paste("QC and production are the same for", filename))
   }
 }
 

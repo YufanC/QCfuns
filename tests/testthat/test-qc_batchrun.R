@@ -4,13 +4,13 @@ test_that("Check if the output html exists and is correct", {
   dir_temp <- tempdir()
   
   compare_script1 <- "dir_temp <- tempdir() \n
-  qc <- data.frame(x = c(1, 2), y = c('a', 'b')) \n
-  rtf <- data.frame(x = c(1, 2), y = c('a', 'b')) \n
+  qc <- data.frame(Row_text = c('N', 'N'), Treatment = c('5', '7'), Placebo = c('10', '6')) \n
+  rtf <- data.frame(Row_text = c('N', 'N'), Treatment = c('5', '7'), Placebo = c('10', '6')) \n
   qc_comparedf(qc, rtf, path = dir_temp, filename = 'test_output1')"
   
   compare_script2 <- "dir_temp <- tempdir() \n
-  qc <- data.frame(x = c(1, 1), y = c('a', 'b')) \n
-  rtf <- data.frame(x = c(1, 2), y = c('a', 'b')) \n
+  qc <- data.frame(Row_text = c('N', 'N'), Treatment = c('5', '7'), Placebo = c('10', '6')) \n
+  rtf <- data.frame(Row_text = c('N', 'N'), Treatment = c('6', '7'), Placebo = c('10', '6')) \n
   qc_comparedf(qc, rtf, path = dir_temp, filename = 'test_output2')"
   
   writeLines(compare_script1, con = file.path(dir_temp, "qctable1.r"))

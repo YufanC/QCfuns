@@ -31,6 +31,7 @@ qc_batchrun <- function(files, path = "."){
   output_result <- data.frame(
     file_name = character(),
     all_match = character(),
+    link_text = character(),
     error_text = character(),
     error_exist = integer(),
     warning_text = character(),
@@ -41,14 +42,22 @@ qc_batchrun <- function(files, path = "."){
     file_temp <- file.path(path, str_replace(basename(files[i]), ".r|.R", ".log"))
     extracted <- extract_errors_and_warnings(file_temp)
     
-    all_match <- ifelse(any(extracted$result == "Yes", na.rm = T), "Yes", "No")
+    all_match <- ifelse(any(str_detect(extracted$result, "QC and production are the same for")), "Yes", "No")
+    message_text <- paste(extracted$result, collapse = "")
     error_text <- paste(extracted$errors, collapse = "\n")
     error_exist <- ifelse(any(nchar(extracted$errors) > 0), 1, 2)
     warning_text <- paste(extracted$warnings, collapse = "\n")
     
     row <- data.frame(
-      file_name = str_extract(basename(file_temp), "(?<=qc).*?(?=\\.log)"),
+      # Get filename from message in log
+      file_name = ifelse(message_text == "", 
+                         str_extract(basename(file_temp), ".*?(?=\\.log)"),
+                         word(message_text, -1)),
       all_match = all_match,
+      # Get names of the link for scripts with unmatched results
+      link_text = ifelse(str_detect(message_text, "QC and production are not matched for"),
+                         word(message_text, -1),
+                         NA),
       error_text = error_text,
       error_exist = error_exist,
       warning_text = warning_text,
@@ -61,7 +70,7 @@ qc_batchrun <- function(files, path = "."){
   ### Create summary html report
   temp_result1 <- output_result %>% 
     arrange(error_exist, all_match) %>% 
-    mutate(html_col = ifelse(all_match == "Yes" | error_exist == 1,
+    mutate(html_col = ifelse(is.na(link_text),
                              paste0("<tr>\n", 
                                     sprintf("<td>%s</td>", file_name), 
                                     "\n",
@@ -72,7 +81,7 @@ qc_batchrun <- function(files, path = "."){
                                     sprintf("<td>%s</td>", warning_text), 
                                     "\n</tr>"),
                              paste0("<tr>\n", 
-                                    sprintf(paste0("<td><a href='", paste0("qc", file_name, ".html"), "' target='_blank'>%s</a></td>"), file_name), 
+                                    sprintf(paste0("<td><a href='", paste0("qc", link_text, ".html"), "' target='_blank'>%s</a></td>"), file_name), 
                                     "\n",
                                     sprintf("<td>%s</td>", all_match), 
                                     "\n",
@@ -173,12 +182,12 @@ extract_errors_and_warnings <- function(file_path) {
         warnings <- c(warnings, trimws(lines[i]))
         i <- i + 1
       }
-    } else if (grepl("The two data frames are different!", lines[i])) {
+    } else if (grepl("QC and production are not matched for", lines[i])) {
+      result <- lines[i]
       i <- i + 1
-      result <- "No"
-    } else if (grepl("The two data frames are the same after accounting for tolerance!", lines[i])) {
+    } else if (grepl("QC and production are the same for", lines[i])) {
+      result <- lines[i]
       i <- i + 1
-      result <- "Yes"
     } else {
       i <- i + 1
     }
