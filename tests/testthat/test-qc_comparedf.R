@@ -27,6 +27,6 @@ test_that("Check if the message works for two identical dataframs", {
                            type = "message")[2]
   
   ### Check if the output XLSX file exists
-  expect_equal(output, "The two data frames are the same after accounting for tolerance!")
+  expect_equal(output, "QC and production are the same for test_output")
 })
 
