@@ -23,7 +23,7 @@ qc_batchrun <- function(files, path = "."){
   assertthat::is.dir(path)
   
   ### Execute all scripts in sequence
-  sapply(files, source_batch)
+  sapply(files, source_batch, path = path)
   
   ### Create summary html report
   num_files <- length(files)
@@ -135,7 +135,7 @@ qc_batchrun <- function(files, path = "."){
       file = file_path)
 }
 
-source_batch <- function(script) {
+source_batch <- function(script, path = NULL) {
   op <- options(log.rx = NULL); on.exit(options(op)) # to reset after each
   
   # Create a message for tracking
