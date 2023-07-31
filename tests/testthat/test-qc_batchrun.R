@@ -29,3 +29,22 @@ test_that("Check if the output html exists and is correct", {
   expect_equal(results[3], "<td>No</td>")
   expect_equal(results[9], "<td>Yes</td>")
 })
+
+# test_that("Check if the output html is correct using real scripts", {
+#   
+#   # Store outputs in temporary diretory
+#   dir_temp <- tempdir()
+#   
+#   file_list <- file.path(system.file(package = "QCfuns"), c("qctsidem-st02.R", "qctsfae-st03.R"))
+#   # file_list <- list.files(path = system.file(package = "QCfuns"), pattern = "qct.*\\.R", 
+#   #                         full.names = TRUE)
+#   qc_batchrun(file_list, dir_temp)
+# 
+#   file_name <- paste0("compare_results_", Sys.Date(), ".html")
+#   file_path <- file.path(dir_temp, file_name)
+# 
+#   ### Check if the output html file is correct
+#   results <- readLines(file_path, warn = F)
+#   expect_equal(results[9], "<td>Yes</td>")
+#   expect_equal(results[3], "<td>No</td>")
+# })

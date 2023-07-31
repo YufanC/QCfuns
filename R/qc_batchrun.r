@@ -165,7 +165,7 @@ extract_errors_and_warnings <- function(file_path) {
   warnings <- vector("character")
   result <- vector("character")
   
-  lines <- readLines(file_path)
+  lines <- readLines(file_path, warn = FALSE)
   num_lines <- length(lines)
   i <- 1
   

@@ -39,7 +39,7 @@ qc_rtf2df <- function(filename, path = NULL){
     }
     
     # Convert to dataframe
-    dat0 <- read.table(text = a_rtf[start_row:length(a_rtf)], header = T, sep = "|", strip.white = T, colClasses = "character", quote = "")
+    dat0 <- read.table(text = a_rtf[start_row:length(a_rtf)], header = T, sep = "|", strip.white = T, colClasses = "character", quote = "", comment.char = "")
     
     # Remove the first and last column
     dat1 <- dat0[, c(-1, -ncol(dat0))]
@@ -51,7 +51,7 @@ qc_rtf2df <- function(filename, path = NULL){
   } else {
     ### for rtf created by SAS
     # Convert to dataframe
-    dat0 <- read.table(text = a_rtf[sep_count == max(sep_count)], header = T, sep = "|", strip.white = T, colClasses = "character", quote = "")
+    dat0 <- read.table(text = a_rtf[sep_count == max(sep_count)], header = T, sep = "|", strip.white = T, colClasses = "character", quote = "", comment.char = "")
     
     dat1 <- dat0[, c(-1, -ncol(dat0))]
   }

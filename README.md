@@ -11,61 +11,52 @@ devtools::install_github("YufanC/QCfuns")
 # Add qcscript to snippet
 QCfuns::addQCscript()
 
-#################################################################################
-# Original Reporting Effort:  Reporting effort
-# Program Name             :  Program name
-# R Version                :  R version 4.2.1 (2022-06-23)
-# Short Description        :  Description
-# Author                   :  Author
-# Date                     :  2023-03-23
+### Header ###################################################################
+# Original Reporting Effort:  ${1:Reporting effort}
+# Program Name             :  ${2:Program name}
+# R Version                :  `r R.Version()$version.string`
+# Short Description        :  ${3:Description}
+# Author                   :  ${4:Author}
+# Date                     :  `r Sys.Date()`
 # input                    :
 # Output                   :  
 # Remarks                  :
 
-# Modification History
+### Modification History #####################################################
 #Rev       Modified By         Reporting Effort         Date      Description
-#################################################################################
 
-#################################################################################
-###                           Prepping environment                            ###
-#################################################################################
+### Prepping environment #####################################################
 library(haven)
 library(dplyr)
-library(stringr)
 library(tidyr)
+library(stringr)
 library(QCfuns)
 
-files.sources <- list.files(path = read_path(rptdrv, "qc"), pattern = "qcf.*\\.r", full.names = T)
+files.sources <- list.files(path = read_path(rptdrv, "qc"), 
+                            pattern = "^qcf.*\\\.r", full.names = T)
 sapply(files.sources, source)
 
-###########################
-###  Derive QC dataset  ###
-###########################
+### Derive QC dataset ########################################################
 
 adsl <- read_sas(read_path(a_in, "adsl.sas7bdat")) %>% 
   mutate(across(where(is.character), zap_empty))
   
-###########################
-###  Generate QC table  ###
-###########################
+### Generate QC table ########################################################
 
 first_row <- qc_cntrow1(adsl, "TRT01P", row_text = "Analysis set: Safety")
 
 tab1 <- qc_cat_row(adsl, "TRT01P", rowvar = "SEX")
 
-tab_qc <- bind_rows(first_row$row1, tab1) %>% 
+tab_qc <- bind_rows(first_row\$row1, tab1) %>% 
   mutate(across(everything(), ~replace(., is.na(.), "")))
 
-###################
-### Read in RTF ###
-###################
+### Read in RTF ##############################################################
 
-tableid <- "tableid"
+tableid <- "${5:tableid}"
 tab_rtf <- qc_rtf2df(tableid, path = opath[["PREPROD"]])
 
-############################
-### Compare two datasets ###
-############################
+### Compare two datasets #####################################################
 
-qc_compare2xlsx(qc = tab_qc, rtf = tab_rtf, path = qc[["PDEV"]], filename = tableid)
+qc_comparedf(qc = tab_qc, rtf = tab_rtf, path = qc[["PDEV"]], 
+             filename = tableid)
 ```

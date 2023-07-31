@@ -87,29 +87,77 @@ add_snippets <- function() {
     # find defintions appearing in packageSnippets but not in rstudioSnippets
     # if no snippets are missing go to next file
     #
+    snippetsAll <- trimws(pckgSnippetsFileDefinitions)
     snippetsToCopy <- setdiff(trimws(pckgSnippetsFileDefinitions), trimws(rstudioSnippetDefinitions))
     snippetsNotToCopy <- intersect(trimws(pckgSnippetsFileDefinitions), trimws(rstudioSnippetDefinitions))
     
     # Inform user about changes, ask to confirm action
     #
     if (interactive()) {
-      cat(paste0("You are about to add the following ", length(snippetsToCopy),
+      cat(paste0("You are about to add the following ", length(snippetsAll),
                  " snippets to '", rstudioSnippetsFilePath, "':\n",
-                 paste0(paste0("-", snippetsToCopy), collapse="\n")))
+                 paste0(paste0("-", snippetsAll), collapse="\n")))
       if (length(snippetsNotToCopy) > 0) {
-        cat(paste0("\n(The following snippets will NOT be added because there is already a snippet with that name:\n",
+        cat(paste0("\n(The following snippets already exist:\n",
                    paste0(snippetsNotToCopy, collapse=", ") ,")"))
+        answer0 <- readline(prompt="Do you want to remove the original snippets (y/n): ")
       }
-      answer <- readline(prompt="Do you want to proceed (y/n): ")
+      answer <- readline(prompt="Do you want to proceed to add the snippets (y/n): ")
       if (substr(tolower(answer), 1, 1) == "n") {
         next()
       }
     }
     
+    # Remove original snippets if permitted
     # Create list of line numbers where snippet definitons start
     # This list is used to determine the end of each definition block
     #
+    allrstudioSnippetDefinitonStarts <- grep("^snippet .*", rstudioSnippetsFileContent)
     allPckgSnippetDefinitonStarts <- grep("^snippet .*", pckgSnippetsFileContentSanitized)
+    
+    if (substr(tolower(answer0), 1, 1) == "y"){
+      for (s in snippetsNotToCopy) {
+        startLine0 <- grep(paste0("^", s, ".*"), rstudioSnippetsFileContent)
+        
+        # Find last line of snippet definition:
+        # First find start of next defintion and return
+        # previous line number or lastline if already in last definiton
+        #
+        endLine0 <- allrstudioSnippetDefinitonStarts[allrstudioSnippetDefinitonStarts > startLine0][1] -1
+        if (is.na(endLine0)) {
+          endLine0 <- length(rstudioSnippetsFileContent)
+        }
+        
+        rstudioSnippetsFileContent1 <- rstudioSnippetsFileContent[-c(startLine0:endLine0)]
+        snippetText0 <- paste0(rstudioSnippetsFileContent1, collapse = "\n")
+        
+        ### Identify the repeated snippet in package
+        startLine <- grep(paste0("^", s, ".*"), pckgSnippetsFileContentSanitized)
+        
+        # Find last line of snippet definition:
+        # First find start of next defintion and return
+        # previous line number or lastline if already in last definiton
+        #
+        endLine <- allPckgSnippetDefinitonStarts[allPckgSnippetDefinitonStarts > startLine][1] -1
+        if (is.na(endLine)) {
+          endLine <- length(pckgSnippetsFileContentSanitized)
+        }
+        
+        snippetText <- paste0(pckgSnippetsFileContentSanitized[startLine:endLine], collapse = "\n")
+        
+        if (tail(rstudioSnippetsFileContent1, n=1) != "") {
+          snippetText <- paste0("\n", snippetText)
+        }
+        
+        # Remove and add snippet block, print message
+        #
+        cat(paste0(snippetText0, snippetText), file = rstudioSnippetsFilePath)
+        cat(paste0("* Removed original and added new '", s, "' to '", rstudioSnippetsFilePath, "'\n"))
+        added <- TRUE
+      }
+    }
+    
+    # Add new snippets 
     
     for (s in snippetsToCopy) {
       startLine <- grep(paste0("^", s, ".*"), pckgSnippetsFileContentSanitized)
