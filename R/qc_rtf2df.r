@@ -34,6 +34,8 @@ qc_rtf2df <- function(filename, path = NULL){
     
     if (length(seq_white_space) > 2){
       start_row <- max(seq_white_space[seq_len(match(FALSE, diff(seq_white_space) == 1))])
+    } else if(length(seq_white_space) == 0){
+      start_row <- 1
     } else {
       start_row <- max(seq_white_space)
     }
@@ -61,8 +63,8 @@ qc_rtf2df <- function(filename, path = NULL){
     mutate(across(1:length(dat1), ~replace(., is.na(.), "")),
            across(1:length(dat1), ~replace(., .=="-", "")))
   
-  # Delte rows with the first column equal to ""
-  dat3 <- dat2[dat2[[1]] != "", ]
+  # Delete rows with all values equal to ""
+  dat3 <- dat2[rowSums(dat2 == "") != ncol(dat2), ]
   rownames(dat3) <- NULL
   
   return(dat3)
