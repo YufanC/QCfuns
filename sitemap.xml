@@ -4,10 +4,16 @@
     <loc>https://yufanc.github.io/QCfuns/404.html</loc>
   </url>
   <url>
-    <loc>https://yufanc.github.io/QCfuns/articles/index.html</loc>
+    <loc>https://yufanc.github.io/QCfuns/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://yufanc.github.io/QCfuns/articles/my-vignette.html</loc>
+    <loc>https://yufanc.github.io/QCfuns/articles/Other_functions.html</loc>
+  </url>
+  <url>
+    <loc>https://yufanc.github.io/QCfuns/articles/QCfuns.html</loc>
+  </url>
+  <url>
+    <loc>https://yufanc.github.io/QCfuns/articles/index.html</loc>
   </url>
   <url>
     <loc>https://yufanc.github.io/QCfuns/authors.html</loc>
@@ -16,16 +22,10 @@
     <loc>https://yufanc.github.io/QCfuns/index.html</loc>
   </url>
   <url>
-    <loc>https://yufanc.github.io/QCfuns/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://yufanc.github.io/QCfuns/reference/addQCscript.html</loc>
+    <loc>https://yufanc.github.io/QCfuns/reference/Getdigit.html</loc>
   </url>
   <url>
     <loc>https://yufanc.github.io/QCfuns/reference/add_snippets.html</loc>
-  </url>
-  <url>
-    <loc>https://yufanc.github.io/QCfuns/reference/getdigit.html</loc>
   </url>
   <url>
     <loc>https://yufanc.github.io/QCfuns/reference/getmaxdigit.html</loc>
@@ -56,9 +56,6 @@
   </url>
   <url>
     <loc>https://yufanc.github.io/QCfuns/reference/qc_cntrow1_shift.html</loc>
-  </url>
-  <url>
-    <loc>https://yufanc.github.io/QCfuns/reference/qc_compare2xlsx.html</loc>
   </url>
   <url>
     <loc>https://yufanc.github.io/QCfuns/reference/qc_comparedf.html</loc>
