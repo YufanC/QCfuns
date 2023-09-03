@@ -1,6 +1,5 @@
 ---
 title: "Get Started"
-author: "Yufan Chen"
 output: 
   rmarkdown::html_vignette:
     toc: yes
@@ -43,6 +42,11 @@ knitr::include_graphics("QCworkflow.png")
 ```
 
 ### Read in rtf files
+
+```{r eval=FALSE}
+qc_rtf2df(filename = "tsidem01", path = opath[["PREPROD"]])
+```
+
 rtf layout
 
 ```{r out.width="80%", echo = FALSE}
@@ -58,12 +62,24 @@ knitr::include_graphics("rtfdf.png")
 ### Compare dataframes
 qc_comparedf function leverages the compare_df function from the compareDF package to generate a concise and color-coded summary of comparison results between the data frame created and the data frame extracted from the rtf file
 
-```{r out.width="60%", echo = FALSE}
+```{r eval=FALSE}
+qc_comparedf(qc = tab_qc, rtf = tab_rtf, path = qc[["PDEV"]], filename = "tsidem01", keep_unchanged_rows = TRUE)
+```
+
+```{r out.width="70%", echo = FALSE}
 knitr::include_graphics("compare.png")
 ```
 
 ### Batchrun
 qc_batchrun function can digest the results from qc_comparedf and produce a comprehensive summary of the validation status for multiple outputs simultaneously with log and comparison output for each individual script. The qc_batchrun can be executable not only in RStudio interactively, but also allow users to run batch jobs independently of the RStudio IDE.
+
+```{r eval=FALSE}
+### select all r scripts start with 'qct' on SPACE
+qc_files <- list.files(path = qc[["PDEV"]], pattern = "qct.*\\.r", 
+                       full.names = TRUE)
+
+qc_batchrun(files = qc_files, path = qc[["PDEV"]])
+```
 
 ```{r out.width="100%", echo = FALSE}
 knitr::include_graphics("batchrun.gif")
