@@ -1,0 +1,76 @@
+---
+title: "Get Started"
+author: "Yufan Chen"
+output: 
+  rmarkdown::html_vignette:
+    toc: yes
+    toc_depth: 3
+vignette: >
+  %\VignetteIndexEntry{Get Started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+QCfuns package is a collection of R functions aiming to facilitate outputs validation
+process. The functions can interact with each other and all together construct
+a workflow that is efficient and easy to follow.
+
+There are two types of functions in the workflow:
+
+* Data to table functions. These functions take a dataframe of ADaM structure
+as input and output a table-like dataframe. The names of these functions always
+start with "qc_" and end with the type of table they are creating, 
+such as qc_demo, qc_shift.
+
+* Utility functions. Utility functions are functions that perform tasks
+other than creating table-like dataframe from ADaM dataset. These functions
+include addQCscript, qc_rtf2df, qc_compare2xlsx and qc_batchrun.
+
+## Key functions
+`qc_rtf`, `qc_comparedf` and `qc_batchrun` are the three key functions in the QC
+workflow introduced by QCfuns package.
+
+```{r out.width="100%", echo = FALSE}
+knitr::include_graphics("QCworkflow.png")
+```
+
+### Read in rtf files
+rtf layout
+
+```{r out.width="80%", echo = FALSE}
+knitr::include_graphics("rtf.png")
+```
+
+R dataframe (Get rid of title, footnotes and empty lines)
+
+```{r out.width="80%", echo = FALSE}
+knitr::include_graphics("rtfdf.png")
+```
+
+### Compare dataframes
+qc_comparedf function leverages the compare_df function from the compareDF package to generate a concise and color-coded summary of comparison results between the data frame created and the data frame extracted from the rtf file
+
+```{r out.width="60%", echo = FALSE}
+knitr::include_graphics("compare.png")
+```
+
+### Batchrun
+qc_batchrun function can digest the results from qc_comparedf and produce a comprehensive summary of the validation status for multiple outputs simultaneously with log and comparison output for each individual script. The qc_batchrun can be executable not only in RStudio interactively, but also allow users to run batch jobs independently of the RStudio IDE.
+
+```{r out.width="100%", echo = FALSE}
+knitr::include_graphics("batchrun.gif")
+```
+
+Scripts with errors and mismatched results will be on the top of the summary report. Individual comparing results can be accessed by hyperlinks
+
+```{r out.width="60%", echo = FALSE}
+knitr::include_graphics("batchrun_result.png")
+```
