@@ -31,7 +31,7 @@ such as qc_demo, qc_shift.
 
 * Utility functions. Utility functions are functions that perform tasks
 other than creating table-like dataframe from ADaM dataset. These functions
-include addQCscript, qc_rtf2df, qc_compare2xlsx and qc_batchrun.
+include add_snippets, qc_rtf2df, qc_comparedf and qc_batchrun.
 
 ## Key functions
 `qc_rtf`, `qc_comparedf` and `qc_batchrun` are the three key functions in the QC
