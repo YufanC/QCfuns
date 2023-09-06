@@ -9,7 +9,7 @@ devtools::install_github("YufanC/QCfuns")
 ## Example QC script
 ``` r
 # Add qcscript to snippet
-QCfuns::addQCscript()
+QCfuns::add_snippets()
 
 ### Header ###################################################################
 # Original Reporting Effort:  ${1:Reporting effort}
