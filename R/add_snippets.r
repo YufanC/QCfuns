@@ -101,6 +101,8 @@ add_snippets <- function() {
         cat(paste0("\n(The following snippets already exist:\n",
                    paste0(snippetsNotToCopy, collapse=", ") ,")"))
         answer0 <- readline(prompt="Do you want to remove the original snippets (y/n): ")
+      } else {
+        answer0 <- "No"
       }
       answer <- readline(prompt="Do you want to proceed to add the snippets (y/n): ")
       if (substr(tolower(answer), 1, 1) == "n") {
