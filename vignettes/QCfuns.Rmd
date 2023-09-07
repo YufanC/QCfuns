@@ -34,7 +34,7 @@ other than creating table-like dataframe from ADaM dataset. These functions
 include add_snippets, qc_rtf2df, qc_comparedf and qc_batchrun.
 
 ## Key functions
-`qc_rtf`, `qc_comparedf` and `qc_batchrun` are the three key functions in the QC
+`qc_rtf2df`, `qc_comparedf` and `qc_batchrun` are the three key functions in the QC
 workflow introduced by QCfuns package.
 
 ```{r out.width="100%", echo = FALSE}
