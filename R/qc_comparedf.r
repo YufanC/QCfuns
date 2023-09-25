@@ -53,7 +53,7 @@ qc_comparedf <- function(qc, rtf, path = ".", filename = NULL, by = "row_seq", e
                                                    round_output_to = round_output_to))
   
   ### if there is at least a difference detected
-  if (re$change_summary["changes"] != 0 | re$change_summary["additions"] != 0 | re$change_summary["removals"] != 0){
+  if (result$change_summary["changes"] != 0 | result$change_summary["additions"] != 0 | result$change_summary["removals"] != 0){
     
     message(paste("QC and production are not matched for", filename))
     
