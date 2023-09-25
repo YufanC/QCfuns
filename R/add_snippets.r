@@ -66,11 +66,10 @@ add_snippets <- function() {
       
       answer <- readline("Do you want to create an empty one (y/n): ")
       
-      if (tolower(answer) == "y"){
+      if (substr(tolower(answer), 1, 1) == "y"){
         dir.create(dirname(rstudioSnippetsFilePath),recursive = TRUE,showWarnings = FALSE)
         file.create(rstudioSnippetsFilePath)
       } else {
-        message("Snippets not added")
         next()
       }
     }
@@ -147,8 +146,10 @@ add_snippets <- function() {
         
         snippetText <- paste0(pckgSnippetsFileContentSanitized[startLine:endLine], collapse = "\n")
         
-        if (tail(rstudioSnippetsFileContent1, n=1) != "") {
-          snippetText <- paste0("\n", snippetText)
+        if (length(rstudioSnippetsFileContent1) > 0){
+          if (tail(rstudioSnippetsFileContent1, n=1) != "") {
+            snippetText <- paste0("\n", snippetText)
+          }
         }
         
         # Remove and add snippet block, print message
@@ -192,6 +193,8 @@ add_snippets <- function() {
   
   if (added) {
     cat("Restart RStudio to use new snippets")
+  } else {
+    cat("Snippets not added")
   }
   
   return(invisible(added))
