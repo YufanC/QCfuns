@@ -67,7 +67,7 @@
       <img src="" class="logo" alt=""><h1>Get Started</h1>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/YufanC/QCfuns/vignettes/QCfuns.Rmd" class="external-link"><code>vignettes/QCfuns.Rmd</code></a></small>
       <div class="d-none name"><code>QCfuns.Rmd</code></div>
     </div>
 
@@ -85,19 +85,54 @@ follow.</p>
 <li><p>Data to table functions. These functions take a dataframe of ADaM
 structure as input and output a table-like dataframe. The names of these
 functions always start with “qc_” and end with the type of table they
-are creating, such as qc_demo, qc_shift.</p></li>
+are creating, such as <code>qc_demo</code>,
+<code>qc_shift</code>.</p></li>
 <li><p>Utility functions. Utility functions are functions that perform
 tasks other than creating table-like dataframe from ADaM dataset. These
-functions include add_snippets, qc_rtf2df, qc_comparedf and
-qc_batchrun.</p></li>
+functions include <code>add_snippets</code>, <code>qc_rtf2df</code>,
+<code>qc_comparedf</code> and <code>qc_batchrun</code>.</p></li>
 </ul>
+</div>
+<div class="section level2">
+<h2 id="qc-workflow">QC Workflow<a class="anchor" aria-label="anchor" href="#qc-workflow"></a>
+</h2>
+<p>The accuracy and integrity of clinical reports are essential for
+ensuring the safety and efficacy of investigational drugs. To validate
+the accuracy of clinical reports, double programming is often required.
+To streamline the QC programming workflow and optimize the productive
+review process, the QCfuns package offers a collection of handy R
+utility functions. The major features of this utility tool include the
+following. * Access build-in QC script template in snippet, which
+provides a helpful starting point than building scripts from scratch. *
+Convert RTF table format into a data frame, which will be easily used to
+compare numbers between production and QC sides. RTFs can be either in
+SAS or in R. * Generate comparison results by comparing two data frames
+from QC work and production sides. * Perform batch run against all QC
+scripts and generate overall summary report for review.</p>
+<p><img src="QCworkflow.png" width="100%"></p>
+<p>As a QC programmer, our workflow begins by creating a dataframe based
+on ADaM datasets, SAP, and DPS. We then utilize the
+<code>qc_rtf2df</code> function in R to convert the table output from
+rtf format into a data frame. This allows us to easily manipulate and
+analyze the data.</p>
+<p>Next, we employ the <code>qc_comparedf</code> function to compare the
+two dataframes. This function helps us identify any discrepancies or
+differences between the two datasets, allowing us to ensure the accuracy
+and consistency of our results.</p>
+<p>In situations where we need to validate multiple outputs, we can
+repeat the validation process and streamline it using the
+<code>qc_batchrun</code> function. This function enables us to run all
+the QC scripts in one go and obtain a comprehensive summary report of
+the validation results.</p>
 </div>
 <div class="section level2">
 <h2 id="key-functions">Key functions<a class="anchor" aria-label="anchor" href="#key-functions"></a>
 </h2>
-<p><code>qc_rtf2df</code>, <code>qc_comparedf</code> and
-<code>qc_batchrun</code> are the three key functions in the QC workflow
-introduced by QCfuns package.</p>
+<p>To summarize, the key functions in our QC workflow are
+<code>qc_rtf2df</code>, <code>qc_comparedf</code> and
+<code>qc_batchrun</code>. Each function plays a crucial role in
+facilitating data conversion, comparison, and validation. The detailed
+introduction of these functions are as below.</p>
 <p><img src="QCworkflow.png" width="100%"></p>
 <div class="section level3">
 <h3 id="read-in-rtf-files">Read in rtf files<a class="anchor" aria-label="anchor" href="#read-in-rtf-files"></a>
