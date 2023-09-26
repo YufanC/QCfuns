@@ -1,4 +1,8 @@
 url: https://yufanc.github.io/QCfuns/
 template:
   bootstrap: 5
+repo:
+  url:
+    source: https://github.com/YufanC/QCfuns/
+    issue: https://github.com/YufanC/QCfuns/issues/
 

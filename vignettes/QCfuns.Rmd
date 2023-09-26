@@ -27,15 +27,31 @@ There are two types of functions in the workflow:
 * Data to table functions. These functions take a dataframe of ADaM structure
 as input and output a table-like dataframe. The names of these functions always
 start with "qc_" and end with the type of table they are creating, 
-such as qc_demo, qc_shift.
+such as `qc_demo`, `qc_shift`.
 
 * Utility functions. Utility functions are functions that perform tasks
 other than creating table-like dataframe from ADaM dataset. These functions
-include add_snippets, qc_rtf2df, qc_comparedf and qc_batchrun.
+include `add_snippets`, `qc_rtf2df`, `qc_comparedf` and `qc_batchrun`.
+
+## QC Workflow
+The accuracy and integrity of clinical reports are essential for ensuring the safety and efficacy of investigational drugs. To validate the accuracy of clinical reports, double programming is often required. To streamline the QC programming workflow and optimize the productive review process, the QCfuns package offers a collection of handy R utility functions. The major features of this utility tool include the following.
+*	Access build-in QC script template in snippet, which provides a helpful starting point than building scripts from scratch. 
+*	Convert RTF table format into a data frame, which will be easily used to compare numbers between production and QC sides. RTFs can be either in SAS or in R.
+*	Generate comparison results by comparing two data frames from QC work and production sides. 
+*	Perform batch run against all QC scripts and generate overall summary report for review.     
+
+```{r out.width="100%", echo = FALSE}
+knitr::include_graphics("QCworkflow.png")
+```
+
+As a QC programmer, our workflow begins by creating a dataframe based on ADaM datasets, SAP, and DPS. We then utilize the `qc_rtf2df` function in R to convert the table output from rtf format into a data frame. This allows us to easily manipulate and analyze the data.
+
+Next, we employ the `qc_comparedf` function to compare the two dataframes. This function helps us identify any discrepancies or differences between the two datasets, allowing us to ensure the accuracy and consistency of our results.
+
+In situations where we need to validate multiple outputs, we can repeat the validation process and streamline it using the `qc_batchrun` function. This function enables us to run all the QC scripts in one go and obtain a comprehensive summary report of the validation results.
 
 ## Key functions
-`qc_rtf2df`, `qc_comparedf` and `qc_batchrun` are the three key functions in the QC
-workflow introduced by QCfuns package.
+To summarize, the key functions in our QC workflow are `qc_rtf2df`, `qc_comparedf` and `qc_batchrun`. Each function plays a crucial role in facilitating data conversion, comparison, and validation. The detailed introduction of these functions are as below.
 
 ```{r out.width="100%", echo = FALSE}
 knitr::include_graphics("QCworkflow.png")
