@@ -52,7 +52,14 @@
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
 </form>
 
-      <ul class="navbar-nav"></ul>
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/YufanC/QCfuns/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 
     
@@ -67,7 +74,7 @@
       <img src="" class="logo" alt=""><h1>Get Started</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/YufanC/QCfuns/vignettes/QCfuns.Rmd" class="external-link"><code>vignettes/QCfuns.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/YufanC/QCfuns/blob/HEAD/vignettes/QCfuns.Rmd" class="external-link"><code>vignettes/QCfuns.Rmd</code></a></small>
       <div class="d-none name"><code>QCfuns.Rmd</code></div>
     </div>
 
@@ -102,13 +109,18 @@ the accuracy of clinical reports, double programming is often required.
 To streamline the QC programming workflow and optimize the productive
 review process, the QCfuns package offers a collection of handy R
 utility functions. The major features of this utility tool include the
-following. * Access build-in QC script template in snippet, which
-provides a helpful starting point than building scripts from scratch. *
-Convert RTF table format into a data frame, which will be easily used to
-compare numbers between production and QC sides. RTFs can be either in
-SAS or in R. * Generate comparison results by comparing two data frames
-from QC work and production sides. * Perform batch run against all QC
-scripts and generate overall summary report for review.</p>
+following.</p>
+<ul>
+<li><p>Access build-in QC script template in snippet, which provides a
+helpful starting point than building scripts from scratch.</p></li>
+<li><p>Convert RTF table format into a data frame, which will be easily
+used to compare numbers between production and QC sides. RTFs can be
+either in SAS or in R.</p></li>
+<li><p>Generate comparison results by comparing two data frames from QC
+work and production sides.</p></li>
+<li><p>Perform batch run against all QC scripts and generate overall
+summary report for review.</p></li>
+</ul>
 <p><img src="QCworkflow.png" width="100%"></p>
 <p>As a QC programmer, our workflow begins by creating a dataframe based
 on ADaM datasets, SAP, and DPS. We then utilize the
