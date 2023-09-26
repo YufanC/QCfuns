@@ -35,10 +35,14 @@ include `add_snippets`, `qc_rtf2df`, `qc_comparedf` and `qc_batchrun`.
 
 ## QC Workflow
 The accuracy and integrity of clinical reports are essential for ensuring the safety and efficacy of investigational drugs. To validate the accuracy of clinical reports, double programming is often required. To streamline the QC programming workflow and optimize the productive review process, the QCfuns package offers a collection of handy R utility functions. The major features of this utility tool include the following.
-*	Access build-in QC script template in snippet, which provides a helpful starting point than building scripts from scratch. 
-*	Convert RTF table format into a data frame, which will be easily used to compare numbers between production and QC sides. RTFs can be either in SAS or in R.
-*	Generate comparison results by comparing two data frames from QC work and production sides. 
-*	Perform batch run against all QC scripts and generate overall summary report for review.     
+
+-	Access build-in QC script template in snippet, which provides a helpful starting point than building scripts from scratch. 
+
+-	Convert RTF table format into a data frame, which will be easily used to compare numbers between production and QC sides. RTFs can be either in SAS or in R.
+
+-	Generate comparison results by comparing two data frames from QC work and production sides.
+
+-	Perform batch run against all QC scripts and generate overall summary report for review.     
 
 ```{r out.width="100%", echo = FALSE}
 knitr::include_graphics("QCworkflow.png")
