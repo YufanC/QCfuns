@@ -16,7 +16,8 @@ qc_comparedf(
   stop_on_error = FALSE,
   keep_unchanged_rows = FALSE,
   keep_unchanged_cols = TRUE,
-  round_output_to = 3
+  round_output_to = 3,
+  limit = 1000
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ qc_comparedf(
 \item{keep_unchanged_cols}{whether to preserve unchanged values or not. Defaults to TRUE}
 
 \item{round_output_to}{Number of digits to round the output to. Defaults to 3.}
+
+\item{limit}{The max number of differences to display. Defaults to 1000.}
 }
 \value{
 the output of comparison in HTML

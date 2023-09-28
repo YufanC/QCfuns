@@ -13,6 +13,7 @@
 #' @param keep_unchanged_rows whether to preserve unchanged values or not. Defaults to FALSE
 #' @param keep_unchanged_cols whether to preserve unchanged values or not. Defaults to TRUE
 #' @param round_output_to Number of digits to round the output to. Defaults to 3.
+#' @param limit The max number of differences to display. Defaults to 1000.
 #' @return the output of comparison in HTML
 #' @examples
 #' \dontrun{
@@ -21,7 +22,7 @@
 #' @export
 #' @importFrom compareDF compare_df create_output_table
 qc_comparedf <- function(qc, rtf, path = ".", filename = NULL, by = "row_seq", exclude = NULL, tolerance = 0, tolerance_type = "ratio", 
-                         stop_on_error = FALSE, keep_unchanged_rows = FALSE, keep_unchanged_cols = TRUE, round_output_to = 3) {
+                         stop_on_error = FALSE, keep_unchanged_rows = FALSE, keep_unchanged_cols = TRUE, round_output_to = 3, limit = 1000) {
   
   assertthat::is.dir(path)
   assertthat::assert_that(length(qc) == length(rtf))
@@ -80,7 +81,7 @@ qc_comparedf <- function(qc, rtf, path = ".", filename = NULL, by = "row_seq", e
     # Save comparison results in html
     file_path <- file.path(path, paste0("qc", filename, ".html"))
     cat(sprintf("<h3>Comparison Results for %s</h3>", filename),
-        compareDF::create_output_table(result), file = file_path)
+        compareDF::create_output_table(result, limit = limit), file = file_path)
 
   } else {
     message(paste("QC and production are the same for", filename))
