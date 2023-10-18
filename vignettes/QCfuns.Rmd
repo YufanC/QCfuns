@@ -57,14 +57,10 @@ In situations where we need to validate multiple outputs, we can repeat the vali
 ## Key functions
 To summarize, the key functions in our QC workflow are `qc_rtf2df`, `qc_comparedf` and `qc_batchrun`. Each function plays a crucial role in facilitating data conversion, comparison, and validation. The detailed introduction of these functions are as below.
 
-```{r out.width="100%", echo = FALSE}
-knitr::include_graphics("QCworkflow.png")
-```
-
 ### Read in rtf files
 
 ```{r eval=FALSE}
-qc_rtf2df(filename = "tsidem01", path = opath[["PREPROD"]])
+qc_rtf2df(filename = "tsfae-st03", path = opath[["PREPROD"]])
 ```
 
 rtf layout
@@ -83,7 +79,7 @@ knitr::include_graphics("rtfdf.png")
 qc_comparedf function leverages the compare_df function from the compareDF package to generate a concise and color-coded summary of comparison results between the data frame created and the data frame extracted from the rtf file
 
 ```{r eval=FALSE}
-qc_comparedf(qc = tab_qc, rtf = tab_rtf, path = qc[["PDEV"]], filename = "tsidem01", keep_unchanged_rows = TRUE)
+qc_comparedf(qc = tab_qc, rtf = tab_rtf, path = qc[["PDEV"]], filename = "tsfae-st03", keep_unchanged_rows = TRUE)
 ```
 
 ```{r out.width="70%", echo = FALSE}
