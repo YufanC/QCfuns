@@ -145,12 +145,11 @@ the validation results.</p>
 <code>qc_batchrun</code>. Each function plays a crucial role in
 facilitating data conversion, comparison, and validation. The detailed
 introduction of these functions are as below.</p>
-<p><img src="QCworkflow.png" width="100%"></p>
 <div class="section level3">
 <h3 id="read-in-rtf-files">Read in rtf files<a class="anchor" aria-label="anchor" href="#read-in-rtf-files"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/qc_rtf2df.html">qc_rtf2df</a></span><span class="op">(</span>filename <span class="op">=</span> <span class="st">"tsidem01"</span>, path <span class="op">=</span> <span class="va">opath</span><span class="op">[[</span><span class="st">"PREPROD"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/qc_rtf2df.html">qc_rtf2df</a></span><span class="op">(</span>filename <span class="op">=</span> <span class="st">"tsfae-st03"</span>, path <span class="op">=</span> <span class="va">opath</span><span class="op">[[</span><span class="st">"PREPROD"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p>rtf layout</p>
 <p><img src="rtf.png" width="80%"></p>
 <p>R dataframe (Get rid of title, footnotes and empty lines)</p>
@@ -164,7 +163,7 @@ compareDF package to generate a concise and color-coded summary of
 comparison results between the data frame created and the data frame
 extracted from the rtf file</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/qc_comparedf.html">qc_comparedf</a></span><span class="op">(</span>qc <span class="op">=</span> <span class="va">tab_qc</span>, rtf <span class="op">=</span> <span class="va">tab_rtf</span>, path <span class="op">=</span> <span class="va">qc</span><span class="op">[[</span><span class="st">"PDEV"</span><span class="op">]</span><span class="op">]</span>, filename <span class="op">=</span> <span class="st">"tsidem01"</span>, keep_unchanged_rows <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/qc_comparedf.html">qc_comparedf</a></span><span class="op">(</span>qc <span class="op">=</span> <span class="va">tab_qc</span>, rtf <span class="op">=</span> <span class="va">tab_rtf</span>, path <span class="op">=</span> <span class="va">qc</span><span class="op">[[</span><span class="st">"PDEV"</span><span class="op">]</span><span class="op">]</span>, filename <span class="op">=</span> <span class="st">"tsfae-st03"</span>, keep_unchanged_rows <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="compare.png" width="70%"></p>
 </div>
 <div class="section level3">
