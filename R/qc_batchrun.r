@@ -154,9 +154,7 @@ source_batch <- function(script, path = NULL) {
     script,
     log_name = str_replace(basename(script), ".r|.R", ".log"),
     log_path = path,
-    remove_log_object = TRUE,
-    quit_on_error = FALSE,
-    to_report = c("messages", "output", "results")
+    quit_on_error = FALSE
   )
 }
 
