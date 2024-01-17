@@ -4,12 +4,14 @@
 \alias{qc_batchrun}
 \title{Batch Run QC Scripts}
 \usage{
-qc_batchrun(files, path = ".")
+qc_batchrun(files, path = ".", parallel = FALSE)
 }
 \arguments{
 \item{files}{a character vector of full/relative path names}
 
 \item{path}{the folder path of HTML output file. By default the path is the working directory, getwd().}
+
+\item{parallel}{whether to batch run in parallel, default is FALSE}
 }
 \value{
 A summary table of comparison results will display in html
@@ -23,6 +25,6 @@ Execute R qc scripts by batch with log
 qc_files <- list.files(path = qc[["PDEV"]], pattern = "qct.*\\\\.r", 
                        full.names = TRUE)
 
-qc_batchrun(files = qc_files, path = qc[["PDEV"]])
+qc_batchrun(files = qc_files, path = qc[["PDEV"]], parallel = TRUE)
 }
 }

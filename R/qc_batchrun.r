@@ -3,6 +3,7 @@
 #' Execute R qc scripts by batch with log
 #' @param files a character vector of full/relative path names 
 #' @param path the folder path of HTML output file. By default the path is the working directory, getwd().
+#' @param parallel whether to batch run in parallel, default is FALSE
 #'
 #' @return A summary table of comparison results will display in html
 #' @export
@@ -12,29 +13,31 @@
 #' qc_files <- list.files(path = qc[["PDEV"]], pattern = "qct.*\\.r", 
 #'                        full.names = TRUE)
 #' 
-#' qc_batchrun(files = qc_files, path = qc[["PDEV"]])
+#' qc_batchrun(files = qc_files, path = qc[["PDEV"]], parallel = TRUE)
 #' }
 #' @importFrom logrx axecute
 #' @importFrom rstudioapi viewer
 #' @importFrom utils browseURL
-qc_batchrun <- function(files, path = "."){
+qc_batchrun <- function(files, path = ".", parallel = FALSE){
   
   assertthat::assert_that(all(file.exists(files)))
   assertthat::is.dir(path)
   
-  ### Execute all scripts in sequence
-  # sapply(files, source_batch, path = path)
-  
-  # Determine the number of core used by current system
-  system_info <- Sys.info()
-  if (system_info["sysname"] == "Windows"){
-    parallel::mclapply(files, source_batch, path = path, mc.cores = 1)
+  if (parallel){
+    # Determine the number of core used by current system
+    system_info <- Sys.info()
+    if (system_info["sysname"] == "Windows"){
+      parallel::mclapply(files, source_batch_par, path = path, mc.cores = 1)
+    } else {
+      # Define the number of cores to use for parallel execution
+      num_cores <- parallel::detectCores()
+      
+      # Parallelize the execution of the script
+      parallel::mclapply(files, source_batch_par, path = path, mc.cores = num_cores)
+    }
   } else {
-    # Define the number of cores to use for parallel execution
-    num_cores <- parallel::detectCores()
-    
-    # Parallelize the execution of the script
-    parallel::mclapply(files, source_batch, path = path, mc.cores = num_cores)
+    ### Execute all scripts in sequence
+    sapply(files, source_batch, path = path)
   }
   
   ### Create summary html report
@@ -157,6 +160,20 @@ qc_batchrun <- function(files, path = "."){
 }
 
 source_batch <- function(script, path = NULL) {
+  op <- options(log.rx = NULL); on.exit(options(op)) # to reset after each
+  
+  # Create a message for tracking
+  message(paste("Running", script))
+  
+  axecute(
+    script,
+    log_name = str_replace(basename(script), ".r|.R", ".log"),
+    log_path = path,
+    quit_on_error = FALSE
+  )
+}
+
+source_batch_par <- function(script, path = NULL) {
   
   axecute(
     script,
