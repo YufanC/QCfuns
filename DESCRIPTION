@@ -2,7 +2,7 @@ Type: Package
 Package: QCfuns
 Title: Collection of R QC functions
 Description: A fast and user-friendly QC working flow.  
-Version: 0.3.0
+Version: 0.3.1
 Authors@R: 
     person("Yufan", "Chen", , "ychen209@its.jnj.com", role = c("aut", "cre"))
 License: Apache License (>= 2)
