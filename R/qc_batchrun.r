@@ -23,7 +23,19 @@ qc_batchrun <- function(files, path = "."){
   assertthat::is.dir(path)
   
   ### Execute all scripts in sequence
-  sapply(files, source_batch, path = path)
+  # sapply(files, source_batch, path = path)
+  
+  # Determine the number of core used by current system
+  system_info <- Sys.info()
+  if (system_info["sysname"] == "Windows"){
+    parallel::mclapply(files, source_batch, path = path, mc.cores = 1)
+  } else {
+    # Define the number of cores to use for parallel execution
+    num_cores <- parallel::detectCores()
+    
+    # Parallelize the execution of the script
+    parallel::mclapply(files, source_batch, path = path, mc.cores = num_cores)
+  }
   
   ### Create summary html report
   num_files <- length(files)
@@ -145,10 +157,6 @@ qc_batchrun <- function(files, path = "."){
 }
 
 source_batch <- function(script, path = NULL) {
-  op <- options(log.rx = NULL); on.exit(options(op)) # to reset after each
-  
-  # Create a message for tracking
-  message(paste("Running", script))
   
   axecute(
     script,

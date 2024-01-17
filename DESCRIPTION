@@ -12,6 +12,7 @@ Imports:
     dplyr,
     knitr,
     logrx,
+    parallel,
     rstudioapi,
     stringr,
     striprtf (>= 0.5.3),
