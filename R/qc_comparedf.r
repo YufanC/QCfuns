@@ -56,27 +56,29 @@ qc_comparedf <- function(qc, rtf, path = ".", filename = NULL, by = "row_seq", e
   ### if there is at least a difference detected
   if (result$change_summary["changes"] != 0 | result$change_summary["additions"] != 0 | result$change_summary["removals"] != 0){
     
-    message(paste("QC and production are not matched for", filename))
-    
-    # display result in viewer
-    temp_dir = tempdir()
-    temp_file <- file.path(temp_dir, paste0("qc", filename, ".html"))
-    
-    # diverts output to a temp file
-    sink(temp_file, append = TRUE)
-    
-    cat(sprintf("<h3>Comparison Results for %s</h3>", filename),
-        compareDF::create_output_table(result), file = temp_file)
-    
-    # Use RStudio viewer if available, otherwise open in a web browser
-    if (!is.null(getOption("viewer"))) {
-      rstudioapi::viewer(temp_file)
-    } else {
-      browseURL(temp_file)
+    if (interactive()){
+      message(paste("QC and production are not matched for", filename))
+      
+      # display result in viewer
+      temp_dir = tempdir()
+      temp_file <- file.path(temp_dir, paste0("qc", filename, ".html"))
+      
+      # diverts output to a temp file
+      sink(temp_file, append = TRUE)
+      
+      cat(sprintf("<h3>Comparison Results for %s</h3>", filename),
+          compareDF::create_output_table(result), file = temp_file)
+      
+      # Use RStudio viewer if available, otherwise open in a web browser
+      if (!is.null(getOption("viewer"))) {
+        rstudioapi::viewer(temp_file)
+      } else {
+        browseURL(temp_file)
+      }
+      
+      # diverts output back to console
+      sink()
     }
-    
-    # diverts output back to console
-    sink()
     
     # Save comparison results in html
     file_path <- file.path(path, paste0("qc", filename, ".html"))
