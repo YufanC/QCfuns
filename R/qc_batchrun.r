@@ -174,6 +174,7 @@ source_batch <- function(script, path = NULL) {
 }
 
 source_batch_par <- function(script, path = NULL) {
+  op <- options(log.rx = NULL); on.exit(options(op)) # to reset after each
   
   axecute(
     script,

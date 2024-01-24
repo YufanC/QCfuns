@@ -17,7 +17,7 @@ test_that("Check if the output html exists and is correct", {
   writeLines(compare_script2, con = file.path(dir_temp, "qctable2.r"))
   
   file_list <- c(file.path(dir_temp, "qctable1.r"), file.path(dir_temp, "qctable2.r"))
-  qc_batchrun(file_list, dir_temp)
+  qc_batchrun(file_list, dir_temp, parallel = T)
   
   file_name <- paste0("compare_results_", Sys.Date(), ".html")
   file_path <- file.path(dir_temp, file_name)
