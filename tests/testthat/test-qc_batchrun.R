@@ -10,14 +10,20 @@ test_that("Check if the output html exists and is correct", {
   
   compare_script2 <- "dir_temp <- tempdir() \n
   qc <- data.frame(Row_text = c('N', 'N'), Treatment = c('5', '7'), Placebo = c('10', '6')) \n
+  rtf <- data.frame(Row_text = c('N', 'N'), Treatment = c('5', '8'), Placebo = c('10', '6')) \n
+  qc_comparedf(qc, rtf, path = dir_temp, filename = 'test_output1')"
+  
+  compare_script3 <- "dir_temp <- tempdir() \n
+  qc <- data.frame(Row_text = c('N', 'N'), Treatment = c('5', '7'), Placebo = c('10', '6')) \n
   rtf <- data.frame(Row_text = c('N', 'N'), Treatment = c('6', '7'), Placebo = c('10', '6')) \n
   qc_comparedf(qc, rtf, path = dir_temp, filename = 'test_output2')"
   
   writeLines(compare_script1, con = file.path(dir_temp, "qctable1.r"))
   writeLines(compare_script2, con = file.path(dir_temp, "qctable2.r"))
+  writeLines(compare_script3, con = file.path(dir_temp, "qctable3.r"))
   
-  file_list <- c(file.path(dir_temp, "qctable1.r"), file.path(dir_temp, "qctable2.r"))
-  qc_batchrun(file_list, dir_temp, parallel = T)
+  file_list <- c(file.path(dir_temp, "qctable1.r"), file.path(dir_temp, "qctable2.r"), file.path(dir_temp, "qctable3.r"))
+  qc_batchrun(file_list, dir_temp, parallel = TRUE)
   
   file_name <- paste0("compare_results_", Sys.Date(), ".html")
   file_path <- file.path(dir_temp, file_name)
