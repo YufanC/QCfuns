@@ -67,7 +67,7 @@ qc_comparedf <- function(qc, rtf, path = ".", filename = NULL, by = "row_seq", e
       sink(temp_file, append = TRUE)
       
       cat(sprintf("<h3>Comparison Results for %s</h3>", filename),
-          compareDF::create_output_table(result), file = temp_file)
+          compareDF::create_output_table(result, limit = limit), file = temp_file)
       
       # Use RStudio viewer if available, otherwise open in a web browser
       if (!is.null(getOption("viewer"))) {
