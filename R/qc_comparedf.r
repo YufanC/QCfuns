@@ -87,6 +87,37 @@ qc_comparedf <- function(qc, rtf, path = ".", filename = NULL, by = "row_seq", e
 
   } else {
     message(paste("QC and production are the same for", filename))
+    
+    ### If keep_unchanged_rows argument is set to TRUE then display the unchanged rows
+    if (keep_unchanged_rows == TRUE){
+      if (interactive()){
+        
+        # display result in viewer
+        temp_dir = tempdir()
+        temp_file <- file.path(temp_dir, paste0("qc", filename, ".html"))
+        
+        # diverts output to a temp file
+        sink(temp_file, append = TRUE)
+        
+        cat(sprintf("<h3>Comparison Results for %s</h3>", filename),
+            compareDF::create_output_table(result, limit = limit), file = temp_file)
+        
+        # Use RStudio viewer if available, otherwise open in a web browser
+        if (!is.null(getOption("viewer"))) {
+          rstudioapi::viewer(temp_file)
+        } else {
+          browseURL(temp_file)
+        }
+        
+        # diverts output back to console
+        sink()
+      }
+      
+      # Save comparison results in html
+      file_path <- file.path(path, paste0("qc", filename, ".html"))
+      cat(sprintf("<h3>Comparison Results for %s</h3>", filename),
+          compareDF::create_output_table(result, limit = limit), file = file_path)
+    }
   }
 }
 
