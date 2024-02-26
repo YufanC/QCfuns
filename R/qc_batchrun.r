@@ -54,7 +54,7 @@ qc_batchrun <- function(files, path = ".", parallel = FALSE){
   )
   
   for (i in 1:num_files) {
-    file_temp <- file.path(path, str_replace(basename(files[i]), ".r|.R", ".log"))
+    file_temp <- file.path(path, str_replace(basename(files[i]), "\\.r|\\.R", "\\.log"))
     extracted <- extract_errors_and_warnings(file_temp)
     
     all_match <- ifelse(any(str_detect(extracted$result, "QC and production are the same for")), "Yes", "No")
@@ -167,7 +167,7 @@ source_batch <- function(script, path = NULL) {
   
   axecute(
     script,
-    log_name = str_replace(basename(script), ".r|.R", ".log"),
+    log_name = str_replace(basename(script), "\\.r|\\.R", "\\.log"),
     log_path = path,
     quit_on_error = FALSE
   )
@@ -180,7 +180,7 @@ source_batch_par <- function(script, path = NULL) {
   
   axecute(
     script,
-    log_name = str_replace(basename(script), ".r|.R", ".log"),
+    log_name = str_replace(basename(script), "\\.r|\\.R", "\\.log"),
     log_path = path,
     quit_on_error = FALSE
   )
