@@ -90,54 +90,54 @@ following code. Then follow the prompt in console to proceed</p>
 <p>Or you can do the same by clicking the <code>Add QC script</code> in
 Addins. <img src="addQCscript.png" width="80%"></p>
 <p>The QC script template looks like this:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Header ###################################################################</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Original Reporting Effort:  ${1:Reporting effort}</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Program Name             :  ${2:Program name}</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># R Version                :  `r R.Version()$version.string`</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Short Description        :  ${3:Description}</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Author                   :  ${4:Author}</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Date                     :  `r Sys.Date()`</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># input                    :</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Output                   :  </span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Remarks                  :</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="do">### Modification History #####################################################</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#Rev       Modified By         Reporting Effort         Date      Description</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="do">### Prepping environment #####################################################</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(QCfuns)</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>files.sources <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="fu">read_path</span>(rptdrv, <span class="st">"qc"</span>), </span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                            <span class="at">pattern =</span> <span class="st">"^qcf.*</span><span class="sc">\\</span><span class="st">\.r"</span>, <span class="at">full.names =</span> T)</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(files.sources, source)</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="do">### Derive QC dataset ########################################################</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>adsl <span class="ot">&lt;-</span> <span class="fu">read_sas</span>(<span class="fu">read_path</span>(a_in, <span class="st">"adsl.sas7bdat"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character), zap_empty))</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="do">### Generate QC table ########################################################</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>first_row <span class="ot">&lt;-</span> <span class="fu">qc_cntrow1</span>(adsl, <span class="st">"TRT01P"</span>, <span class="at">row_text =</span> <span class="st">"Analysis set: Safety"</span>)</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>tab1 <span class="ot">&lt;-</span> <span class="fu">qc_cat_row</span>(adsl, <span class="st">"TRT01P"</span>, <span class="at">rowvar =</span> <span class="st">"SEX"</span>)</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>tab_qc <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(first_row\<span class="sc">$</span>row1, tab1) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">replace</span>(., <span class="fu">is.na</span>(.), <span class="st">""</span>)))</span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="do">### Read in RTF ##############################################################</span></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>tableid <span class="ot">&lt;-</span> <span class="st">"${5:tableid}"</span></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>tab_rtf <span class="ot">&lt;-</span> <span class="fu">qc_rtf2df</span>(tableid, <span class="at">path =</span> opath[[<span class="st">"PREPROD"</span>]])</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="do">### Compare two datasets #####################################################</span></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="fu">qc_comparedf</span>(<span class="at">qc =</span> tab_qc, <span class="at">rtf =</span> tab_rtf, <span class="at">path =</span> qc[[<span class="st">"PDEV"</span>]], </span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>             <span class="at">filename =</span> tableid)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="do">### Header ###################################################################</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co"># Original Reporting Effort:  ${1:Reporting effort}</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Program Name             :  ${2:Program name}</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># R Version                :  `r R.Version()$version.string`</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co"># Short Description        :  ${3:Description}</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co"># Author                   :  ${4:Author}</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co"># Date                     :  `r Sys.Date()`</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co"># input                    :</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co"># Output                   :  </span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co"># Remarks                  :</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="do">### Modification History #####################################################</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#Rev       Modified By         Reporting Effort         Date      Description</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="do">### Prepping environment #####################################################</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="fu">library</span>(QCfuns)</span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>files.sources <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="fu">read_path</span>(rptdrv, <span class="st">"qc"</span>), </span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a>                            <span class="at">pattern =</span> <span class="st">"^qcf.*</span><span class="sc">\\</span><span class="st">\.r"</span>, <span class="at">full.names =</span> T)</span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="fu">sapply</span>(files.sources, source)</span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="do">### Derive QC dataset ########################################################</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a>adsl <span class="ot">&lt;-</span> <span class="fu">read_sas</span>(<span class="fu">read_path</span>(a_in, <span class="st">"adsl.sas7bdat"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character), zap_empty))</span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a>  </span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="do">### Generate QC table ########################################################</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a>first_row <span class="ot">&lt;-</span> <span class="fu">qc_cntrow1</span>(adsl, <span class="st">"TRT01P"</span>, <span class="at">row_text =</span> <span class="st">"Analysis set: Safety"</span>)</span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a>tab1 <span class="ot">&lt;-</span> <span class="fu">qc_cat_row</span>(adsl, <span class="st">"TRT01P"</span>, <span class="at">rowvar =</span> <span class="st">"SEX"</span>)</span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a>tab_qc <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(first_row\<span class="sc">$</span>row1, tab1) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">replace</span>(., <span class="fu">is.na</span>(.), <span class="st">""</span>)))</span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="do">### Read in RTF ##############################################################</span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a>tableid <span class="ot">&lt;-</span> <span class="st">"${5:tableid}"</span></span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a>tab_rtf <span class="ot">&lt;-</span> <span class="fu">qc_rtf2df</span>(tableid, <span class="at">path =</span> opath[[<span class="st">"PREPROD"</span>]])</span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a><span class="do">### Compare two datasets #####################################################</span></span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a><span class="fu">qc_comparedf</span>(<span class="at">qc =</span> tab_qc, <span class="at">rtf =</span> tab_rtf, <span class="at">path =</span> qc[[<span class="st">"PDEV"</span>]], </span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a>             <span class="at">filename =</span> tableid)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="construct-data-frame-using-data-to-table-functions">Construct data frame using data to table functions<a class="anchor" aria-label="anchor" href="#construct-data-frame-using-data-to-table-functions"></a>

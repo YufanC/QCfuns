@@ -1,10 +1,10 @@
-pandoc: 2.19.2
+pandoc: 3.1.11
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   Other_functions: Other_functions.html
   QCfuns: QCfuns.html
-last_built: 2024-02-26T05:11Z
+last_built: 2024-03-19T02:55Z
 urls:
   reference: https://yufanc.github.io/QCfuns/reference
   article: https://yufanc.github.io/QCfuns/articles
