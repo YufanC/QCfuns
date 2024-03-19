@@ -47,7 +47,7 @@ qc_rtf2df <- function(filename, path = NULL){
     dat1 <- dat0[, c(-1, -ncol(dat0))]
     
     # Remove footnote which are the same in all columns
-    footnote_rows <- apply(dat1, 1, function(row) all(stringr::str_remove(row, ".*:") == stringr::str_remove(row[1], ".*:")))
+    footnote_rows <- apply(dat1, 1, function(row) all(stringr::str_remove(row, ".*:") == stringr::str_remove(row[1], ".*:"), stringr::str_length(stringr::str_remove(stringr::str_trim(row[1]), ".*:")) > 0))
     dat1 <- dat1[!footnote_rows, ]
     
   } else {
